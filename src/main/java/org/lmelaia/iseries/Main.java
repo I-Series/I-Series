@@ -20,6 +20,6 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
+        javax.swing.JOptionPane.showMessageDialog(null, "The application was run");
     }
 }
