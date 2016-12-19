@@ -736,9 +736,6 @@ public class Launch4jConfigurationBuilder {
     protected String instanceAlreadyRunningErrorMessage
             = "An application instance is already running.";
 
-    public Launch4jConfigurationBuilder() {
-    }
-
     //##########################
     //           BASIC
     //##########################
@@ -1569,6 +1566,11 @@ public class Launch4jConfigurationBuilder {
                         + "Disable custom classpath to use the default "
                         + "main class.");
             }
+            
+            if(headerType == null){
+                throw new InvalidLaunch4jConfigurationException(
+                    "Header type cannot be null");
+            }
 
             if (classpath != null && classpath.length == 0) {
                 classpath = null;
@@ -1591,6 +1593,8 @@ public class Launch4jConfigurationBuilder {
 
     private void validateJre() {
         validateJreVersions();
+        validateJavaUsageOptions();
+        validateJavaArchitecture();
         validateHeaps();
         validateJvmOptions();
     }
@@ -1645,6 +1649,20 @@ public class Launch4jConfigurationBuilder {
                     "The maximum jre version must be greater than the minimum");
         }
     }
+    
+    private void validateJavaUsageOptions(){
+        if(javaUsageOptions == null){
+            throw new InvalidLaunch4jConfigurationException(
+                    "Java usage options cannot be null");
+        }
+    }
+    
+    private void validateJavaArchitecture(){
+        if(javaArchitecture == null){
+            throw new InvalidLaunch4jConfigurationException(
+                    "Java architecture cannot be null");
+        }
+    }
 
     private void validateHeaps() {
         //Heaps.
@@ -1659,12 +1677,12 @@ public class Launch4jConfigurationBuilder {
             //Initial
             if (initialHeapSize < 1) {
                 throw new InvalidLaunch4jConfigurationException(
-                        "Initial heap size must be between 1 and 100%");
+                        "Initial heap size must be between 1% and 100%");
             }
 
             if (initialHeapSize > 100) {
                 throw new InvalidLaunch4jConfigurationException(
-                        "Initial heap size must be between 1 and 100%");
+                        "Initial heap size must be between 1% and 100%");
             }
 
             //Maximum

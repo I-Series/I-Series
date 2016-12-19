@@ -46,4 +46,159 @@ public class Launch4jConfigurationBuilderTest {
     public void tearDown() {
     }
     
+    public void testOutputFileName(){
+        
+    }
+    
+    public void testJarFileName() {
+        
+    }
+    
+    public void testWrap() {
+        
+    }
+    
+    public void testJarRuntumePath() {
+        
+    }
+    
+    public void testWrapperManifest() {
+        
+    }
+    
+    public void testIconFileName() {
+        
+    }
+    
+    public void testChangeDirectory() {
+        
+    }
+    
+    public void testCommandLineArguments() {
+        
+    }
+    
+    public void testProcessPriority() {
+        
+    }
+    
+    public void testDownloadUrl() {
+        
+    }
+    
+    public void testCustomClasspath() {
+        
+    }
+    
+    public void testMainClass() {
+        
+    }
+    
+    public void testClasspath() {
+        
+    }
+    
+    public void testHeaderType() {
+        
+    }
+    
+    public void testSingleInstance() {
+        
+    }
+    
+    public void testMutexName() {
+        
+    }
+    
+    public void testBundledJrePath() {
+        
+    }
+    
+    public void testMinimumJreVersion() {
+        
+    }
+    
+    public void testJavaUsageOptions() {
+        
+    }
+    
+    public void testJavaArchitecture() {
+        
+    }
+    
+    public void testInitialHeapSize() {
+        
+    }
+    
+    public void testMaximumHeapSize() {
+        
+    }
+    
+    public void testIsHeapInPercent() {
+        
+    }
+    
+    public void testJvmOptions() {
+        
+    }
+    
+    public void testEnvironmentVariables() {
+        
+    }
+    
+    public void testIsSplashScreenEnabled() {
+        
+    }
+    
+    public void testSplashScreenFileName() {
+        
+    }
+    
+    public void testTimeout() {
+        
+    }
+    
+    public void testAddVersionInfo() {
+        
+    }
+    
+    public void testFileVersion() {
+        
+    }
+    
+    public void testFreeFormFileVersion() {
+        
+    }
+    
+    public void testFileDescription() {
+        
+    }
+    
+    public void testCopyright() {
+        
+    }
+    
+    public void testProductVersion() {
+        
+    }
+    
+    public void testFreeFormProductVersion() {
+        
+    }
+    
+    public void testProductName() {
+        
+    }
+    
+    public void testCompanyName() {
+        
+    }
+    
+    public void testInternalName() {
+        
+    }
+    
+    public void testOriginalFileName() {
+        
+    }
 }
