@@ -53,7 +53,7 @@ public class Launch4jConfigurationBuilderTest {
         try {
             DEFAULT_VALID_TEMPLATE.create();
         } catch (InvalidLaunch4jConfigurationException ex) {
-            fail("Default template is invalid");
+            fail("Default template is invalid\n" + ex);
         }
     }
 
