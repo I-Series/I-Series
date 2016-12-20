@@ -54,6 +54,13 @@ public class Launch4jConfigurationBuilderTest {
 
     @Test
     public void testOutputFileName() {
+        //Test for valid exe.
+        try {
+            testObject.create();
+        } catch (InvalidLaunch4jConfigurationException | NullPointerException ex) {
+            fail("Test doesn't allow valid exe\n" + ex);
+        }
+        
         //Test for null exe
         try{
             testObject.setOutputFile(null);
@@ -80,15 +87,6 @@ public class Launch4jConfigurationBuilderTest {
                     "Test Fail: Configuration allows non-exe output file");
             fail("Configuration allows non-exe output file");
         } catch (InvalidLaunch4jConfigurationException ex){}
-        
-        //Test for valid exe.
-        try {
-            testObject.setOutputFile(System.getProperty("user.dir")
-                    + "\\tests\\EmptyExe.exe");
-            testObject.create();
-        } catch (InvalidLaunch4jConfigurationException | NullPointerException ex) {
-            fail("Test doesn't allow valid exe\n" + ex);
-        }
     }
 
     @Test
