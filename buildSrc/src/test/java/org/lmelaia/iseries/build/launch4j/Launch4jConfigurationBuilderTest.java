@@ -54,39 +54,31 @@ public class Launch4jConfigurationBuilderTest {
 
     @Test
     public void testOutputFileName() {
-        //Test for valid exe.
-        try {
-            testObject.create();
-        } catch (InvalidLaunch4jConfigurationException | NullPointerException ex) {
-            fail("Test doesn't allow valid exe\n" + ex);
-        }
-        
         //Test for null exe
         try{
-            testObject.setOutputFile(null);
-            testObject.create();
-            System.err.println(
-                    "Test Fail: Configuration allows null output file");
+            testObject.setOutputFile(null).create();
             fail("Configuration allows null output file");
         } catch (InvalidLaunch4jConfigurationException ex){}
         
         //Test for empty exe
         try{
-            testObject.setOutputFile("");
-            testObject.create();
-            System.err.println(
-                    "Test Fail: Configuration allows empty output file");
+            testObject.setOutputFile("").create();
             fail("Configuration allows empty output file");
         } catch (InvalidLaunch4jConfigurationException ex){}
         
         //Test for non-exe exe
         try{
-            testObject.setOutputFile("something/something.lol");
-            testObject.create();
-            System.err.println(
-                    "Test Fail: Configuration allows non-exe output file");
+            testObject.setOutputFile("something/something.lol").create();
             fail("Configuration allows non-exe output file");
         } catch (InvalidLaunch4jConfigurationException ex){}
+        
+        //Test for valid exe.
+        try {
+            testObject.setOutputFile(System.getProperty("user.dir")
+                    + "\\tests\\EmptyExe.exe").create();
+        } catch (InvalidLaunch4jConfigurationException | NullPointerException ex) {
+            fail("Test doesn't allow valid exe\n" + ex);
+        }
     }
 
     @Test
