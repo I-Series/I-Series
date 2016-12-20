@@ -1447,8 +1447,8 @@ public class Launch4jConfigurationBuilder {
 
     private void validateOutputFile() {
         checkString(outputFileName, "ouput file name");
-        
-        if(!outputFileName.endsWith(".exe")){
+
+        if (!outputFileName.endsWith(".exe")) {
             throw new InvalidLaunch4jConfigurationException(
                     "Output file must end with .exe extension");
         }
@@ -1571,10 +1571,10 @@ public class Launch4jConfigurationBuilder {
                         + "Disable custom classpath to use the default "
                         + "main class.");
             }
-            
-            if(headerType == null){
+
+            if (headerType == null) {
                 throw new InvalidLaunch4jConfigurationException(
-                    "Header type cannot be null");
+                        "Header type cannot be null");
             }
 
             if (classpath != null && classpath.length == 0) {
@@ -1629,10 +1629,12 @@ public class Launch4jConfigurationBuilder {
                 != null && maximumJreVersion.isEmpty()) {
             maximumJreVersion = null;
         } else {
-            if (!maximumJreVersion.matches(LAUNCH4J_VERSION_REGEX)) {
-                throw new InvalidLaunch4jConfigurationException(
-                        "Maximum JRE version should be "
-                        + "in the format x.x.x[_xx]");
+            if (maximumJreVersion != null) {
+                if (!maximumJreVersion.matches(LAUNCH4J_VERSION_REGEX)) {
+                    throw new InvalidLaunch4jConfigurationException(
+                            "Maximum JRE version should be "
+                            + "in the format x.x.x[_xx]");
+                }
             }
         }
 
@@ -1642,28 +1644,30 @@ public class Launch4jConfigurationBuilder {
                     + "you specify a maximum jre version");
         }
 
-        //Version size check
-        double min = Double.parseDouble(minimumJreVersion.replace(".", "")
-                .replace("_", "."));
-
-        double max = Double.parseDouble(maximumJreVersion.replace(".", "")
-                .replace("_", "."));
-
-        if (min >= max) {
-            throw new InvalidLaunch4jConfigurationException(
-                    "The maximum jre version must be greater than the minimum");
+        if (maximumJreVersion != null) {
+            //Version size check
+            double min = Double.parseDouble(minimumJreVersion.replace(".", "")
+                    .replace("_", "."));
+            
+            double max = Double.parseDouble(maximumJreVersion.replace(".", "")
+                    .replace("_", "."));
+            
+            if (min >= max) {
+                throw new InvalidLaunch4jConfigurationException(
+                        "The maximum jre version must be greater than the minimum");
+            }
         }
     }
-    
-    private void validateJavaUsageOptions(){
-        if(javaUsageOptions == null){
+
+    private void validateJavaUsageOptions() {
+        if (javaUsageOptions == null) {
             throw new InvalidLaunch4jConfigurationException(
                     "Java usage options cannot be null");
         }
     }
-    
-    private void validateJavaArchitecture(){
-        if(javaArchitecture == null){
+
+    private void validateJavaArchitecture() {
+        if (javaArchitecture == null) {
             throw new InvalidLaunch4jConfigurationException(
                     "Java architecture cannot be null");
         }
