@@ -15,9 +15,10 @@
  */
 package org.lmelaia.iseries.build.launch4j;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
+import static org.junit.Assert.*;
 /**
  * Tests the launch4j configuration builder class.
  *
@@ -30,9 +31,10 @@ public class Launch4jConfigurationBuilderTest {
      */
     private static final Launch4jConfigurationBuilder DEFAULT_VALID_TEMPLATE
             = new Launch4jConfigurationBuilder()
-            .setOutputFile("C:/Users/Melaia/Desktop/Output.exe")
+            .setOutputFile(System.getProperty("user.dir")
+                    + "\\tests\\EmptyExe.exe")
             .setJarFile(System.getProperty("user.dir")
-                    + "\\build\\libs\\I-Series.jar")
+                    + "\\tests\\EmptyJar.jar")
             .setMinimumJreVersion("1.8.0");
 
     /**
@@ -42,6 +44,7 @@ public class Launch4jConfigurationBuilderTest {
     private Launch4jConfigurationBuilder testObject = DEFAULT_VALID_TEMPLATE;
 
     public Launch4jConfigurationBuilderTest() {
+        
     }
 
     @Before
@@ -52,7 +55,53 @@ public class Launch4jConfigurationBuilderTest {
 
     @Test
     public void testOutputFileName() {
-
+        //Test for null exe
+        try{
+            testObject.setOutputFile(null);
+            testObject.create();
+            System.err.println(
+                    "Test Fail: Configuration allows null output file");
+            fail("Configuration allows null output file");
+        } catch (InvalidLaunch4jConfigurationException ex){
+            System.out.println(
+                    "Test Pass: Configuration doesn't allow null exe");
+        }
+        
+        //Test for empty exe
+        try{
+            testObject.setOutputFile("");
+            testObject.create();
+            System.err.println(
+                    "Test Fail: Configuration allows empty output file");
+            fail("Configuration allows empty output file");
+        } catch (InvalidLaunch4jConfigurationException ex){
+            System.out.println(
+                    "Test Pass: Configuration doesn't allow empty exe");
+        }
+        
+        //Test for non-exe exe
+        try{
+            testObject.setOutputFile("something/something.lol");
+            testObject.create();
+            System.err.println(
+                    "Test Fail: Configuration allows non-exe output file");
+            fail("Configuration allows non-exe output file");
+        } catch (InvalidLaunch4jConfigurationException ex){
+            System.out.println(
+                    "Test Pass: Configuration doesn't allow non-exe exe");
+        }
+        
+        //Test for valid exe.
+        try {
+            testObject.setOutputFile(System.getProperty("user.dir")
+                    + "\\tests\\EmptyExe.exe");
+            testObject.create();
+            System.out.println("Test Pass: Configuration allows valid exe");
+        } catch (InvalidLaunch4jConfigurationException | NullPointerException ex) {
+            System.err.println("Test Fail: "
+                    + "Configuration doesn't allow valid exe " + ex);
+            fail("Test doesn't allow valid exe " + ex);
+        }
     }
 
     @Test
