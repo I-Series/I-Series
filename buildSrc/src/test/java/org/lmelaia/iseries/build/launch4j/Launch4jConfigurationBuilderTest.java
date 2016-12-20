@@ -15,7 +15,6 @@
  */
 package org.lmelaia.iseries.build.launch4j;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -62,10 +61,7 @@ public class Launch4jConfigurationBuilderTest {
             System.err.println(
                     "Test Fail: Configuration allows null output file");
             fail("Configuration allows null output file");
-        } catch (InvalidLaunch4jConfigurationException ex){
-            System.out.println(
-                    "Test Pass: Configuration doesn't allow null exe");
-        }
+        } catch (InvalidLaunch4jConfigurationException ex){}
         
         //Test for empty exe
         try{
@@ -74,10 +70,7 @@ public class Launch4jConfigurationBuilderTest {
             System.err.println(
                     "Test Fail: Configuration allows empty output file");
             fail("Configuration allows empty output file");
-        } catch (InvalidLaunch4jConfigurationException ex){
-            System.out.println(
-                    "Test Pass: Configuration doesn't allow empty exe");
-        }
+        } catch (InvalidLaunch4jConfigurationException ex){}
         
         //Test for non-exe exe
         try{
@@ -86,27 +79,21 @@ public class Launch4jConfigurationBuilderTest {
             System.err.println(
                     "Test Fail: Configuration allows non-exe output file");
             fail("Configuration allows non-exe output file");
-        } catch (InvalidLaunch4jConfigurationException ex){
-            System.out.println(
-                    "Test Pass: Configuration doesn't allow non-exe exe");
-        }
+        } catch (InvalidLaunch4jConfigurationException ex){}
         
         //Test for valid exe.
         try {
             testObject.setOutputFile(System.getProperty("user.dir")
                     + "\\tests\\EmptyExe.exe");
             testObject.create();
-            System.out.println("Test Pass: Configuration allows valid exe");
         } catch (InvalidLaunch4jConfigurationException | NullPointerException ex) {
-            System.err.println("Test Fail: "
-                    + "Configuration doesn't allow valid exe " + ex);
-            fail("Test doesn't allow valid exe " + ex);
+            fail("Test doesn't allow valid exe\n" + ex);
         }
     }
 
     @Test
     public void testJarFileName() {
-
+        
     }
 
     @Test
