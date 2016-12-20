@@ -1447,6 +1447,11 @@ public class Launch4jConfigurationBuilder {
 
     private void validateOutputFile() {
         checkString(outputFileName, "ouput file name");
+        
+        if(!outputFileName.endsWith(".exe")){
+            throw new InvalidLaunch4jConfigurationException(
+                    "Output file must end with .exe extension");
+        }
     }
 
     private void validateJarFile() {
