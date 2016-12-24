@@ -172,4 +172,26 @@ public class Launch4jConfigurationBuilderTest {
         } catch (InvalidLaunch4jConfigurationException ex){
         }
     }
+    
+    @Test
+    public void testValidateManifestFile(){
+        try{
+            testObject.setWrapperManifest("something.not").create();
+            fail("Test allows manifest without propper extension");
+        } catch (InvalidLaunch4jConfigurationException ex){
+        }
+        
+        try{
+            testObject.setWrapperManifest("someplace/someotherplace.manifest").create();
+            fail("Test allows nonexistant manifest");
+        } catch (InvalidLaunch4jConfigurationException ex){
+        }
+        
+        try{
+            testObject.setWrapperManifest(System.getProperty("user.dir")
+                    + "\\tests\\EmptyManifest.manifest").create();
+        } catch (InvalidLaunch4jConfigurationException ex){
+            fail("Test doesn't allow valid manifest file\n" + ex);
+        }
+    }
 }
