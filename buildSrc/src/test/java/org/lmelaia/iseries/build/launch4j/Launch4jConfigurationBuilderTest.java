@@ -45,7 +45,7 @@ public class Launch4jConfigurationBuilderTest {
     private Launch4jConfigurationBuilder testObject = DEFAULT_VALID_TEMPLATE;
 
     public Launch4jConfigurationBuilderTest() {
-
+        
     }
 
     @BeforeClass
@@ -97,7 +97,42 @@ public class Launch4jConfigurationBuilderTest {
 
     @Test
     public void testJarFileName() {
+        //Test for null jar
+        try {
+            testObject.setJarFile(null).create();
+            fail("Configuration allows null jar file");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
 
+        //Test for empty jar
+        try {
+            testObject.setJarFile("").create();
+            fail("Configuration allows empty jar file");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+
+        //Test for non-jar jar
+        try {
+            testObject.setJarFile("something/something.lol").create();
+            fail("Configuration allows non-jar jar file");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+
+        //Test for nonexistant jar.
+        try {
+            testObject.setJarFile(System.getProperty("user.dir")
+                    + "\\tests\\Nojar.jar").create();
+            fail("Test allows nonexistant jar");
+        } catch (InvalidLaunch4jConfigurationException | NullPointerException ex) {
+        }
+        
+        //Test for valid jar.
+        try {
+            testObject.setJarFile(System.getProperty("user.dir")
+                    + "\\tests\\EmptyJar.jar").create();
+        } catch (InvalidLaunch4jConfigurationException | NullPointerException ex) {
+            fail("Test doesn't allow valid jar\n" + ex);
+        }
     }
 
     @Test
