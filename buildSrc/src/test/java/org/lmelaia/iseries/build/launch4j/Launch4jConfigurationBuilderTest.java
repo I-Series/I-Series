@@ -64,7 +64,7 @@ public class Launch4jConfigurationBuilderTest {
     }
 
     @Test
-    public void testOutputFileName() {
+    public void testValidateOutputFile() {
         //Test for null exe
         try {
             testObject.setOutputFile(null).create();
@@ -96,7 +96,7 @@ public class Launch4jConfigurationBuilderTest {
     }
 
     @Test
-    public void testJarFileName() {
+    public void testValidateJarFile() {
         //Test for null jar
         try {
             testObject.setJarFile(null).create();
@@ -136,187 +136,7 @@ public class Launch4jConfigurationBuilderTest {
     }
 
     @Test
-    public void testWrap() {
-
-    }
-
-    @Test
-    public void testJarRuntumePath() {
-
-    }
-
-    @Test
-    public void testWrapperManifest() {
-
-    }
-
-    @Test
-    public void testIconFileName() {
-
-    }
-
-    @Test
-    public void testChangeDirectory() {
-
-    }
-
-    @Test
-    public void testCommandLineArguments() {
-
-    }
-
-    @Test
-    public void testProcessPriority() {
-
-    }
-
-    @Test
-    public void testDownloadUrl() {
-
-    }
-
-    @Test
-    public void testCustomClasspath() {
-
-    }
-
-    @Test
-    public void testMainClass() {
-
-    }
-
-    @Test
-    public void testClasspath() {
-
-    }
-
-    @Test
-    public void testHeaderType() {
-
-    }
-
-    @Test
-    public void testSingleInstance() {
-
-    }
-
-    @Test
-    public void testMutexName() {
-
-    }
-
-    @Test
-    public void testBundledJrePath() {
-
-    }
-
-    @Test
-    public void testMinimumJreVersion() {
-
-    }
-
-    @Test
-    public void testJavaUsageOptions() {
-
-    }
-
-    @Test
-    public void testJavaArchitecture() {
-
-    }
-
-    @Test
-    public void testInitialHeapSize() {
-
-    }
-
-    @Test
-    public void testMaximumHeapSize() {
-
-    }
-
-    @Test
-    public void testIsHeapInPercent() {
-
-    }
-
-    @Test
-    public void testJvmOptions() {
-
-    }
-
-    @Test
-    public void testEnvironmentVariables() {
-
-    }
-
-    @Test
-    public void testIsSplashScreenEnabled() {
-
-    }
-
-    @Test
-    public void testSplashScreenFileName() {
-
-    }
-
-    @Test
-    public void testTimeout() {
-
-    }
-
-    @Test
-    public void testAddVersionInfo() {
-
-    }
-
-    @Test
-    public void testFileVersion() {
-
-    }
-
-    @Test
-    public void testFreeFormFileVersion() {
-
-    }
-
-    @Test
-    public void testFileDescription() {
-
-    }
-
-    @Test
-    public void testCopyright() {
-
-    }
-
-    @Test
-    public void testProductVersion() {
-
-    }
-
-    @Test
-    public void testFreeFormProductVersion() {
-
-    }
-
-    @Test
-    public void testProductName() {
-
-    }
-
-    @Test
-    public void testCompanyName() {
-
-    }
-
-    @Test
-    public void testInternalName() {
-
-    }
-
-    @Test
-    public void testOriginalFileName() {
-
+    public void testValidateJarRuntimePath() {
+        
     }
 }
