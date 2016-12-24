@@ -36,7 +36,8 @@ public class Launch4jConfigurationBuilderTest {
                     + "\\tests\\EmptyExe.exe")
             .setJarFile(System.getProperty("user.dir")
                     + "\\tests\\EmptyJar.jar")
-            .setMinimumJreVersion("1.8.0");
+            .setMinimumJreVersion("1.8.0")
+            .setWrap(true);
 
     /**
      * The test configuration builder object. <b>This object is reset before
@@ -97,6 +98,8 @@ public class Launch4jConfigurationBuilderTest {
 
     @Test
     public void testValidateJarFile() {
+        testObject.setWrap(true);
+        
         //Test for null jar
         try {
             testObject.setJarFile(null).create();
@@ -123,20 +126,50 @@ public class Launch4jConfigurationBuilderTest {
             testObject.setJarFile(System.getProperty("user.dir")
                     + "\\tests\\Nojar.jar").create();
             fail("Test allows nonexistant jar");
-        } catch (InvalidLaunch4jConfigurationException | NullPointerException ex) {
+        } catch (InvalidLaunch4jConfigurationException ex) {
         }
         
         //Test for valid jar.
         try {
             testObject.setJarFile(System.getProperty("user.dir")
                     + "\\tests\\EmptyJar.jar").create();
-        } catch (InvalidLaunch4jConfigurationException | NullPointerException ex) {
+        } catch (InvalidLaunch4jConfigurationException ex) {
             fail("Test doesn't allow valid jar\n" + ex);
         }
     }
 
     @Test
     public void testValidateJarRuntimePath() {
+        testObject.setWrap(false);
         
+        try{
+            testObject.setJarRuntimePath(null).create();
+            fail("Test allows null runtime path when wrap is false");
+        } catch (InvalidLaunch4jConfigurationException ex){
+        }
+        
+        try{
+            testObject.setJarRuntimePath("").create();
+            fail("Test allows empty runtime path when wrap is false");
+        } catch (InvalidLaunch4jConfigurationException ex){
+        }
+        
+        try{
+            testObject.setJarRuntimePath("/").create();
+            fail("Test allows runtime path beginning with '/' when wrap is false");
+        } catch (InvalidLaunch4jConfigurationException ex){
+        }
+        
+        try{
+            testObject.setJarRuntimePath("\\").create();
+            fail("Test allows runtime path beginning with '\\' when wrap is false");
+        } catch (InvalidLaunch4jConfigurationException ex){
+        }
+        
+        try{
+            testObject.setJarRuntimePath("somepath:").create();
+            fail("Test allows runtime path without ':' when wrap is false");
+        } catch (InvalidLaunch4jConfigurationException ex){
+        }
     }
 }
