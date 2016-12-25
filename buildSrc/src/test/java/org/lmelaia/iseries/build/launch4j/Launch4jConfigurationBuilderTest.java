@@ -28,40 +28,34 @@ import org.junit.BeforeClass;
 public class Launch4jConfigurationBuilderTest {
 
     /**
-     * A valid configuration builder used as a reset template.
+     * The test configuration builder object. <b>This object is reset before
+     * each test.</b>
      */
-    private static final Launch4jConfigurationBuilder DEFAULT_VALID_TEMPLATE
-            = new Launch4jConfigurationBuilder()
+    private Launch4jConfigurationBuilder testObject = getNewTestObject();
+
+    @BeforeClass
+    public static void testConfiguration() {
+        try{
+            getNewTestObject().create();
+        } catch (InvalidLaunch4jConfigurationException ex){
+            fail("Test object is invalid at creation time.");
+        }
+    }
+    
+    public static Launch4jConfigurationBuilder getNewTestObject(){
+        return new Launch4jConfigurationBuilder()
             .setOutputFile(System.getProperty("user.dir")
                     + "\\tests\\EmptyExe.exe")
             .setJarFile(System.getProperty("user.dir")
                     + "\\tests\\EmptyJar.jar")
             .setMinimumJreVersion("1.8.0")
-            .setWrap(true);
-
-    /**
-     * The test configuration builder object. <b>This object is reset before
-     * each test.</b>
-     */
-    private Launch4jConfigurationBuilder testObject = DEFAULT_VALID_TEMPLATE;
-
-    public Launch4jConfigurationBuilderTest() {
-        
-    }
-
-    @BeforeClass
-    public static void testConfiguration() {
-        try {
-            DEFAULT_VALID_TEMPLATE.create();
-        } catch (InvalidLaunch4jConfigurationException ex) {
-            fail("Default template is invalid\n" + ex);
-        }
+            ;
     }
 
     @Before
     public void setUp() {
         //Reset the object before each test.
-        testObject = DEFAULT_VALID_TEMPLATE;
+        testObject = getNewTestObject();
     }
 
     @Test
@@ -98,8 +92,6 @@ public class Launch4jConfigurationBuilderTest {
 
     @Test
     public void testValidateJarFile() {
-        testObject.setWrap(true);
-        
         //Test for null jar
         try {
             testObject.setJarFile(null).create();
