@@ -186,4 +186,44 @@ public class Launch4jConfigurationBuilderTest {
             fail("Test doesn't allow valid manifest file\n" + ex);
         }
     }
+    
+    @Test
+    public void testValidateIconFile(){
+        try{
+            testObject.setIconFile(null).create();
+            fail("Test allows null icon file");
+        } catch (InvalidLaunch4jConfigurationException ex){
+        }
+        
+        try{
+            testObject.setIconFile("").create();
+            fail("Test allows empty icon file");
+        } catch (InvalidLaunch4jConfigurationException ex){
+        }
+        
+        try{
+            testObject.setIconFile("wrong.filetype").create();
+            fail("Test allows incorrect file type");
+        } catch (InvalidLaunch4jConfigurationException ex){
+        }
+        
+        try{
+            testObject.setIconFile("nonexistant_file.ico").create();
+            fail("Test allows nonexistant file");
+        } catch (InvalidLaunch4jConfigurationException ex){
+        }
+        
+        try{
+            testObject.setIconFile(null).create();
+            fail("Test allows null icon file");
+        } catch (InvalidLaunch4jConfigurationException ex){
+        }
+        
+        try{
+            testObject.setIconFile(System.getProperty("user.dir")
+                    + "\\tests\\EmptyIcon.ico").create();
+        } catch (InvalidLaunch4jConfigurationException ex){
+            fail("Test doesn't allow valid icon file");
+        }
+    }
 }
