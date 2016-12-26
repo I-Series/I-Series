@@ -525,4 +525,37 @@ public class Launch4jConfigurationBuilderTest {
             fail("Test doesn't allow valid jvm options");
         }
     }
+    
+    @Test
+    public void testValidateEnvironmentVariables(){
+        try {
+            testObject.setEnvironmentVariables("").create();
+            fail("Test allows empty environment variable");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setEnvironmentVariables(null, null).create();
+            fail("Test allows null environment variable");
+        } catch (InvalidLaunch4jConfigurationException | NullPointerException ex) {
+        }
+        
+        try {
+            testObject.setEnvironmentVariables("sasd=").create();
+            fail("Test allows invalid environment variable");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setEnvironmentVariables("=sdahss").create();
+            fail("Test allows invalid environment variable");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setEnvironmentVariables("sasd=asdasd").create();
+        } catch (InvalidLaunch4jConfigurationException ex) {
+            fail("Test doesn't allow valid environment variable");
+        }
+    }
 }
