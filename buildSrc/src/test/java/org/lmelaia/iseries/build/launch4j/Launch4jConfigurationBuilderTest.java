@@ -244,5 +244,28 @@ public class Launch4jConfigurationBuilderTest {
             fail("Test allows empty download url");
         } catch (InvalidLaunch4jConfigurationException e) {
         }
-    } 
+    }
+    
+    @Test
+    public void testValidateClasspath(){
+        testObject.customClasspath(true);
+        
+        try {
+            testObject.setMainClass(null).create();
+            fail("Test allows null main class when using custom classpath");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setMainClass("").create();
+            fail("Test allows empty main class when using custom classpath");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setMainClass("somme.main.Class").create();
+        } catch (InvalidLaunch4jConfigurationException ex) {
+            fail("Test doesn't allow valid main class when using custom classpath");
+        }
+    }
 }
