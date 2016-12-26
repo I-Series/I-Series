@@ -616,4 +616,198 @@ public class Launch4jConfigurationBuilderTest {
             fail("Test doesn't allow valid splash\n" + ex);
         }
     }
+    
+    @Test
+    public void validateVersionInfo(){
+        testObject.addVersionInfo(true);
+        testObject.setProductVersion("0.0.0.0");
+        testObject.setFileVersion("0.0.0.0");
+        
+        try {
+            testObject.setOriginalFileName("something.exe")
+                    .setFileVersion("0.0.0.0")
+                    .setFreeFormFileVersion(" something ")
+                    .setFileDescription(" something ")
+                    .setCopyright(" something ")
+                    .setFreeFormProductVersion("0.0.0.0")
+                    .setProductName(" something ")
+                    .setInternalName(" something ").create();
+        } catch (InvalidLaunch4jConfigurationException ex) {
+            fail("Test doesn't allow valid file extension\n" + ex);
+        }
+        
+        try {
+            testObject.setFileVersion(null).create();
+            fail("Test allows null file version");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setFileVersion("").create();
+            fail("Test allows empty file version");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setFileVersion("0.0.0").create();
+            fail("Test allows invalid file version");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setFileVersion("0.0.0.0.0").create();
+            fail("Test allows invalid file version");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setFileVersion("0.").create();
+            fail("Test allows invalid file version");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setFileVersion("0").create();
+            fail("Test allows invalid file version");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setFileVersion("0.0.0..").create();
+            fail("Test allows invalid file version");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setFreeFormFileVersion(null).create();
+            fail("Test allows null free form file version");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setFreeFormFileVersion("").create();
+            fail("Test allows empty free form file version");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setFileDescription(null).create();
+            fail("Test allows null file description");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setFileDescription("").create();
+            fail("Test allows empty file description");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setCopyright(null).create();
+            fail("Test allows null copyright");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setCopyright("").create();
+            fail("Test allows empty copyright");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setProductVersion(null).create();
+            fail("Test allows null product version");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setProductVersion("").create();
+            fail("Test allows empty product version");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setProductVersion("0.0.0").create();
+            fail("Test allows invalid product version");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setProductVersion("0.0.0.0.0").create();
+            fail("Test allows invalid product version");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setProductVersion("0.").create();
+            fail("Test allows invalid product version");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setProductVersion("0").create();
+            fail("Test allows invalid product version");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setProductVersion("0.0.0..").create();
+            fail("Test allows invalid product version");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setFreeFormProductVersion(null).create();
+            fail("Test allows null free form product version");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setFreeFormProductVersion("").create();
+            fail("Test allows empty free form product version");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setProductName(null).create();
+            fail("Test allows null product name");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setProductName("").create();
+            fail("Test allows empty product name");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setInternalName(null).create();
+            fail("Test allows null internal name");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setInternalName("").create();
+            fail("Test allows empty internal name");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setOriginalFileName(null).create();
+            fail("Test allows null original file name");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setOriginalFileName("").create();
+            fail("Test allows empty original file name");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setOriginalFileName("something.notExe").create();
+            fail("Test allows non-exe original file name file extension");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+    }
 }
