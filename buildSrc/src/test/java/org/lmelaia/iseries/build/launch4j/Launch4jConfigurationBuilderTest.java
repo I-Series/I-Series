@@ -429,10 +429,19 @@ public class Launch4jConfigurationBuilderTest {
     }
     
     @Test
-    public void validateJavaUsageOptions(){
+    public void testValidateJavaUsageOptions(){
         try {
             testObject.setJavaUsageOptions(null).create();
             fail("Test allows null java usage options");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+    }
+    
+    @Test
+    public void testValidateJavaArchitecture(){
+        try {
+            testObject.setJavaUsageOptions(null).create();
+            fail("Test allows null java architecture");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
     }
