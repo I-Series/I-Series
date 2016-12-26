@@ -504,4 +504,19 @@ public class Launch4jConfigurationBuilderTest {
             fail("Test doesn't allow valid heap configuration");
         }
     }
+    
+    @Test
+    public void testValidateJvmOptions(){
+        try {
+            testObject.setJvmOptions("ww", "ww", "ww", null).create();
+            fail("Test allows null jvm option");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setJvmOptions("XX", "XX", "").create();
+            fail("Test allows empty jvm option");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+    }
 }
