@@ -202,12 +202,6 @@ public class Launch4jConfigurationBuilderTest {
         }
         
         try{
-            testObject.setIconFile(null).create();
-            fail("Test allows null icon file");
-        } catch (InvalidLaunch4jConfigurationException ex){
-        }
-        
-        try{
             testObject.setIconFile(System.getProperty("user.dir")
                     + "\\tests\\EmptyIcon.ico").create();
         } catch (InvalidLaunch4jConfigurationException ex){
