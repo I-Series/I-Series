@@ -190,18 +190,6 @@ public class Launch4jConfigurationBuilderTest {
     @Test
     public void testValidateIconFile(){
         try{
-            testObject.setIconFile(null).create();
-            fail("Test allows null icon file");
-        } catch (InvalidLaunch4jConfigurationException ex){
-        }
-        
-        try{
-            testObject.setIconFile("").create();
-            fail("Test allows empty icon file");
-        } catch (InvalidLaunch4jConfigurationException ex){
-        }
-        
-        try{
             testObject.setIconFile("wrong.filetype").create();
             fail("Test allows incorrect file type");
         } catch (InvalidLaunch4jConfigurationException ex){
