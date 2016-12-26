@@ -15,7 +15,6 @@
  */
 package org.lmelaia.iseries.build.launch4j;
 
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
@@ -426,6 +425,15 @@ public class Launch4jConfigurationBuilderTest {
                     .setMaximumJreVersion("1.0.0").create();
             fail("Test allows lager minimum jre version");
         } catch (InvalidLaunch4jConfigurationException ex){
+        }
+    }
+    
+    @Test
+    public void validateJavaUsageOptions(){
+        try {
+            testObject.setJavaUsageOptions(null).create();
+            fail("Test allows null java usage options");
+        } catch (InvalidLaunch4jConfigurationException ex) {
         }
     }
 }
