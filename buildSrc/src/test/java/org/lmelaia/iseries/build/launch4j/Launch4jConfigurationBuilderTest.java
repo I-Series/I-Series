@@ -37,7 +37,7 @@ public class Launch4jConfigurationBuilderTest {
     private Launch4jConfigurationBuilder testObject = getNewTestObject();
 
     private static FileUtils fileUtils;
-    
+
     @BeforeClass
     public static void initialize() {
         try {
@@ -45,33 +45,31 @@ public class Launch4jConfigurationBuilderTest {
                 new String[]{"EmptyExe.exe"},
                 new String[]{"EmptyIcon.ico"},
                 new String[]{"EmptyJar.jar"},
-                new String[]{"EmptyManifest.manifest"},
-            });
+                new String[]{"EmptyManifest.manifest"},});
             fileUtils.setup();
         } catch (Exception e) {
             fail("Couldn't create or setup file utils object\n" + e);
         }
-        
-        try{
+
+        try {
             getNewTestObject().create();
-        } catch (InvalidLaunch4jConfigurationException ex){
+        } catch (InvalidLaunch4jConfigurationException ex) {
             fail("Test object is invalid at creation time\n" + ex);
         }
     }
-    
+
     @AfterClass
-    public static void cleanup(){
+    public static void cleanup() {
         fileUtils.teardown();
     }
-    
-    public static Launch4jConfigurationBuilder getNewTestObject(){
+
+    public static Launch4jConfigurationBuilder getNewTestObject() {
         return new Launch4jConfigurationBuilder()
-            .setOutputFile(System.getProperty("user.dir")
-                    + "\\tests\\EmptyExe.exe")
-            .setJarFile(System.getProperty("user.dir")
-                    + "\\tests\\EmptyJar.jar")
-            .setMinimumJreVersion("1.8.0")
-            ;
+                .setOutputFile(System.getProperty("user.dir")
+                        + "\\tests\\EmptyExe.exe")
+                .setJarFile(System.getProperty("user.dir")
+                        + "\\tests\\EmptyJar.jar")
+                .setMinimumJreVersion("1.8.0");
     }
 
     @Before
@@ -142,7 +140,7 @@ public class Launch4jConfigurationBuilderTest {
             fail("Test allows nonexistant jar");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
+
         //Test for valid jar.
         try {
             testObject.setJarFile(System.getProperty("user.dir")
@@ -155,117 +153,139 @@ public class Launch4jConfigurationBuilderTest {
     @Test
     public void testValidateJarRuntimePath() {
         testObject.setWrap(false);
-        
-        try{
+
+        try {
             testObject.setJarRuntimePath(null).create();
             fail("Test allows null runtime path when wrap is false");
-        } catch (InvalidLaunch4jConfigurationException ex){
+        } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
-        try{
+
+        try {
             testObject.setJarRuntimePath("").create();
             fail("Test allows empty runtime path when wrap is false");
-        } catch (InvalidLaunch4jConfigurationException ex){
+        } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
-        try{
+
+        try {
             testObject.setJarRuntimePath("/").create();
             fail("Test allows runtime path beginning with '/' when wrap is false");
-        } catch (InvalidLaunch4jConfigurationException ex){
+        } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
-        try{
+
+        try {
             testObject.setJarRuntimePath("\\").create();
             fail("Test allows runtime path beginning with '\\' when wrap is false");
-        } catch (InvalidLaunch4jConfigurationException ex){
+        } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
-        try{
+
+        try {
             testObject.setJarRuntimePath("somepath:").create();
             fail("Test allows runtime path without ':' when wrap is false");
-        } catch (InvalidLaunch4jConfigurationException ex){
+        } catch (InvalidLaunch4jConfigurationException ex) {
         }
     }
-    
+
     @Test
-    public void testValidateManifestFile(){
-        try{
+    public void testValidateManifestFile() {
+        try {
             testObject.setWrapperManifest("something.not").create();
             fail("Test allows manifest without propper extension");
-        } catch (InvalidLaunch4jConfigurationException ex){
+        } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
-        try{
+
+        try {
             testObject.setWrapperManifest("someplace/someotherplace.manifest").create();
             fail("Test allows nonexistant manifest");
-        } catch (InvalidLaunch4jConfigurationException ex){
+        } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
-        try{
+
+        try {
             testObject.setWrapperManifest(System.getProperty("user.dir")
                     + "\\tests\\EmptyManifest.manifest").create();
-        } catch (InvalidLaunch4jConfigurationException ex){
+        } catch (InvalidLaunch4jConfigurationException ex) {
             fail("Test doesn't allow valid manifest file\n" + ex);
         }
     }
-    
+
     @Test
-    public void testValidateIconFile(){
-        try{
+    public void testValidateIconFile() {
+        try {
             testObject.setIconFile("wrong.filetype").create();
             fail("Test allows incorrect file type");
-        } catch (InvalidLaunch4jConfigurationException ex){
+        } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
-        try{
+
+        try {
             testObject.setIconFile("nonexistant_file.ico").create();
             fail("Test allows nonexistant file");
-        } catch (InvalidLaunch4jConfigurationException ex){
+        } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
-        try{
+
+        try {
             testObject.setIconFile(System.getProperty("user.dir")
                     + "\\tests\\EmptyIcon.ico").create();
-        } catch (InvalidLaunch4jConfigurationException ex){
+        } catch (InvalidLaunch4jConfigurationException ex) {
             fail("Test doesn't allow valid icon file");
         }
     }
-    
+
     @Test
-    public void testValidateUrls(){
+    public void testValidateUrls() {
         try {
             testObject.setDownloadUrl(null).create();
             fail("Test allows null download url");
         } catch (InvalidLaunch4jConfigurationException e) {
         }
-        
+
         try {
             testObject.setDownloadUrl("").create();
             fail("Test allows empty download url");
         } catch (InvalidLaunch4jConfigurationException e) {
         }
     }
-    
+
     @Test
-    public void testValidateClasspath(){
+    public void testValidateClasspath() {
         testObject.useCustomClasspath(true);
-        
+
         try {
             testObject.setMainClass(null).create();
             fail("Test allows null main class when using custom classpath");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
+
         try {
             testObject.setMainClass("").create();
             fail("Test allows empty main class when using custom classpath");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
+
         try {
             testObject.setMainClass("somme.main.Class").create();
         } catch (InvalidLaunch4jConfigurationException ex) {
             fail("Test doesn't allow valid main class when using custom classpath");
+        }
+    }
+
+    @Test
+    public void testValidateSingleInstance() {
+        testObject.allowOneInstanceOnly(true);
+
+        try {
+            testObject.setMutexName(null).create();
+            fail("Test allows null mutex name when using single instance");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+
+        try {
+            testObject.setMutexName("").create();
+            fail("Test allows empty mutex name when using single instance");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        try {
+            testObject.setMutexName("someMutexName").create();
+        } catch (InvalidLaunch4jConfigurationException ex) {
+            fail("Test doesn't allow valid mutex name when using single instance");
         }
     }
 }
