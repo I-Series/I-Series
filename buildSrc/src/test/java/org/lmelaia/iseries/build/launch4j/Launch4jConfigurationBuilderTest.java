@@ -288,4 +288,144 @@ public class Launch4jConfigurationBuilderTest {
             fail("Test doesn't allow valid mutex name when using single instance");
         }
     }
+    
+    @Test
+    public void testValidateJreVersions(){
+        //Bundled jre path
+        try {
+            testObject.setBundledJrePath("some/path").setMinimumJreVersion(null).create();
+        } catch (InvalidLaunch4jConfigurationException ex) {
+            fail("Test doesn't allow null minimum jre version with a bundled path");
+        }
+        testObject.setBundledJrePath(null);
+        
+        //Minimum jre version
+        try {
+            testObject.setMinimumJreVersion(null).create();
+            fail("Test allows null minimum jre version");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setMinimumJreVersion("").create();
+            fail("Test allows empty minimum jre version");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setMinimumJreVersion("1").create();
+            fail("Test allows invalid minimum jre version");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setMinimumJreVersion("1.0").create();
+            fail("Test allows invalid minimum jre version");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setMinimumJreVersion("1.0..").create();
+            fail("Test allows invalid minimum jre version");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setMinimumJreVersion("1.0.0.").create();
+            fail("Test allows invalid minimum jre version");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setMinimumJreVersion("1.0.0_").create();
+            fail("Test allows invalid minimum jre version");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setMinimumJreVersion("1.0.0_1.").create();
+            fail("Test allows invalid minimum jre version");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setMinimumJreVersion("1.0.0.0").create();
+            fail("Test allows invalid minimum jre version");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setMinimumJreVersion("1.0.0_65").create();
+        } catch (InvalidLaunch4jConfigurationException ex) {
+            fail("Test doesn't allow valid minimum jre version");
+        }
+        
+        try {
+            testObject.setMinimumJreVersion("1.0.0").create();
+        } catch (InvalidLaunch4jConfigurationException ex) {
+            fail("Test doesn't allow valid minimum jre version");
+        }
+        
+        //Maximum jre path.
+        try {
+            testObject.setMaximumJreVersion("1").create();
+            fail("Test allows invalid maximum jre version");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setMaximumJreVersion("1.0").create();
+            fail("Test allows invalid maximum jre version");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setMaximumJreVersion("1.0..").create();
+            fail("Test allows invalid maximum jre version");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setMaximumJreVersion("1.0.0.").create();
+            fail("Test allows invalid maximum jre version");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setMaximumJreVersion("1.0.0_").create();
+            fail("Test allows invalid maximum jre version");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setMaximumJreVersion("1.0.0_1.").create();
+            fail("Test allows invalid maximum jre version");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setMaximumJreVersion("1.0.0.0").create();
+            fail("Test allows invalid maximum jre version");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setMaximumJreVersion("1.2.0_65").create();
+        } catch (InvalidLaunch4jConfigurationException ex) {
+            fail("Test doesn't allow valid maximum jre version");
+        }
+        
+        try {
+            testObject.setMaximumJreVersion("1.2.0").create();
+        } catch (InvalidLaunch4jConfigurationException ex) {
+            fail("Test doesn't allow valid maximum jre version");
+        }
+        
+        try{
+            testObject.setMinimumJreVersion("2.0.0")
+                    .setMaximumJreVersion("1.0.0").create();
+            fail("Test allows lager minimum jre version");
+        } catch (InvalidLaunch4jConfigurationException ex){
+        }
+    }
 }
