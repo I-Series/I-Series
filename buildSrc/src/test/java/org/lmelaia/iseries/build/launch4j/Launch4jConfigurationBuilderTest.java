@@ -44,7 +44,8 @@ public class Launch4jConfigurationBuilderTest {
                 new String[]{"EmptyExe.exe"},
                 new String[]{"EmptyIcon.ico"},
                 new String[]{"EmptyJar.jar"},
-                new String[]{"EmptyManifest.manifest"},});
+                new String[]{"EmptyManifest.manifest"},
+                new String[]{"EmptySplash.bmp"},});
             fileUtils.setup();
         } catch (Exception e) {
             fail("Couldn't create or setup file utils object\n" + e);
@@ -287,9 +288,9 @@ public class Launch4jConfigurationBuilderTest {
             fail("Test doesn't allow valid mutex name when using single instance");
         }
     }
-    
+
     @Test
-    public void testValidateJreVersions(){
+    public void testValidateJreVersions() {
         //Bundled jre path
         try {
             testObject.setBundledJrePath("some/path").setMinimumJreVersion(null).create();
@@ -297,265 +298,322 @@ public class Launch4jConfigurationBuilderTest {
             fail("Test doesn't allow null minimum jre version with a bundled path");
         }
         testObject.setBundledJrePath(null);
-        
+
         //Minimum jre version
         try {
             testObject.setMinimumJreVersion(null).create();
             fail("Test allows null minimum jre version");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
+
         try {
             testObject.setMinimumJreVersion("").create();
             fail("Test allows empty minimum jre version");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
+
         try {
             testObject.setMinimumJreVersion("1").create();
             fail("Test allows invalid minimum jre version");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
+
         try {
             testObject.setMinimumJreVersion("1.0").create();
             fail("Test allows invalid minimum jre version");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
+
         try {
             testObject.setMinimumJreVersion("1.0..").create();
             fail("Test allows invalid minimum jre version");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
+
         try {
             testObject.setMinimumJreVersion("1.0.0.").create();
             fail("Test allows invalid minimum jre version");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
+
         try {
             testObject.setMinimumJreVersion("1.0.0_").create();
             fail("Test allows invalid minimum jre version");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
+
         try {
             testObject.setMinimumJreVersion("1.0.0_1.").create();
             fail("Test allows invalid minimum jre version");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
+
         try {
             testObject.setMinimumJreVersion("1.0.0.0").create();
             fail("Test allows invalid minimum jre version");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
+
         try {
             testObject.setMinimumJreVersion("1.0.0_65").create();
         } catch (InvalidLaunch4jConfigurationException ex) {
             fail("Test doesn't allow valid minimum jre version");
         }
-        
+
         try {
             testObject.setMinimumJreVersion("1.0.0").create();
         } catch (InvalidLaunch4jConfigurationException ex) {
             fail("Test doesn't allow valid minimum jre version");
         }
-        
+
         //Maximum jre path.
         try {
             testObject.setMaximumJreVersion("1").create();
             fail("Test allows invalid maximum jre version");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
+
         try {
             testObject.setMaximumJreVersion("1.0").create();
             fail("Test allows invalid maximum jre version");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
+
         try {
             testObject.setMaximumJreVersion("1.0..").create();
             fail("Test allows invalid maximum jre version");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
+
         try {
             testObject.setMaximumJreVersion("1.0.0.").create();
             fail("Test allows invalid maximum jre version");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
+
         try {
             testObject.setMaximumJreVersion("1.0.0_").create();
             fail("Test allows invalid maximum jre version");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
+
         try {
             testObject.setMaximumJreVersion("1.0.0_1.").create();
             fail("Test allows invalid maximum jre version");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
+
         try {
             testObject.setMaximumJreVersion("1.0.0.0").create();
             fail("Test allows invalid maximum jre version");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
+
         try {
             testObject.setMaximumJreVersion("1.2.0_65").create();
         } catch (InvalidLaunch4jConfigurationException ex) {
             fail("Test doesn't allow valid maximum jre version");
         }
-        
+
         try {
             testObject.setMaximumJreVersion("1.2.0").create();
         } catch (InvalidLaunch4jConfigurationException ex) {
             fail("Test doesn't allow valid maximum jre version");
         }
-        
-        try{
+
+        try {
             testObject.setMinimumJreVersion("2.0.0")
                     .setMaximumJreVersion("1.0.0").create();
             fail("Test allows lager minimum jre version");
-        } catch (InvalidLaunch4jConfigurationException ex){
+        } catch (InvalidLaunch4jConfigurationException ex) {
         }
     }
-    
+
     @Test
-    public void testValidateJavaUsageOptions(){
+    public void testValidateJavaUsageOptions() {
         try {
             testObject.setJavaUsageOptions(null).create();
             fail("Test allows null java usage options");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
     }
-    
+
     @Test
-    public void testValidateJavaArchitecture(){
+    public void testValidateJavaArchitecture() {
         try {
             testObject.setJavaUsageOptions(null).create();
             fail("Test allows null java architecture");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
     }
-    
+
     @Test
-    public void testValidateHeaps(){
+    public void testValidateHeaps() {
         try {
             testObject.setInitialHeapSize(1).setMaximumHeapSize(0).create();
             fail("Test allows no maximum heap size when initial is set");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
         testObject.setInitialHeapSize(0);
-        
+
         try {
             testObject.setInitialHeapSize(0).setHeapInPercent(true).create();
             fail("Test allows <1% heap size");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
-         
+
         try {
             testObject.setInitialHeapSize(101).create();
             fail("Test allows >100% heap size");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
+
         try {
             testObject.setMaximumHeapSize(0).setHeapInPercent(true).create();
             fail("Test allows <1% maximum heap size");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
+
         try {
             testObject.setMaximumHeapSize(101).setHeapInPercent(true).create();
             fail("Test allows >100% heap size");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
         testObject.setHeapInPercent(false);
-        
+
         try {
             testObject.setInitialHeapSize(-1).create();
             fail("Test allows <0 heap size");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
+
         try {
             testObject.setMaximumHeapSize(-1).create();
             fail("Test allows <0 max heap size heap size");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
+
         try {
             testObject.setInitialHeapSize(100).setMaximumHeapSize(50).create();
             fail("Test allows bigger initial heap size");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
+
         try {
             testObject.setInitialHeapSize(50).setMaximumHeapSize(100).create();
         } catch (InvalidLaunch4jConfigurationException ex) {
             fail("Test doesn't allow valid heap configuration");
         }
     }
-    
+
     @Test
-    public void testValidateJvmOptions(){
+    public void testValidateJvmOptions() {
         try {
             testObject.setJvmOptions("ww", "ww", "ww", null).create();
             fail("Test allows null jvm option");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
+
         try {
             testObject.setJvmOptions("XX", "XX", "").create();
             fail("Test allows empty jvm option");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
+
         try {
             testObject.setJvmOptions("XX", "XX", "XX").create();
         } catch (InvalidLaunch4jConfigurationException ex) {
             fail("Test doesn't allow valid jvm options");
         }
     }
-    
+
     @Test
-    public void testValidateEnvironmentVariables(){
+    public void testValidateEnvironmentVariables() {
         try {
             testObject.setEnvironmentVariables("").create();
             fail("Test allows empty environment variable");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
+
         try {
             testObject.setEnvironmentVariables(null, null).create();
             fail("Test allows null environment variable");
         } catch (InvalidLaunch4jConfigurationException | NullPointerException ex) {
         }
-        
+
         try {
             testObject.setEnvironmentVariables("sasd=").create();
             fail("Test allows invalid environment variable");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
+
         try {
             testObject.setEnvironmentVariables("=sdahss").create();
             fail("Test allows invalid environment variable");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
-        
+
         try {
             testObject.setEnvironmentVariables("sasd=asdasd").create();
         } catch (InvalidLaunch4jConfigurationException ex) {
             fail("Test doesn't allow valid environment variable");
+        }
+    }
+
+    @Test
+    public void testValidateSplashScreen() {
+        testObject.enableSplashScreen(true);
+
+        try {
+            testObject.setSplashFile("").create();
+            fail("Test allows empty splash file when enabled");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+
+        try {
+            testObject.setSplashFile(null).create();
+            fail("Test allows null splash file when enabled");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+
+        try {
+            testObject.setSplashFile("").create();
+            fail("Test allows empty splash file when enabled");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+
+        try {
+            testObject.setSplashFile("something.notBmp").create();
+            fail("Test allows non-bmp splash file");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+
+        try {
+            testObject.setSplashFile("doesntExist.bmp").create();
+            fail("Test allows empty splash file when enabled");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setSplashFile(System.getProperty("user.dir")
+                    + "\\tests\\EmptySplash.bmp").setTimeout(0).create();
+            fail("Test allows timout < 1 when enabled");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setSplashFile(System.getProperty("user.dir")
+                    + "\\tests\\EmptySplash.bmp").setTimeout(9001).create();
+            fail("Test allows timout > 900 when enabled");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        testObject.setTimeout(60);
+
+        try {
+            testObject.setSplashFile(System.getProperty("user.dir")
+                    + "\\tests\\EmptySplash.bmp").create();
+        } catch (InvalidLaunch4jConfigurationException ex) {
+            fail("Test doesn't allow valid splash\n" + ex);
         }
     }
 }
