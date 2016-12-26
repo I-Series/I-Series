@@ -248,7 +248,7 @@ public class Launch4jConfigurationBuilderTest {
     
     @Test
     public void testValidateClasspath(){
-        testObject.customClasspath(true);
+        testObject.useCustomClasspath(true);
         
         try {
             testObject.setMainClass(null).create();

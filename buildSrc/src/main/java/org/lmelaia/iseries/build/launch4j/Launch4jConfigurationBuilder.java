@@ -905,7 +905,7 @@ public class Launch4jConfigurationBuilder {
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder
-            customClasspath(boolean customClasspath) {
+            useCustomClasspath(boolean customClasspath) {
         this.customClasspath = customClasspath;
         return this;
     }
