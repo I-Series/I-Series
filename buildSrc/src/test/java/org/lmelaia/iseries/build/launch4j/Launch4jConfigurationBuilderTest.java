@@ -445,4 +445,63 @@ public class Launch4jConfigurationBuilderTest {
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
     }
+    
+    @Test
+    public void testValidateHeaps(){
+        try {
+            testObject.setInitialHeapSize(1).setMaximumHeapSize(0).create();
+            fail("Test allows no maximum heap size when initial is set");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        testObject.setInitialHeapSize(0);
+        
+        try {
+            testObject.setInitialHeapSize(0).setHeapInPercent(true).create();
+            fail("Test allows <1% heap size");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+         
+        try {
+            testObject.setInitialHeapSize(101).create();
+            fail("Test allows >100% heap size");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setMaximumHeapSize(0).setHeapInPercent(true).create();
+            fail("Test allows <1% maximum heap size");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setMaximumHeapSize(101).setHeapInPercent(true).create();
+            fail("Test allows >100% heap size");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        testObject.setHeapInPercent(false);
+        
+        try {
+            testObject.setInitialHeapSize(-1).create();
+            fail("Test allows <0 heap size");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setMaximumHeapSize(-1).create();
+            fail("Test allows <0 max heap size heap size");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setInitialHeapSize(100).setMaximumHeapSize(50).create();
+            fail("Test allows bigger initial heap size");
+        } catch (InvalidLaunch4jConfigurationException ex) {
+        }
+        
+        try {
+            testObject.setInitialHeapSize(50).setMaximumHeapSize(100).create();
+        } catch (InvalidLaunch4jConfigurationException ex) {
+            fail("Test doesn't allow valid heap configuration");
+        }
+    }
 }

@@ -1071,7 +1071,7 @@ public class Launch4jConfigurationBuilder {
      * @param isInPercent
      * @return this for convenience.
      */
-    public Launch4jConfigurationBuilder setHeapToPercent(boolean isInPercent) {
+    public Launch4jConfigurationBuilder setHeapInPercent(boolean isInPercent) {
         this.isHeapInPercent = isInPercent;
         return this;
     }
