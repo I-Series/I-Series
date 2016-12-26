@@ -67,13 +67,15 @@ public class TestFileUtils {
     @Test
     public void testTeardown(){
         fileUtils.teardown();
-        
+        //@REM: Here because of bug
+        System.out.println("new File(path + file1).exists()" + new File(path + file1).exists());
         if(new File(path + file1).exists()){
             fail("The file " + path + file1 + " wasn't deleted");
         }
-        
+        //@REM: Here because of bug
+        System.out.println("new File(path + file1).exists()" + new File(path + file2).exists());
         if(new File(path + file2).exists()){
-            fail("The file " + path + file1 + " wasn't deleted");
+            fail("The file " + path + file1 + " wasn't deleted"); 
         }
     }
 }
