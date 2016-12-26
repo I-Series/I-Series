@@ -15,10 +15,13 @@
  */
 package org.lmelaia.iseries.build.launch4j;
 
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
+import org.lmelaia.iseries.buildtest.utils.FileUtils;
 
 /**
  * Tests the launch4j configuration builder class.
@@ -33,13 +36,32 @@ public class Launch4jConfigurationBuilderTest {
      */
     private Launch4jConfigurationBuilder testObject = getNewTestObject();
 
+    private static FileUtils fileUtils;
+    
     @BeforeClass
-    public static void testConfiguration() {
+    public static void initialize() {
+        try {
+            fileUtils = new FileUtils(new String[][]{
+                new String[]{"EmptyExe.exe"},
+                new String[]{"EmptyIcon.ico"},
+                new String[]{"EmptyJar.jar"},
+                new String[]{"EmptyManifest.manifest"},
+            });
+            fileUtils.setup();
+        } catch (Exception e) {
+            fail("Couldn't create or setup file utils object\n" + e);
+        }
+        
         try{
             getNewTestObject().create();
         } catch (InvalidLaunch4jConfigurationException ex){
-            fail("Test object is invalid at creation time.");
+            fail("Test object is invalid at creation time\n" + ex);
         }
+    }
+    
+    @AfterClass
+    public static void cleanup(){
+        fileUtils.teardown();
     }
     
     public static Launch4jConfigurationBuilder getNewTestObject(){
