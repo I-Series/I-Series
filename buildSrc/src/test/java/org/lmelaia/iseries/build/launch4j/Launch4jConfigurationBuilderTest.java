@@ -518,5 +518,11 @@ public class Launch4jConfigurationBuilderTest {
             fail("Test allows empty jvm option");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
+        
+        try {
+            testObject.setJvmOptions("XX", "XX", "XX").create();
+        } catch (InvalidLaunch4jConfigurationException ex) {
+            fail("Test doesn't allow valid jvm options");
+        }
     }
 }
