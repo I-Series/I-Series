@@ -230,4 +230,19 @@ public class Launch4jConfigurationBuilderTest {
             fail("Test doesn't allow valid icon file");
         }
     }
+    
+    @Test
+    public void testValidateUrls(){
+        try {
+            testObject.setDownloadUrl(null).create();
+            fail("Test allows null download url");
+        } catch (InvalidLaunch4jConfigurationException e) {
+        }
+        
+        try {
+            testObject.setDownloadUrl("").create();
+            fail("Test allows empty download url");
+        } catch (InvalidLaunch4jConfigurationException e) {
+        }
+    } 
 }
