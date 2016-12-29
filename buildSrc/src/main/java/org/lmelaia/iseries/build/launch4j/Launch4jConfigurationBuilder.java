@@ -16,6 +16,7 @@
 package org.lmelaia.iseries.build.launch4j;
 
 import java.io.File;
+import java.util.Arrays;
 
 /**
  * This class provides a way to set the configuration options for launch4j
@@ -1414,7 +1415,117 @@ public class Launch4jConfigurationBuilder {
     public Launch4jConfiguration create()
             throws InvalidLaunch4jConfigurationException {
         validate();
-        return new Launch4jConfiguration(this);
+        return new Launch4jConfiguration(this.copy());
+    }
+    
+    /**
+     * Creates a copy of this object.
+     * 
+     * <p>
+     * The new object will have the exact same properties as the old, although
+     * the old object will have no reference to the new properties - this allows
+     * settings to be changed after the {@link #create()} method has been called
+     * without the Launch4jConfiguration object being modified.
+     * </p>
+     * 
+     * <p>
+     * This is used because changing a value in this class will reflect in a
+     * Launch4j configuration object obtained from this class, which will bypass
+     * the need to validate settings in this class. Creating a copy prevents
+     * this issue.
+     * </p>
+     * 
+     * @return a copy of this object with no references to the new properties in
+     * this object.
+     */
+    private Launch4jConfigurationBuilder copy(){
+        Launch4jConfigurationBuilder configurationBuilder 
+                = new Launch4jConfigurationBuilder();
+        
+        //Basic
+        configurationBuilder.setOutputFile(outputFileName);
+        configurationBuilder.setJarFile(jarFileName);
+        configurationBuilder.setWrap(wrap);
+        configurationBuilder.setJarRuntimePath(jarRuntimePath);
+        configurationBuilder.setWrapperManifest(wrapperManifest);
+        configurationBuilder.setIconFile(iconFileName);
+        configurationBuilder.setChangeDirectory(changeDirectory);
+        configurationBuilder.setCommandLineArguments(commandLineArguments);
+        configurationBuilder.setProcessPriority(processPriority);
+        configurationBuilder.setStayAlive(stayAlive);
+        configurationBuilder.setRestartAfterCrash(restartAfterCrash);
+        configurationBuilder.setErrorTitle(errorTitle);
+        configurationBuilder.setDownloadUrl(downloadUrl);
+        configurationBuilder.setSupportURL(supportUrl);
+        
+        //Classpath
+        configurationBuilder.useCustomClasspath(customClasspath);
+        configurationBuilder.setMainClass(mainClass);
+        configurationBuilder.setClasspath(classpath == null
+                ? null : Arrays.copyOf(classpath, classpath.length));
+        
+        //Header
+        configurationBuilder.setHeaderType(headerType);
+        configurationBuilder.setObjectFiles(objectFiles == null
+                ? null : Arrays.copyOf(objectFiles, objectFiles.length));
+        configurationBuilder.setW32Api(w32Api == null
+                ? null : Arrays.copyOf(w32Api, w32Api.length));
+        
+        //Single instance
+        configurationBuilder.allowOneInstanceOnly(singleInstance);
+        configurationBuilder.setMutexName(mutexName);
+        configurationBuilder.setWindowTitle(windowTitle);
+        
+        //Jre
+        configurationBuilder.setBundledJrePath(bundledJrePath);
+        configurationBuilder.set64Bit(is64bit);
+        configurationBuilder.setFallback(isFallbackOption);
+        configurationBuilder.setMinimumJreVersion(minimumJreVersion);
+        configurationBuilder.setMaximumJreVersion(maximumJreVersion);
+        configurationBuilder.setJavaUsageOptions(javaUsageOptions);
+        configurationBuilder.setJavaArchitecture(javaArchitecture);
+        configurationBuilder.setInitialHeapSize(initialHeapSize);
+        configurationBuilder.setMaximumHeapSize(maximumHeapSize);
+        configurationBuilder.setHeapInPercent(isHeapInPercent);
+        configurationBuilder.setJvmOptions(jvmOptions == null
+                ? null : Arrays.copyOf(jvmOptions, jvmOptions.length));
+        
+        //Envrionment variables
+        configurationBuilder.setEnvironmentVariables(
+                environmentVariables == null ? null 
+                        : Arrays.copyOf(
+                                environmentVariables,
+                                environmentVariables.length
+                        )
+        );
+        configurationBuilder.enableSplashScreen(isSplashScreenEnabled);
+        configurationBuilder.setSplashFile(splashScreenFileName);
+        configurationBuilder.setWaitForWindow(waitForWindow);
+        configurationBuilder.setTimeout(timeout);
+        configurationBuilder.signalErrorOnTimeout(signalErrorOnTimeout);
+        
+        //Version information
+        configurationBuilder.addVersionInfo(addVersionInfo);
+        configurationBuilder.setFileVersion(fileVersion);
+        configurationBuilder.setFreeFormFileVersion(freeFormFileVersion);
+        configurationBuilder.setFileDescription(fileDescription);
+        configurationBuilder.setCopyright(copyright);
+        configurationBuilder.setProductVersion(productVersion);
+        configurationBuilder.setFreeFormProductVersion(freeFormProductVersion);
+        configurationBuilder.setProductName(productName);
+        configurationBuilder.setCompanyName(companyName);
+        configurationBuilder.setInternalName(internalName);
+        configurationBuilder.setOriginalFileName(originalFileName);
+        
+        //Error messages
+        configurationBuilder.setStartupErrorMessage(startupErrorMessage);
+        configurationBuilder.setBundledJreErrorMessage(bundledJreErrorMessage);
+        configurationBuilder.setJreVersionErrorMessage(jreVersionErrorMessage);
+        configurationBuilder.setLauncherErrorMessage(launcherErrorMessage);
+        configurationBuilder.setInstanceAlreadyRunningErrorMessage(
+                instanceAlreadyRunningErrorMessage);
+        
+        return configurationBuilder;
     }
 
     //##########################
