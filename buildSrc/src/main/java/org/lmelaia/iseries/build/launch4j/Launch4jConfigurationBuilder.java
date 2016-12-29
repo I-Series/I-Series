@@ -312,7 +312,7 @@ public class Launch4jConfigurationBuilder {
     protected String[] objectFiles;
 
     /**
-     * The windows 32 API files used by launch4j.
+     * The windowsAPI files used by launch4j.
      *
      * <p>
      * This option <b>may</b> be {@code null} and is set to {@code null} by
