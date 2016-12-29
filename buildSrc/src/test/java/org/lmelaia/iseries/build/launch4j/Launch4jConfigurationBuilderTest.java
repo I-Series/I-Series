@@ -810,4 +810,19 @@ public class Launch4jConfigurationBuilderTest {
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
     }
+    
+    @Test
+    public void testCreateCopyFunction(){
+        Launch4jConfiguration configuration = testObject.create();
+        
+        testObject.setErrorTitle("Some error title");
+        
+        if(configuration.getErrorTitle() != null 
+                && configuration.getErrorTitle().equals(testObject.errorTitle)){
+            fail(
+                    "Modifying configuration builder "
+                            + "effects configuration object"
+            );
+        }
+    }
 }
