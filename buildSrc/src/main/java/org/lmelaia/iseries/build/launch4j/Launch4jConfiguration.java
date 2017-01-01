@@ -15,7 +15,20 @@
  */
 package org.lmelaia.iseries.build.launch4j;
 
-import org.lmelaia.iseries.build.launch4j.Launch4jConfigurationBuilder;
+import java.io.StringWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * A set of configuration settings for launch4j.
@@ -44,7 +57,6 @@ public class Launch4jConfiguration {
     //********************
     //       GETTERS
     //********************
-    
     /**
      * See {@link Launch4jConfigurationBuilder#outputFileName} for
      * documentation.
@@ -54,16 +66,14 @@ public class Launch4jConfiguration {
     }
 
     /**
-     * See {@link Launch4jConfigurationBuilder#jarFileName} for
-     * documentation.
+     * See {@link Launch4jConfigurationBuilder#jarFileName} for documentation.
      */
     public String getJarFileName() {
         return l4jConfigurationBuilder.jarFileName;
     }
 
     /**
-     * See {@link Launch4jConfigurationBuilder#wrap} for
-     * documentation.
+     * See {@link Launch4jConfigurationBuilder#wrap} for documentation.
      */
     public boolean isWrapped() {
         return l4jConfigurationBuilder.wrap;
@@ -86,8 +96,7 @@ public class Launch4jConfiguration {
     }
 
     /**
-     * See {@link Launch4jConfigurationBuilder#iconFileName} for
-     * documentation.
+     * See {@link Launch4jConfigurationBuilder#iconFileName} for documentation.
      */
     public String getIconFileName() {
         return l4jConfigurationBuilder.iconFileName;
@@ -118,8 +127,7 @@ public class Launch4jConfiguration {
     }
 
     /**
-     * See {@link Launch4jConfigurationBuilder#stayAlive} for
-     * documentation.
+     * See {@link Launch4jConfigurationBuilder#stayAlive} for documentation.
      */
     public boolean willStayAlive() {
         return l4jConfigurationBuilder.stayAlive;
@@ -134,24 +142,21 @@ public class Launch4jConfiguration {
     }
 
     /**
-     * See {@link Launch4jConfigurationBuilder#errorTitle} for
-     * documentation.
+     * See {@link Launch4jConfigurationBuilder#errorTitle} for documentation.
      */
     public String getErrorTitle() {
         return l4jConfigurationBuilder.errorTitle;
     }
 
     /**
-     * See {@link Launch4jConfigurationBuilder#downloadUrl} for
-     * documentation.
+     * See {@link Launch4jConfigurationBuilder#downloadUrl} for documentation.
      */
     public String getDownloadUrl() {
         return l4jConfigurationBuilder.downloadUrl;
     }
 
     /**
-     * See {@link Launch4jConfigurationBuilder#supportUrl} for
-     * documentation.
+     * See {@link Launch4jConfigurationBuilder#supportUrl} for documentation.
      */
     public String getSupportUrl() {
         return l4jConfigurationBuilder.supportUrl;
@@ -166,40 +171,35 @@ public class Launch4jConfiguration {
     }
 
     /**
-     * See {@link Launch4jConfigurationBuilder#mainClass} for
-     * documentation.
+     * See {@link Launch4jConfigurationBuilder#mainClass} for documentation.
      */
     public String getMainClass() {
         return l4jConfigurationBuilder.mainClass;
     }
 
     /**
-     * See {@link Launch4jConfigurationBuilder#classpath} for
-     * documentation.
+     * See {@link Launch4jConfigurationBuilder#classpath} for documentation.
      */
     public String[] getClasspath() {
         return l4jConfigurationBuilder.classpath;
     }
 
     /**
-     * See {@link Launch4jConfigurationBuilder#headerType} for
-     * documentation.
+     * See {@link Launch4jConfigurationBuilder#headerType} for documentation.
      */
     public HeaderType getHeaderType() {
         return l4jConfigurationBuilder.headerType;
     }
 
     /**
-     * See {@link Launch4jConfigurationBuilder#objectFiles} for
-     * documentation.
+     * See {@link Launch4jConfigurationBuilder#objectFiles} for documentation.
      */
     public String[] getObjectFiles() {
         return l4jConfigurationBuilder.objectFiles;
     }
 
     /**
-     * See {@link Launch4jConfigurationBuilder#w32Api} for
-     * documentation.
+     * See {@link Launch4jConfigurationBuilder#w32Api} for documentation.
      */
     public String[] getW32Api() {
         return l4jConfigurationBuilder.w32Api;
@@ -214,16 +214,14 @@ public class Launch4jConfiguration {
     }
 
     /**
-     * See {@link Launch4jConfigurationBuilder#mutexName} for
-     * documentation.
+     * See {@link Launch4jConfigurationBuilder#mutexName} for documentation.
      */
     public String getMutexName() {
         return l4jConfigurationBuilder.mutexName;
     }
 
     /**
-     * See {@link Launch4jConfigurationBuilder#windowTitle} for
-     * documentation.
+     * See {@link Launch4jConfigurationBuilder#windowTitle} for documentation.
      */
     public String getWindowTitle() {
         return l4jConfigurationBuilder.windowTitle;
@@ -238,8 +236,7 @@ public class Launch4jConfiguration {
     }
 
     /**
-     * See {@link Launch4jConfigurationBuilder#is64bit} for
-     * documentation.
+     * See {@link Launch4jConfigurationBuilder#is64bit} for documentation.
      */
     public boolean is64Bit() {
         return l4jConfigurationBuilder.is64bit;
@@ -310,8 +307,7 @@ public class Launch4jConfiguration {
     }
 
     /**
-     * See {@link Launch4jConfigurationBuilder#jarFileName} for
-     * documentation.
+     * See {@link Launch4jConfigurationBuilder#jarFileName} for documentation.
      */
     public String[] getJvmOptions() {
         return l4jConfigurationBuilder.jvmOptions;
@@ -342,16 +338,14 @@ public class Launch4jConfiguration {
     }
 
     /**
-     * See {@link Launch4jConfigurationBuilder#waitForWindow} for
-     * documentation.
+     * See {@link Launch4jConfigurationBuilder#waitForWindow} for documentation.
      */
     public boolean willWaitForWindow() {
         return l4jConfigurationBuilder.waitForWindow;
     }
 
     /**
-     * See {@link Launch4jConfigurationBuilder#timeout} for
-     * documentation.
+     * See {@link Launch4jConfigurationBuilder#timeout} for documentation.
      */
     public int getTimeout() {
         return l4jConfigurationBuilder.timeout;
@@ -374,8 +368,7 @@ public class Launch4jConfiguration {
     }
 
     /**
-     * See {@link Launch4jConfigurationBuilder#fileVersion} for
-     * documentation.
+     * See {@link Launch4jConfigurationBuilder#fileVersion} for documentation.
      */
     public String getFileVersion() {
         return l4jConfigurationBuilder.fileVersion;
@@ -398,8 +391,7 @@ public class Launch4jConfiguration {
     }
 
     /**
-     * See {@link Launch4jConfigurationBuilder#copyright} for
-     * documentation.
+     * See {@link Launch4jConfigurationBuilder#copyright} for documentation.
      */
     public String getCopyright() {
         return l4jConfigurationBuilder.copyright;
@@ -422,24 +414,21 @@ public class Launch4jConfiguration {
     }
 
     /**
-     * See {@link Launch4jConfigurationBuilder#productName} for
-     * documentation.
+     * See {@link Launch4jConfigurationBuilder#productName} for documentation.
      */
     public String getProductName() {
         return l4jConfigurationBuilder.productName;
     }
 
     /**
-     * See {@link Launch4jConfigurationBuilder#companyName} for
-     * documentation.
+     * See {@link Launch4jConfigurationBuilder#companyName} for documentation.
      */
     public String getCompanyName() {
         return l4jConfigurationBuilder.companyName;
     }
 
     /**
-     * See {@link Launch4jConfigurationBuilder#internalName} for
-     * documentation.
+     * See {@link Launch4jConfigurationBuilder#internalName} for documentation.
      */
     public String getInternalName() {
         return l4jConfigurationBuilder.internalName;
@@ -486,12 +475,162 @@ public class Launch4jConfiguration {
     }
 
     /**
-     * See 
+     * See
      * {@link Launch4jConfigurationBuilder#instanceAlreadyRunningErrorMessage}
-     * for
-     * documentation.
+     * for documentation.
      */
     public String getInstanceAlreadyRunningErrorMessage() {
         return l4jConfigurationBuilder.instanceAlreadyRunningErrorMessage;
+    }
+
+    //******************
+    //        XML
+    //******************
+    /**
+     * @return a {@link DOMSource} object containing all the properties in an
+     * xml format readable by launch4j.
+     */
+    public DOMSource getConfigurationSource() throws
+            ParserConfigurationException {
+        DocumentBuilderFactory docFactory
+                = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+
+        Document doc = docBuilder.newDocument();
+        Element rootElement = doc.createElement("launch4jConfig");
+        doc.appendChild(rootElement);
+
+        //Content below
+        appendBasic(rootElement, doc);
+
+        if (usesCustomClasspath()) {
+            appendClasspath(rootElement, doc);
+        }
+
+        return new DOMSource(doc);
+    }
+
+    /**
+     * Appends the basic properties to the {@code rootElement}.
+     *
+     * @param rootElement
+     * @param doc
+     */
+    private void appendBasic(Element rootElement, Document doc) {
+        Element outputFile = doc.createElement("outfile");
+        outputFile.appendChild(doc.createTextNode(getOutputFileName()));
+        rootElement.appendChild(outputFile);
+
+        Element jarFile = doc.createElement("jar");
+        jarFile.appendChild(doc.createTextNode(getJarFileName()));
+        rootElement.appendChild(jarFile);
+
+        Element wrap = doc.createElement("dontWrapJar");
+        wrap.appendChild(doc.createTextNode(String.valueOf(isWrapped())));
+        rootElement.appendChild(wrap);
+
+        Element manifest = doc.createElement("manifest");
+        manifest.appendChild(doc.createTextNode(nullToEmpty(getWrapperManifest())));
+        rootElement.appendChild(manifest);
+
+        Element icon = doc.createElement("icon");
+        icon.appendChild(doc.createTextNode(nullToEmpty(getIconFileName())));
+        rootElement.appendChild(icon);
+
+        Element changeDirectory = doc.createElement("chdir");
+        changeDirectory.appendChild(doc.createTextNode(getChangeDirectory()));
+        rootElement.appendChild(changeDirectory);
+
+        Element cmdLine = doc.createElement("cmdLine");
+        cmdLine.appendChild(doc.createTextNode(nullToEmpty(getCommandLineArguments())));
+        rootElement.appendChild(cmdLine);
+
+        Element priority = doc.createElement("priority");
+        priority.appendChild(doc.createTextNode(
+                getProcessPriority().name().toLowerCase()));
+        rootElement.appendChild(priority);
+
+        Element stayAlive = doc.createElement("stayAlive");
+        stayAlive.appendChild(doc.createTextNode(
+                String.valueOf(willStayAlive())));
+        rootElement.appendChild(stayAlive);
+
+        Element restartOnCrash = doc.createElement("restartOnCrash");
+        restartOnCrash.appendChild(doc.createTextNode(
+                String.valueOf(willRestartAfterCrash())));
+        rootElement.appendChild(restartOnCrash);
+
+        Element errTitle = doc.createElement("errTitle");
+        errTitle.appendChild(doc.createTextNode(nullToEmpty(getErrorTitle())));
+        rootElement.appendChild(errTitle);
+
+        Element downloadUrl = doc.createElement("downloadUrl");
+        downloadUrl.appendChild(doc.createTextNode(getDownloadUrl()));
+        rootElement.appendChild(downloadUrl);
+
+        Element supportUrl = doc.createElement("supportUrl");
+        supportUrl.appendChild(doc.createTextNode(nullToEmpty(getSupportUrl())));
+        rootElement.appendChild(supportUrl);
+    }
+
+    /**
+     * Appends the classpath properties to the {@code rootElement}.
+     *
+     * @param rootElement
+     * @param doc
+     */
+    private void appendClasspath(Element rootElement, Document doc) {
+        Element classPath = doc.createElement("classPath");
+
+        Element mainClass = doc.createElement("mainClass");
+        mainClass.appendChild(doc.createTextNode(nullToEmpty(getMainClass())));
+        classPath.appendChild(mainClass);
+
+        Element cp;
+        for (String s : getClasspath()) {
+            cp = doc.createElement("cp");
+            cp.appendChild(doc.createTextNode(s));
+            classPath.appendChild(cp);
+        }
+
+        rootElement.appendChild(classPath);
+    }
+
+    /**
+     * @return {@link #getConfigurationSource() } as a string or {@code null}
+     * if the {@link DOMSource} object couldn't be parsed.
+     */
+    public String getConfigurationSourceAsString() {
+        try {
+            TransformerFactory transformerFactory
+                    = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            DOMSource source = getConfigurationSource();
+
+            StringWriter br = new StringWriter();
+            StreamResult result = new StreamResult(br);
+
+            System.out.println(source + " | " + result);
+
+            transformer.transform(source, result);
+
+            return br.toString();
+        } catch (TransformerException | ParserConfigurationException ex) {
+            Logger.getLogger(Launch4jConfiguration.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            //TODO: Fix this by adding propper logging.
+            System.err.println("Failed to parse launch4j xml configuration"
+                    + " and turn it into a string.\n" + ex);
+        }
+        return null;//Shouldn't get here
+    }
+
+    /**
+     * @param str
+     * @return an empty string if the argument is null, otherwise the argument
+     * is returned.
+     */
+    private static String nullToEmpty(String str) {
+        return (str == null) ? "" : str;
     }
 }
