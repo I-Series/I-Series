@@ -20,7 +20,7 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
-import org.lmelaia.iseries.buildtest.utils.FileUtils;
+import org.lmelaia.iseries.buildtest.utils.FileTestingUtils;
 
 /**
  * Tests the launch4j configuration builder class.
@@ -35,12 +35,12 @@ public class Launch4jConfigurationBuilderTest {
      */
     private Launch4jConfigurationBuilder testObject = getNewTestObject();
 
-    private static FileUtils fileUtils;
+    private static FileTestingUtils fileUtils;
 
     @BeforeClass
     public static void initialize() {
         try {
-            fileUtils = new FileUtils(new String[][]{
+            fileUtils = new FileTestingUtils(new String[][]{
                 new String[]{"EmptyExe.exe"},
                 new String[]{"EmptyIcon.ico"},
                 new String[]{"EmptyJar.jar"},

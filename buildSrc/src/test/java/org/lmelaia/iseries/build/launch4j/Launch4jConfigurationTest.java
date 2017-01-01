@@ -21,7 +21,7 @@ import org.junit.AfterClass;
 import static org.junit.Assert.fail;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.lmelaia.iseries.buildtest.utils.FileUtils;
+import org.lmelaia.iseries.buildtest.utils.FileTestingUtils;
 
 /**
  *
@@ -43,12 +43,12 @@ public class Launch4jConfigurationTest {
             .setClasspath("AAA", "BBB")
             .create();
 
-    private static FileUtils fileUtils;
+    private static FileTestingUtils fileUtils;
 
     @BeforeClass
     public static void initialize() {
         try {
-            fileUtils = new FileUtils(new String[][]{
+            fileUtils = new FileTestingUtils(new String[][]{
                 new String[]{"EmptyJar.jar"}});
             fileUtils.setup();
         } catch (Exception e) {

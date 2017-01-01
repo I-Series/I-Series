@@ -31,7 +31,7 @@ import java.util.Objects;
  *
  * @author Luke Melaia
  */
-public class FileUtils {
+public class FileTestingUtils {
 
     /**
      * Default path.
@@ -55,7 +55,7 @@ public class FileUtils {
      * @param path the home directory of the test files.
      * @param files
      */
-    public FileUtils(String path, String[][] files) {
+    public FileTestingUtils(String path, String[][] files) {
         new File(path).mkdirs();
         this.files = getFiles(Objects.requireNonNull(files), path);
         this.contents = getContent(files);
@@ -69,7 +69,7 @@ public class FileUtils {
      * first element, and there content as the second element. The second
      * element can be null if the file doesn't need content.
      */
-    public FileUtils(String[][] files) {
+    public FileTestingUtils(String[][] files) {
         this(PATH_BUILD_TEST_FILES, files);
     }
 

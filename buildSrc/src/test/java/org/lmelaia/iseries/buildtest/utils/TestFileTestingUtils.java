@@ -24,13 +24,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * Tests the {@link FileUtils} class.
+ * Tests the {@link FileTestingUtils} class.
  * 
  * @author Luke Melaia
  */
-public class TestFileUtils {
+public class TestFileTestingUtils {
     
-    private static FileUtils fileUtils;
+    private static FileTestingUtils fileUtils;
     
     private static String file1 = "TestFileOne.test",
             file1Content = "Some content...",
@@ -39,7 +39,7 @@ public class TestFileUtils {
     
     @BeforeClass
     public static void setup(){
-        fileUtils = new FileUtils(path, new String[][]{
+        fileUtils = new FileTestingUtils(path, new String[][]{
             new String[]{file1, file1Content},
             new String[]{file2}});
     }
