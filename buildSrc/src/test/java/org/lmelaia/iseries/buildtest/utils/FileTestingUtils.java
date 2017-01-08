@@ -51,7 +51,7 @@ public class FileTestingUtils {
      * @param path the home directory of the test files.
      * @param files
      */
-    public FileTestingUtils(String path, String[][] files) {
+    public FileTestingUtils(String path, String[]... files) {
         new File(path).mkdirs();
         validatePath(path);
         this.files.clear();
@@ -83,7 +83,7 @@ public class FileTestingUtils {
      * easily, this isn't required and cannot be null. If an ID is not
      * specified, the ID is set to the files name (i.e. the first element).
      */
-    public FileTestingUtils(String[][] files) {
+    public FileTestingUtils(String[]... files) {
         this(PATH_BUILD_TEST_FILES, files);
     }
 

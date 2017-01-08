@@ -19,131 +19,148 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static org.junit.Assert.fail;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.FixMethodOrder;
+import org.junit.runners.MethodSorters;
 import static org.lmelaia.iseries.buildtest.utils.FileTestingUtils.TestFile;
+import static org.lmelaia.iseries.buildtest.utils.FileTestingUtils.PATH_BUILD_TEST_FILES;
 
 /**
  * Tests the {@link FileTestingUtils} class.
  *
  * @author Luke Melaia
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestFileTestingUtils {
 
-    private static FileTestingUtils fileUtils;
+    private static FileTestingUtils fileUtilsA;
+    private final File A1 = new File(PATH_BUILD_TEST_FILES + "TestFileA1");
+    private final File A2 = new File(PATH_BUILD_TEST_FILES + "TestFileA2");
+    private final File A3 = new File(PATH_BUILD_TEST_FILES + "TestFileA3");
 
-    private static FileTestingUtils fileUtilsNew;
-
-    private static String file1 = "TestFileOne.test",
-            file1Content = "Some content...",
-            file2 = "TestFileTwo.test",
-            file3 = "TestFileThree.test",
-            file3Content = "Some more content...",
-            path = System.getProperty("user.dir") + "\\tests\\";
+    private static FileTestingUtils fileUtilsB;
+    private final File B1 = new File(PATH_BUILD_TEST_FILES + "TestFileB1");
+    private final File B2 = new File(PATH_BUILD_TEST_FILES + "TestFileB2");
+    private final File B3 = new File(PATH_BUILD_TEST_FILES + "TestFileB3");
 
     @BeforeClass
     public static void setup() {
-        fileUtils = new FileTestingUtils(path, new String[][]{
-            new String[]{file1, file1Content},
-            new String[]{file2},
-            new String[]{file3, file3Content}
-        });
+        fileUtilsA = new FileTestingUtils(
+                new String[]{"TestFileA1"},
+                new String[]{"TestFileA2", "Some content"},
+                new String[]{"TestFileA3", "Some more content", "tfa3"}
+        );
 
-        fileUtilsNew = new FileTestingUtils(
-                new TestFile("TestFileA.test").setContent("A bit of content"),
-                new TestFile("TestFileB.test").setContent("Some content here"),
-                new TestFile("TestFileC.test")
-                .setContent("Some more content")
-                .setID("tfc"),
-                new TestFile("TestFileD.test").setID("tfd")
+        fileUtilsB = new FileTestingUtils(
+                new TestFile("TestFileB1"),
+                new TestFile("TestFileB2").setContent("A tiny bit of content"),
+                new TestFile("TestFileB3").setContent("content").setID("tfb3")
         );
     }
 
     @Test
-    public void testSetup() throws IOException {
-        fileUtils.setup();
-        
-        if (!new File(path + file1).exists()) {
-            fail("The file " + path + file1 + " wasn't created");
-        }
+    public void A_testCreation() throws IOException {
+        fileUtilsA.setup();
+        fileUtilsB.setup();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(
-                new File(path + file1)))) {
-            if (!br.readLine().equals(file1Content)) {
-                fail("The file was not written to");
-            }
-        }
+        if (!A1.exists()) 
+            fail(A1 + " doesn't exist");
+        if (!A2.exists()) 
+            fail(A2 + " doesn't exist");
+        if (!A3.exists()) 
+            fail(A3 + " doesn't exist");
+        
+        if (!B1.exists()) 
+            fail(B1 + " doesn't exist");
+        if (!B2.exists()) 
+            fail(B2 + " doesn't exist");
+        if (!B3.exists()) 
+            fail(B3 + " doesn't exist");
+    }
 
-        if (!new File(path + file2).exists()) {
-            fail("The file " + path + file1 + " wasn't created");
-        }
-
-        if (!new File(path + file3).exists()) {
-            fail("The file " + path + file3 + " wasn't created");
-        }
-
-        try (BufferedReader br = new BufferedReader(new FileReader(
-                new File(path + file3)))) {
-            if (!br.readLine().equals(file3Content)) {
-                fail("The file was not written to");
-            }
+    @Test
+    public void B_testIDSystem() {
+        if(fileUtilsA.getFileByID("a nonexistant id") != null){
+            fail("A non-existant ID doesn't return null");
         }
         
-        if(!fileUtils.getFileByID(file2).exists()){
-            fail("Couldn't get file by ID using String Array constructor");
+        if(fileUtilsA.getFileByID("TestFileA1") == null){
+            fail("File name isn't ID by default");
         }
         
-        fileUtilsNew.setup();
-        
-        if(!fileUtilsNew.getFileByID("TestFileA.test").exists()){
-            fail("The file TestFileA.test wasn't created");
+        if(fileUtilsA.getFileByID("tfa3") == null){
+            fail("Setting an id doesn't work");
         }
         
-        if(!fileUtilsNew.getFileByID("TestFileB.test").exists()){
-            fail("The file TestFileB.test wasn't created");
+        if(fileUtilsA.getFileByID("TFA3") == null){
+            fail("ID doesn't ignore lowercase");
         }
         
-        try (BufferedReader br = new BufferedReader(new FileReader(
-                fileUtilsNew.getFileByID("TestFileB.test")))) {
-            if (!br.readLine().equals("Some content here")) {
-                fail("The file TestFileB.test was not written to");
-            }
+        if(fileUtilsB.getFileByID("a nonexistant id") != null){
+            fail("A non-existant ID doesn't return null");
         }
         
-        if(!fileUtilsNew.getFileByID("tfc").exists()){
-            fail("The file TestFileC.test wasn't created or getting a file by"
-                    + " doesn't work");
+        if(fileUtilsB.getFileByID("TestFileB1") == null){
+            fail("File name isn't ID by default");
         }
         
-        try (BufferedReader br = new BufferedReader(new FileReader(
-                fileUtilsNew.getFileByID("tfc")))) {
-            if (!br.readLine().equals("Some more content")) {
-                fail("The file TestFileC.test was not written to");
-            }
+        if(fileUtilsB.getFileByID("tfb3") == null){
+            fail("Setting an id doesn't work");
+        }
+        
+        if(fileUtilsB.getFileByID("TFB3") == null){
+            fail("ID doesn't ignore lowercase");
         }
     }
 
     @Test
-    public void testTeardown() {
-        boolean a = fileUtils.teardown();
-        boolean b = fileUtilsNew.teardown();
-        //@REM: Here because of bug
-        System.out.println("new File(path + file1).exists()" + new File(path + file1).exists());
-        if (new File(path + file1).exists()) {
-            fail("The file " + path + file1 + " wasn't deleted");
-        }
-        //@REM: Here because of bug
-        System.out.println("new File(path + file2).exists()" + new File(path + file2).exists());
-        if (new File(path + file2).exists()) {
-            fail("The file " + path + file2 + " wasn't deleted");
-        }
-        //@REM: Here because of bug
-        System.out.println("new File(path + file3).exists()" + new File(path + file3).exists());
-        if (new File(path + file3).exists()) {
-            fail("The file " + path + file3 + " wasn't deleted");
+    public void C_testContentWriting() {
+        try (BufferedReader br = new BufferedReader(new FileReader(A2))) {
+            if(br.readLine() == null){
+                fail(A2 + " wasn't written to");
+            }
+        } catch (Exception e) {
+            fail("Exception thrown during reading\n" + e);
         }
         
-        System.out.println("A: " + a + "\nB: " + b);
+        try (BufferedReader br = new BufferedReader(new FileReader(B2))) {
+            if(br.readLine() == null){
+                fail(B2 + " wasn't written to");
+            }
+        } catch (Exception e) {
+            fail("Exception thrown during reading\n" + e);
+        }
+    }
+
+    @Test
+    public void D_testDeletion() {
+        boolean a = fileUtilsA.teardown();
+        boolean b = fileUtilsB.teardown();
+        
+        if(!a){
+            fail("All files in fileUtilsA weren't deleted");
+        }
+        
+        if(!b){
+            fail("All files in fileUtilsB weren't deleted");
+        }
+        
+        if(A1.exists())
+            fail(A1 + " wasn't deleted");
+        if(A2.exists())
+            fail(A2 + " wasn't deleted");
+        if(A3.exists())
+            fail(A3 + " wasn't deleted");
+        
+        if(B1.exists())
+            fail(B1 + " wasn't deleted");
+        if(B2.exists())
+            fail(B2 + " wasn't deleted");
+        if(B3.exists())
+            fail(B3 + " wasn't deleted");
     }
 }
