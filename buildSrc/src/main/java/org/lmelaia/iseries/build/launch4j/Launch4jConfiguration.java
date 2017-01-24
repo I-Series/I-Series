@@ -538,7 +538,7 @@ public class Launch4jConfiguration {
         rootElement.appendChild(jarFile);
 
         Element wrap = doc.createElement("dontWrapJar");
-        wrap.appendChild(doc.createTextNode(String.valueOf(isWrapped())));
+        wrap.appendChild(doc.createTextNode(String.valueOf(!isWrapped())));
         rootElement.appendChild(wrap);
 
         Element manifest = doc.createElement("manifest");
@@ -686,7 +686,10 @@ public class Launch4jConfiguration {
         jre.appendChild(minVersion);
 
         Element maxVersion = doc.createElement("maxVersion");
-        maxVersion.appendChild(doc.createTextNode(getMaximumJreVersion()));
+        maxVersion.appendChild(doc.createTextNode(
+                (getMaximumJreVersion() == null) ?
+                        "" : getMaximumJreVersion()
+        ));
         jre.appendChild(maxVersion);
 
         Element jdkPreference = doc.createElement("jdkPreference");
@@ -723,21 +726,23 @@ public class Launch4jConfiguration {
             jre.appendChild(maxHeapSize);
         }
         
-        for(String option : getJvmOptions()){
-            Element opt = doc.createElement("opt");
-            opt.appendChild(doc.createTextNode(option));
-            jre.appendChild(opt);
-        }
+        if(getJvmOptions() != null)
+            for(String option : getJvmOptions()){
+                Element opt = doc.createElement("opt");
+                opt.appendChild(doc.createTextNode(option));
+                jre.appendChild(opt);
+            }
 
         rootElement.appendChild(jre);
     }
     
     public void appendEnvironmentVariables(Element rootElement, Document doc) {
-        for(String variable : getEnvironmentVariables()){
-            Element var = doc.createElement("var");
-            var.appendChild(doc.createTextNode(variable));
-            doc.appendChild(var);
-        }
+        if(getEnvironmentVariables() != null)
+            for(String variable : getEnvironmentVariables()){
+                Element var = doc.createElement("var");
+                var.appendChild(doc.createTextNode(variable));
+                doc.appendChild(var);
+            }
     }
     
     public void appendSplashScreen(Element rootElement, Document doc){
