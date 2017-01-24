@@ -507,6 +507,18 @@ public class Launch4jConfiguration {
             appendClasspath(rootElement, doc);
         }
 
+        appendHeader(rootElement, doc);
+
+        if (isSingleInstance()) {
+            appendSingleInstance(rootElement, doc);
+        }
+
+        appendJre(rootElement, doc);
+        appendEnvironmentVariables(rootElement, doc);
+        appendSplashScreen(rootElement, doc);
+        appendVersionInfo(rootElement, doc);
+        appendMessages(rootElement, doc);
+
         return new DOMSource(doc);
     }
 
@@ -530,7 +542,8 @@ public class Launch4jConfiguration {
         rootElement.appendChild(wrap);
 
         Element manifest = doc.createElement("manifest");
-        manifest.appendChild(doc.createTextNode(nullToEmpty(getWrapperManifest())));
+        manifest.appendChild(doc.createTextNode(
+                nullToEmpty(getWrapperManifest())));
         rootElement.appendChild(manifest);
 
         Element icon = doc.createElement("icon");
@@ -542,7 +555,8 @@ public class Launch4jConfiguration {
         rootElement.appendChild(changeDirectory);
 
         Element cmdLine = doc.createElement("cmdLine");
-        cmdLine.appendChild(doc.createTextNode(nullToEmpty(getCommandLineArguments())));
+        cmdLine.appendChild(doc.createTextNode(
+                nullToEmpty(getCommandLineArguments())));
         rootElement.appendChild(cmdLine);
 
         Element priority = doc.createElement("priority");
@@ -569,7 +583,8 @@ public class Launch4jConfiguration {
         rootElement.appendChild(downloadUrl);
 
         Element supportUrl = doc.createElement("supportUrl");
-        supportUrl.appendChild(doc.createTextNode(nullToEmpty(getSupportUrl())));
+        supportUrl.appendChild(doc.createTextNode(
+                nullToEmpty(getSupportUrl())));
         rootElement.appendChild(supportUrl);
     }
 
@@ -597,8 +612,212 @@ public class Launch4jConfiguration {
     }
 
     /**
-     * @return {@link #getConfigurationSource() } as a string or {@code null}
-     * if the {@link DOMSource} object couldn't be parsed.
+     * Appends the header properties to the {@code rootElement}.
+     *
+     * @param rootElement
+     * @param doc
+     */
+    public void appendHeader(Element rootElement, Document doc) {
+        Element headerType = doc.createElement("headerType");
+        headerType.appendChild(
+                doc.createTextNode(getHeaderType().toString().toLowerCase()));
+        rootElement.appendChild(headerType);
+
+        if (getObjectFiles() != null) {
+            for (String objectFile : getObjectFiles()) {
+                Element obj = doc.createElement("obj");
+                obj.appendChild(doc.createTextNode(objectFile));
+                rootElement.appendChild(obj);
+            }
+        }
+
+        if (getW32Api() != null) {
+            for (String w32api : getW32Api()) {
+                Element api = doc.createElement("api");
+                api.appendChild(doc.createTextNode(w32api));
+                rootElement.appendChild(api);
+            }
+        }
+
+    }
+
+    /**
+     * Appends the single instance properties to the {@code rootElement}.
+     *
+     * @param rootElement
+     * @param doc
+     */
+    public void appendSingleInstance(Element rootElement, Document doc) {
+        Element singleInstance = doc.createElement("singleInstance");
+
+        Element mutexName = doc.createElement("mutexName");
+        mutexName.appendChild(doc.createTextNode(getMutexName()));
+        singleInstance.appendChild(mutexName);
+
+        Element windowTitle = doc.createElement("windowTitle");
+        windowTitle.appendChild(doc.createTextNode(
+                (getWindowTitle() == null) ? "" : getWindowTitle()));
+        singleInstance.appendChild(windowTitle);
+
+        rootElement.appendChild(singleInstance);
+    }
+
+    public void appendJre(Element rootElement, Document doc) {
+        Element jre = doc.createElement("jre");
+
+        Element path = doc.createElement("path");
+        path.appendChild(doc.createTextNode(
+                (getBundledJrePath() == null) ? "" : getBundledJrePath()));
+        jre.appendChild(path);
+
+        Element bundledJre64Bit = doc.createElement("bundledJre64Bit");
+        bundledJre64Bit.appendChild(doc.createTextNode(
+                String.valueOf(is64Bit())));
+        jre.appendChild(bundledJre64Bit);
+
+        Element bundledJreAsFallback
+                = doc.createElement("bundledJreAsFallback");
+        bundledJreAsFallback.appendChild(doc.createTextNode(
+                String.valueOf(isFallbackOption())));
+        jre.appendChild(bundledJreAsFallback);
+
+        Element minVersion = doc.createElement("minVersion");
+        minVersion.appendChild(doc.createTextNode(getMinimumJreVersion()));
+        jre.appendChild(minVersion);
+
+        Element maxVersion = doc.createElement("maxVersion");
+        maxVersion.appendChild(doc.createTextNode(getMaximumJreVersion()));
+        jre.appendChild(maxVersion);
+
+        Element jdkPreference = doc.createElement("jdkPreference");
+        jdkPreference.appendChild(doc.createTextNode(
+                this.getJavaUsageOptions().getOfficalName())
+        );
+        jre.appendChild(jdkPreference);
+
+        Element runtimeBits = doc.createElement("runtimeBits");
+        runtimeBits.appendChild(doc.createTextNode(
+                getJavaArchitecture().getOfficalName())
+        );
+        jre.appendChild(runtimeBits);
+
+        if (getInitialHeapSize() != 0) {
+            Element initialHeapSize = doc.createElement(
+                    (areHeapSizesPercentages()) ? "initialHeapPercent"
+                            : "initialHeapSize"
+            );
+            initialHeapSize.appendChild(doc.createTextNode(
+                    getInitialHeapSize() + ""
+            ));
+            jre.appendChild(initialHeapSize);
+        }
+        
+        if (getMaximumHeapSize() != 0) {
+            Element maxHeapSize = doc.createElement(
+                    (areHeapSizesPercentages()) ? "maxHeapPercent"
+                            : "maxHeapSize"
+            );
+            maxHeapSize.appendChild(doc.createTextNode(
+                    getMaximumHeapSize() + ""
+            ));
+            jre.appendChild(maxHeapSize);
+        }
+        
+        for(String option : getJvmOptions()){
+            Element opt = doc.createElement("opt");
+            opt.appendChild(doc.createTextNode(option));
+            jre.appendChild(opt);
+        }
+
+        rootElement.appendChild(jre);
+    }
+    
+    public void appendEnvironmentVariables(Element rootElement, Document doc) {
+        for(String variable : getEnvironmentVariables()){
+            Element var = doc.createElement("var");
+            var.appendChild(doc.createTextNode(variable));
+            doc.appendChild(var);
+        }
+    }
+    
+    public void appendSplashScreen(Element rootElement, Document doc){
+        if(!isSplashScreenEnabled()){
+            return;
+        }
+        
+        Element splash = doc.createElement("splash");
+        
+        Element file = doc.createElement("file");
+        file.appendChild(doc.createTextNode(getSplashScreenFileName()));
+        splash.appendChild(file);
+        
+        Element waitForWindow = doc.createElement("waitForWindow");
+        waitForWindow.appendChild(doc.createTextNode(willWaitForWindow() + ""));
+        splash.appendChild(waitForWindow);
+        
+        Element timeout = doc.createElement("timeout");
+        timeout.appendChild(doc.createTextNode(this.getTimeout() + ""));
+        splash.appendChild(timeout);
+        
+        Element timeoutErr = doc.createElement("timeoutErr");
+        timeoutErr.appendChild(doc.createTextNode(
+                willSingleErrorOnTimeout() + ""));
+        splash.appendChild(timeoutErr);
+        
+        doc.appendChild(splash);
+    }
+    
+    public void appendVersionInfo(Element rootElement, Document doc){
+        if(!this.isVersionInformationAdded()){
+            return;
+        }
+        
+        Element versionInfo = createNewElement(doc, "versionInfo", null);
+        
+        versionInfo.appendChild(createNewElement(doc, "fileVersion",
+                this.getFileVersion()));
+        versionInfo.appendChild(createNewElement(doc, "txtFileVersion",
+                this.getFreeFormFileVersion()));
+        versionInfo.appendChild(createNewElement(doc, "fileDescription",
+                this.getFileDescription()));
+        versionInfo.appendChild(createNewElement(doc, "copyright", 
+                this.getCopyright()));
+        versionInfo.appendChild(createNewElement(doc, "productVersion",
+                this.getProductVersion()));
+        versionInfo.appendChild(createNewElement(doc, "txtProductVersion",
+                this.getFreeFormProductVersion()));
+        versionInfo.appendChild(createNewElement(doc, "productName", 
+                this.getProductName()));
+        versionInfo.appendChild(createNewElement(doc, "companyName",
+                this.getCompanyName()));
+        versionInfo.appendChild(createNewElement(doc, "internalName", 
+                this.getInternalName()));
+        versionInfo.appendChild(createNewElement(doc, "originalFileName", 
+                this.getOriginalFileName()));
+        
+        rootElement.appendChild(versionInfo);
+    }
+
+    public void appendMessages(Element rootElement, Document doc){
+        Element messages = createNewElement(doc, "messages", null);
+        
+        messages.appendChild(createNewElement(doc, "startupErr",
+                this.getStartupErrorMessage()));
+        messages.appendChild(createNewElement(doc, "bundledJreErr",
+                this.getBundledJreErrorMessage()));
+        messages.appendChild(createNewElement(doc, "jreVersionErr", 
+                this.getJreVersionErrorMessage()));
+        messages.appendChild(createNewElement(doc, "launcherErr",
+                this.getLauncherErrorMessage()));
+        messages.appendChild(createNewElement(doc, "instanceAlreadyExistsMsg", 
+                this.getInstanceAlreadyRunningErrorMessage()));
+        
+        rootElement.appendChild(messages);
+    }
+    
+    /**
+     * @return {@link #getConfigurationSource() } as a string or {@code null} if
+     * the {@link DOMSource} object couldn't be parsed.
      */
     public String getConfigurationSourceAsString() {
         try {
@@ -625,6 +844,16 @@ public class Launch4jConfiguration {
         return null;//Shouldn't get here
     }
 
+    private static Element createNewElement(Document doc, 
+            String tagName, String tagContent){
+        Element el = doc.createElement(tagName);
+        
+        if(tagContent != null)
+            el.appendChild(doc.createTextNode(tagContent));
+        
+        return el;
+    }
+    
     /**
      * @param str
      * @return an empty string if the argument is null, otherwise the argument

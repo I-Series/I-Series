@@ -25,19 +25,32 @@ public enum JavaArchitecture {
     /**
      * Only 64bit architecture will be used.
      */
-    ONLY_64BIT,
+    ONLY_64BIT("64"),
     /**
      * 64Bit architecture will be used first, if available, otherwise 32bit will
      * be used.
      */
-    _64BIT_THEN_32BIT,
+    _64BIT_THEN_32BIT("64/32"),
     /**
      * 32Bit architecture will be used first, if available, otherwise 64bit will
      * be used.
      */
-    _32BIT_THEN_64BIT,
+    _32BIT_THEN_64BIT("32/64"),
     /**
      * Only 32bit architecture will be used.
      */
-    ONLY_32BIT;
+    ONLY_32BIT("32");
+
+    private final String officialName;
+    
+    private JavaArchitecture(String officalName){
+        this.officialName = officalName;
+    }
+    
+    /**
+     * @return the name of the property used in the launch4j configuration file. 
+     */
+    public String getOfficalName() {
+        return this.officialName;
+    }
 }
