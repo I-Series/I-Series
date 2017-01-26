@@ -209,6 +209,12 @@ public class XmlDocumentHelper {
         /**
          * Appends a node to the current element.
          * 
+         * <p><b>This method and {@link #addNewElement(java.lang.String) }
+         * should not be used interchangeably. This method returns the
+         * element the node was added to, while
+         * {@link #addNewElement(java.lang.String)} returns the new element
+         * which was added.</b>
+         * 
          * @param node the node.
          * @return an instance of this so {@link #addNode(org.w3c.dom.Node)}
          * calls can be chained together.
@@ -231,6 +237,11 @@ public class XmlDocumentHelper {
         
         /**
          * Appends a new element to the element contained in this object.
+         * 
+         * <p><b>This method and {@link #addNode(org.w3c.dom.Node)} should not
+         * be used interchangeably. This method returns the new element, while
+         * {@link #addNode(org.w3c.dom.Node)} returns the element the node
+         * was added to.</b>
          * 
          * @param tagName the new elements tag name
          * @return the new element created wrapped in an ElementHelper instance.
