@@ -833,9 +833,6 @@ public class Launch4jConfiguration {
 
             StringWriter br = new StringWriter();
             StreamResult result = new StreamResult(br);
-
-            System.out.println(source + " | " + result);
-
             transformer.transform(source, result);
 
             return br.toString();
