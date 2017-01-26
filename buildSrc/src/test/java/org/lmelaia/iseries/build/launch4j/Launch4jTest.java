@@ -36,6 +36,8 @@ public class Launch4jTest {
 
     /**
      * The output executable file created with launch4j.
+     * <br>
+     * <b>This file is never deleted by the application.</b>
      */
     private static final File EXECUTABLE_FILE = new File(
             "C:\\Programming\\Languages\\Java\\Projects\\I-Series\\buildSrc"
