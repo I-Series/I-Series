@@ -33,45 +33,58 @@ public class Launch4jTest {
     private static final File LAUNCH4J_PATH
             //TODO: Change if path of launch4j changes
             = new File("C:\\Program Files (x86)\\Launch4j");
-    
+
+    /**
+     * The output executable file created with launch4j.
+     */
+    private static final File EXECUTABLE_FILE = new File(
+            "C:\\Programming\\Languages\\Java\\Projects\\I-Series\\buildSrc"
+            + "\\output.exe");
+
     /**
      * Basic configuration for creating a standard executable.
      */
     private Launch4jConfiguration l4jConfig
             = new Launch4jConfigurationBuilder()
-            .setOutputFile("/output.exe")
+            .setOutputFile(EXECUTABLE_FILE.getAbsolutePath())
             .setJarFile(
-                //This is the jar file created from the application source.
-                //TODO: Change this directory if the project directory changes 
-                "C:\\Programming\\Languages\\Java\\"
-                + "Projects\\I-Series\\build\\libs\\I-Series.jar"
+                    //This is the jar file created from the application source.
+                    //TODO: Change this directory if the project directory changes 
+                    "C:\\Programming\\Languages\\Java\\"
+                    + "Projects\\I-Series\\build\\libs\\I-Series.jar"
             )
             .setMinimumJreVersion("1.8.0")
             .create();
-    
+
     /**
      * Attempts to create an executable with launch4j.
-     * 
+     *
      * <p>
-     * This method uses launch4j to test for failure. If launch4j fails to 
+     * This method uses launch4j to test for failure. If launch4j fails to
      * create the executable, it's assumed that there is an error in the code.
      * <br>
+     * If launch4j returns an exit code of {@code 0}, it's assumed the file was
+     * created successfully. Checking for an output executable is buggy and
+     * prone to error so this method won't check for an output file.
+     * </p>
+     * 
+     * <p>
      * The launch4j output is printed to the console if launch4j fails to create
      * the executable, which will aid in debugging.
      * </p>
-     * 
-     * @throws IOException 
+     *
+     * @throws IOException
      */
     @Test
-    public void testExecutableCreation() throws IOException{
+    public void testExecutableCreation() throws IOException {
         Launch4jProcessWrapper l4jProcessWrapper
                 = new Launch4jProcessWrapper(LAUNCH4J_PATH, l4jConfig);
         StringBuilder output = new StringBuilder();
-        
+
         int l4jExitCode = l4jProcessWrapper.startProcess(output);
-        
+
         //Launch4j failed to create the executable
-        if(l4jExitCode != 0){
+        if (l4jExitCode != 0) {
             System.err.println("Launch4j output: " + output.toString());
             fail("Launch4j failed with exit code: " + l4jExitCode);
         }
