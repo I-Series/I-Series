@@ -27,6 +27,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import org.lmelaia.iseries.build.utils.XmlDocumentHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -500,14 +501,18 @@ public class Launch4jConfiguration {
         Element rootElement = doc.createElement("launch4jConfig");
         doc.appendChild(rootElement);
 
+        XmlDocumentHelper documentHelper 
+                = XmlDocumentHelper.getInstanceWithNewDocument()
+                .newRootElement("launch4jConfig").getDocumentHelper();
+        
         //Content below
-        appendBasic(rootElement, doc);
+        appendBasic(rootElement, documentHelper);
 
         if (usesCustomClasspath()) {
-            appendClasspath(rootElement, doc);
+            appendClasspath(rootElement, documentHelper);
         }
 
-        appendHeader(rootElement, doc);
+        appendHeader(rootElement, documentHelper);
 
         if (isSingleInstance()) {
             appendSingleInstance(rootElement, doc);
@@ -528,64 +533,103 @@ public class Launch4jConfiguration {
      * @param rootElement
      * @param doc
      */
-    private void appendBasic(Element rootElement, Document doc) {
-        Element outputFile = doc.createElement("outfile");
-        outputFile.appendChild(doc.createTextNode(getOutputFileName()));
-        rootElement.appendChild(outputFile);
+    private void appendBasic(Element rootElement, XmlDocumentHelper doc) {
+//        Element outputFile = doc.createElement("outfile");
+//        outputFile.appendChild(doc.createTextNode(getOutputFileName()));
+//        rootElement.appendChild(outputFile);
+        
+        doc.getRootElement().addNewElement("outfile")
+                .addText(getOutputFileName());
 
-        Element jarFile = doc.createElement("jar");
-        jarFile.appendChild(doc.createTextNode(getJarFileName()));
-        rootElement.appendChild(jarFile);
+//        Element jarFile = doc.createElement("jar");
+//        jarFile.appendChild(doc.createTextNode(getJarFileName()));
+//        rootElement.appendChild(jarFile);
+        
+        doc.getRootElement().addNewElement("jar")
+                .addText(getJarFileName());
 
-        Element wrap = doc.createElement("dontWrapJar");
-        wrap.appendChild(doc.createTextNode(String.valueOf(!isWrapped())));
-        rootElement.appendChild(wrap);
+        //Element wrap = doc.createElement("dontWrapJar");
+        //wrap.appendChild(doc.createTextNode(String.valueOf(!isWrapped())));
+        //rootElement.appendChild(wrap);
 
-        Element manifest = doc.createElement("manifest");
-        manifest.appendChild(doc.createTextNode(
-                nullToEmpty(getWrapperManifest())));
-        rootElement.appendChild(manifest);
+        doc.getRootElement().addNewElement("dontWrapJar")
+                .addText(!isWrapped());
+        
+//        Element manifest = doc.createElement("manifest");
+//        manifest.appendChild(doc.createTextNode(
+//                nullToEmpty(getWrapperManifest())));
+//        rootElement.appendChild(manifest);
 
-        Element icon = doc.createElement("icon");
-        icon.appendChild(doc.createTextNode(nullToEmpty(getIconFileName())));
-        rootElement.appendChild(icon);
+        doc.getRootElement().addNewElement("manifest")
+                .addText(getWrapperManifest());
+        
+        //Element icon = doc.createElement("icon");
+        //icon.appendChild(doc.createTextNode(nullToEmpty(getIconFileName())));
+        //rootElement.appendChild(icon);
 
-        Element changeDirectory = doc.createElement("chdir");
-        changeDirectory.appendChild(doc.createTextNode(getChangeDirectory()));
-        rootElement.appendChild(changeDirectory);
+        doc.getRootElement().addNewElement("icon")
+                .addText(getIconFileName());
+        
+        //Element changeDirectory = doc.createElement("chdir");
+        //changeDirectory.appendChild(doc.createTextNode(getChangeDirectory()));
+        //rootElement.appendChild(changeDirectory);
 
-        Element cmdLine = doc.createElement("cmdLine");
-        cmdLine.appendChild(doc.createTextNode(
-                nullToEmpty(getCommandLineArguments())));
-        rootElement.appendChild(cmdLine);
+        doc.getRootElement().addNewElement("chdir")
+                .addText(getChangeDirectory());
+        
+        //Element cmdLine = doc.createElement("cmdLine");
+        //cmdLine.appendChild(doc.createTextNode(
+        //        nullToEmpty(getCommandLineArguments())));
+        //rootElement.appendChild(cmdLine);
 
-        Element priority = doc.createElement("priority");
-        priority.appendChild(doc.createTextNode(
-                getProcessPriority().name().toLowerCase()));
-        rootElement.appendChild(priority);
+        doc.getRootElement().addNewElement("cmdLine")
+                .addText(getCommandLineArguments());
+        
+        //Element priority = doc.createElement("priority");
+        //priority.appendChild(doc.createTextNode(
+        //        getProcessPriority().name().toLowerCase()));
+        //rootElement.appendChild(priority);
 
-        Element stayAlive = doc.createElement("stayAlive");
-        stayAlive.appendChild(doc.createTextNode(
-                String.valueOf(willStayAlive())));
-        rootElement.appendChild(stayAlive);
+        doc.getRootElement().addNewElement("priotiry")
+                .addText(getProcessPriority().name().toLowerCase());
+        
+        //Element stayAlive = doc.createElement("stayAlive");
+        //stayAlive.appendChild(doc.createTextNode(
+        //        String.valueOf(willStayAlive())));
+        //rootElement.appendChild(stayAlive);
 
-        Element restartOnCrash = doc.createElement("restartOnCrash");
-        restartOnCrash.appendChild(doc.createTextNode(
-                String.valueOf(willRestartAfterCrash())));
-        rootElement.appendChild(restartOnCrash);
+        doc.getRootElement().addNewElement("stayAlive")
+                .addText(willStayAlive());
+        
+        //Element restartOnCrash = doc.createElement("restartOnCrash");
+        //restartOnCrash.appendChild(doc.createTextNode(
+        //        String.valueOf(willRestartAfterCrash())));
+        //rootElement.appendChild(restartOnCrash);
 
-        Element errTitle = doc.createElement("errTitle");
-        errTitle.appendChild(doc.createTextNode(nullToEmpty(getErrorTitle())));
-        rootElement.appendChild(errTitle);
+        doc.getRootElement().addNewElement("restartOnCrash")
+                .addText(willRestartAfterCrash());
+        
+        //Element errTitle = doc.createElement("errTitle");
+        //errTitle.appendChild(doc.createTextNode(nullToEmpty(getErrorTitle())));
+        //rootElement.appendChild(errTitle);
 
-        Element downloadUrl = doc.createElement("downloadUrl");
-        downloadUrl.appendChild(doc.createTextNode(getDownloadUrl()));
-        rootElement.appendChild(downloadUrl);
+        doc.getRootElement().addNewElement("errTitle")
+                .addText(getErrorTitle());
+        
+        //Element downloadUrl = doc.createElement("downloadUrl");
+        //downloadUrl.appendChild(doc.createTextNode(getDownloadUrl()));
+        //rootElement.appendChild(downloadUrl);
 
-        Element supportUrl = doc.createElement("supportUrl");
-        supportUrl.appendChild(doc.createTextNode(
-                nullToEmpty(getSupportUrl())));
-        rootElement.appendChild(supportUrl);
+        doc.getRootElement().addNewElement("downloadUrl")
+                .addText(getDownloadUrl());
+        
+        //Element supportUrl = doc.createElement("supportUrl");
+        //supportUrl.appendChild(doc.createTextNode(
+        //        nullToEmpty(getSupportUrl())));
+        //rootElement.appendChild(supportUrl);
+        
+        doc.getRootElement().addNewElement("supportUrl")
+                .addText(getSupportUrl());
     }
 
     /**
@@ -594,21 +638,27 @@ public class Launch4jConfiguration {
      * @param rootElement
      * @param doc
      */
-    private void appendClasspath(Element rootElement, Document doc) {
-        Element classPath = doc.createElement("classPath");
+    private void appendClasspath(Element rootElement, XmlDocumentHelper doc) {
+        //Element classPath = doc.createElement("classPath");
 
-        Element mainClass = doc.createElement("mainClass");
-        mainClass.appendChild(doc.createTextNode(nullToEmpty(getMainClass())));
-        classPath.appendChild(mainClass);
+        XmlDocumentHelper.ElementHelper classpath 
+                = doc.getRootElement().addNewElement("classPath");
+        
+        //Element mainClass = doc.createElement("mainClass");
+        //mainClass.appendChild(doc.createTextNode(nullToEmpty(getMainClass())));
+        //classPath.appendChild(mainClass);
 
-        Element cp;
+        classpath.addNewElement("mainClass")
+                .addText(getMainClass());
+                
         for (String s : getClasspath()) {
-            cp = doc.createElement("cp");
-            cp.appendChild(doc.createTextNode(s));
-            classPath.appendChild(cp);
+            //cp = doc.createElement("cp");
+            //cp.appendChild(doc.createTextNode(s));
+            //classPath.appendChild(cp);
+            
+            classpath.addNewElement("cp")
+                    .addText(s);
         }
-
-        rootElement.appendChild(classPath);
     }
 
     /**
@@ -617,25 +667,31 @@ public class Launch4jConfiguration {
      * @param rootElement
      * @param doc
      */
-    public void appendHeader(Element rootElement, Document doc) {
-        Element headerType = doc.createElement("headerType");
-        headerType.appendChild(
-                doc.createTextNode(getHeaderType().toString().toLowerCase()));
-        rootElement.appendChild(headerType);
-
+    public void appendHeader(Element rootElement, XmlDocumentHelper doc) {
+        //Element headerType = doc.createElement("headerType");
+        
+        doc.getRootElement().addNewElement("headerType")
+                .addText(getHeaderType().toString().toLowerCase());
+        
         if (getObjectFiles() != null) {
             for (String objectFile : getObjectFiles()) {
-                Element obj = doc.createElement("obj");
-                obj.appendChild(doc.createTextNode(objectFile));
-                rootElement.appendChild(obj);
+                //Element obj = doc.createElement("obj");
+                //obj.appendChild(doc.createTextNode(objectFile));
+                //rootElement.appendChild(obj);
+                
+                doc.getRootElement().addNewElement("obj")
+                        .addText(objectFile);
             }
         }
 
         if (getW32Api() != null) {
             for (String w32api : getW32Api()) {
-                Element api = doc.createElement("api");
-                api.appendChild(doc.createTextNode(w32api));
-                rootElement.appendChild(api);
+                //Element api = doc.createElement("api");
+                //api.appendChild(doc.createTextNode(w32api));
+                //rootElement.appendChild(api);
+                
+                doc.getRootElement().addNewElement("api")
+                        .addText(w32api);
             }
         }
 

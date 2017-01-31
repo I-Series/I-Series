@@ -232,7 +232,25 @@ public class XmlDocumentHelper {
          * calls can be chained together.
          */
         public ElementHelper addText(String text){
+            if(text == null)
+                text = "";
+            
             return addNode(DOCUMENT.getXmlDocument().createTextNode(text));
+        }
+        
+        /**
+         * Appends a new text node to the element.
+         * 
+         * @param text the text nodes text.
+         * @return an instance of this so {@link #addText(java.lang.String)}
+         * calls can be chained together.
+         */
+        public ElementHelper addText(Object text){
+            if(text == null){
+                text = "";
+            }
+            
+            return addText(String.valueOf(text));
         }
         
         /**
