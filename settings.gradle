@@ -1,1 +1,2 @@
 rootProject.name = 'I-Series'
+include 'buildsrc'

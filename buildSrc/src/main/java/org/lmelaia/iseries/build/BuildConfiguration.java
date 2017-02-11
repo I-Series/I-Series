@@ -15,11 +15,92 @@
  */
 package org.lmelaia.iseries.build;
 
+import java.util.Arrays;
+import org.lmelaia.iseries.build.launch4j.Launch4jConfiguration;
+import org.lmelaia.iseries.build.launch4j.Launch4jConfigurationBuilder;
+
 /**
  * Holds the configuration settings for the build script.
- * 
+ *
  * @author Luke Melaia
  */
 public class BuildConfiguration {
+
+    //******************************
+    //    CONFIGURATION SETTINGS
+    //******************************
     
+    /**
+     * The string representation of the path to the I-Series project folder.
+     */
+    private static final String PROJECT_PATH
+            = "C:/Programming/Languages/Java/Projects/I-Series/";
+
+    /**
+     * The string representation of the path to the I-Series jar file.
+     */
+    private static final String JAR_PATH
+            = PROJECT_PATH
+            + "build/libs/I-Series.jar";
+
+    /**
+     * The string representation of the path to where the build output will be
+     * written.
+     */
+    private static final String OUTPUT_PATH = PROJECT_PATH + "output/";
+
+    /**
+     * The file name (not path) of the executable. This must end in '.exe'.
+     */
+    private static final String APPLICATION_NAME = "I-Series.exe";
+
+    private static final Launch4jConfiguration CONFIGURATION
+            = new Launch4jConfigurationBuilder()
+            .setJarFile(JAR_PATH)
+            .setOutputFile(OUTPUT_PATH + APPLICATION_NAME)
+            .setMinimumJreVersion("1.8.0_65")
+            .create();
+    
+    
+    //*******************
+    //      METHODS
+    //*******************
+    
+    /**
+     * <b>
+     * This method is called BEFORE the root projects run task is executed.
+     * </b>
+     * 
+     * <p>
+     * This allows any action to be completed before running
+     * the root project.
+     */
+    public static void run(){
+        System.out.println("BuildConfiguration.run()");
+        //TODO: logic before running root project.
+    }
+    
+    /**
+     * <b>
+     * This method is called AFTER the root projects build task is executed.
+     * </b>
+     * 
+     * <p>
+     * This allows any action to be completed after building the root project,
+     * such as: building the executable and installer files.
+     */
+    public static void build(){
+        System.out.println("BuildConfiguration.build()");
+        //TODO: logic after building root project.
+    }
+    
+    /**
+     * Dummy main method for buildsrc:build.gradle.<p>
+     * <b>This method should NOT perform any operations!</b>
+     * 
+     * @param args 
+     */
+    public static void main(String[] args){
+        //NO-OP
+    }
 }

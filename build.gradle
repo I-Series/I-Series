@@ -13,6 +13,8 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import org.lmelaia.iseries.build.BuildConfiguration
+
 apply plugin: 'java'
 apply plugin: 'application'
 
@@ -27,13 +29,33 @@ if (!hasProperty('mainClass')) {
     ext.mainClass = 'org.lmelaia.iseries.Main'
 }
 
+/*
+ * When called, this task runs the static method run()
+ * inside the BuildConfiguration class, contained in the BuildSrc
+ * subproject.
+ * 
+ * This task is called BEFORE running the root project.
+ */
+task buildsrcRun << {
+    BuildConfiguration.run()
+}
+
+/*
+ * When called, this task runs the static method build()
+ * inside the BuildConfiguration class, contained in the BuildSrc
+ * subproject.
+ * 
+ * This task is called AFTER building the root project.
+ */
+task buildsrcBuild << {
+    BuildConfiguration.build()
+}
+
 repositories {
-    mavenCentral()
-    
+    mavenCentral()    
 }
 
 dependencies {
-    
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
@@ -45,3 +67,12 @@ jar {
         )
     }
 }
+
+/*
+ * Runs the task buildsrcBuild AFTER building the root project.
+ */
+build.finalizedBy(buildsrcBuild)
+/*
+ * Runs the task buildsrcRun BEFORE running the root project.
+ */
+run.dependsOn(buildsrcRun)

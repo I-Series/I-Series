@@ -16,7 +16,7 @@
 apply plugin: 'java'
 apply plugin: 'application'
 
-mainClassName = 'org.lmelaia.iseries.Main'
+mainClassName = 'org.lmelaia.iseries.build.BuildConfiguration'
 
 test.testLogging.showStandardStreams = true
 test.testLogging.exceptionFormat = 'full'
