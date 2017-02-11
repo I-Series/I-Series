@@ -19,6 +19,8 @@ apply plugin: 'application'
 sourceCompatibility = '1.8'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
+applicationDefaultJvmArgs = ["-Dprism.vsync=false"]
+
 mainClassName = "org.lmelaia.iseries.Main"
 
 if (!hasProperty('mainClass')) {
@@ -33,4 +35,13 @@ repositories {
 dependencies {
     
     testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+jar {
+    manifest {
+        attributes(
+            'Class-Path': configurations.compile.collect { "libs/" + it.getName() }.join(' '), 
+            'Main-Class': 'org.lmelaia.iseries.Main'
+        )
+    }
 }
