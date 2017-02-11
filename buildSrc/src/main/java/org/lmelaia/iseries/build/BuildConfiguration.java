@@ -33,13 +33,13 @@ public class BuildConfiguration {
     /**
      * The string representation of the path to the I-Series project folder.
      */
-    private static final String PROJECT_PATH
+    public static final String PROJECT_PATH
             = "C:/Programming/Languages/Java/Projects/I-Series/";
 
     /**
      * The string representation of the path to the I-Series jar file.
      */
-    private static final String JAR_PATH
+    public static final String JAR_PATH
             = PROJECT_PATH
             + "build/libs/I-Series.jar";
 
@@ -47,8 +47,13 @@ public class BuildConfiguration {
      * The string representation of the path to where the build output will be
      * written.
      */
-    private static final String OUTPUT_PATH = PROJECT_PATH + "output/";
+    public static final String OUTPUT_PATH = PROJECT_PATH + "output/";
 
+    /**
+     * The string representation of the path to the launch4j application folder.
+     */
+    public static final String LAUNCH4J_PATH = "C:\\Program Files (x86)\\Launch4j";
+    
     /**
      * The file name (not path) of the executable. This must end in '.exe'.
      */

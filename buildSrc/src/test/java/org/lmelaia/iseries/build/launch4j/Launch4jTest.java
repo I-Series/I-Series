@@ -19,6 +19,8 @@ import java.io.File;
 import java.io.IOException;
 import static org.junit.Assert.fail;
 import org.junit.Test;
+import org.lmelaia.iseries.build.BuildConfiguration;
+import static org.lmelaia.iseries.build.BuildConfiguration.*;
 
 /**
  * Tests creating an executable with launch4j.
@@ -31,8 +33,7 @@ public class Launch4jTest {
      * The path to the launch4j application folder.
      */
     private static final File LAUNCH4J_PATH
-            //TODO: Change if path of launch4j changes
-            = new File("C:\\Program Files (x86)\\Launch4j");
+            = new File(BuildConfiguration.LAUNCH4J_PATH);
 
     /**
      * The output executable file created with launch4j.
@@ -40,8 +41,7 @@ public class Launch4jTest {
      * <b>This file is never deleted by the application.</b>
      */
     private static final File EXECUTABLE_FILE = new File(
-            "C:\\Programming\\Languages\\Java\\Projects\\I-Series\\buildSrc"
-            + "\\output.exe");
+            PROJECT_PATH + "buildSrc/output.exe");
 
     /**
      * Basic configuration for creating a standard executable.
@@ -51,9 +51,7 @@ public class Launch4jTest {
             .setOutputFile(EXECUTABLE_FILE.getAbsolutePath())
             .setJarFile(
                     //This is the jar file created from the application source.
-                    //TODO: Change this directory if the project directory changes 
-                    "C:\\Programming\\Languages\\Java\\"
-                    + "Projects\\I-Series\\build\\libs\\I-Series.jar"
+                    PROJECT_PATH + "/build/libs/I-Series.jar"
             )
             .setMinimumJreVersion("1.8.0")
             .create();
