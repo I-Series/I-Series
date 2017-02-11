@@ -73,7 +73,7 @@ public class Launch4jTest {
      * <p>
      * The launch4j output is printed to the console if launch4j fails to create
      * the executable, which will aid in debugging.
-     * </p>
+     * </p> 
      *
      * @throws IOException
      */
@@ -90,6 +90,12 @@ public class Launch4jTest {
         //Launch4j failed to create the executable
         if (l4jExitCode != 0) {
             fail("Launch4j failed with exit code: " + l4jExitCode);
+        }
+        
+        if(!output.toString().equals("launch4j: Compiling resources")){
+            fail("The launch4j output was expected to "
+                    + "be: \"launch4j: Compiling resources\", but was: "
+                    + "\"" + output + "\"");
         }
     }
 }
