@@ -23,7 +23,8 @@ import org.lmelaia.iseries.build.launch4j.Launch4jConfigurationBuilder;
 import org.lmelaia.iseries.build.launch4j.Launch4jProcessWrapper;
 
 /**
- * Holds the configuration settings for the build script.
+ * Holds the configuration settings for the build script along with
+ * methods to do a full build of the root project.
  *
  * @author Luke Melaia
  */
@@ -32,6 +33,7 @@ public class BuildConfiguration {
     //******************************
     //    CONFIGURATION SETTINGS
     //******************************
+    
     /**
      * The string representation of the path to the I-Series project folder.
      */
@@ -69,7 +71,7 @@ public class BuildConfiguration {
             = new Launch4jConfigurationBuilder()
             .setJarFile(JAR_PATH)
             .setOutputFile(OUTPUT_PATH + APPLICATION_NAME)
-            .setMinimumJreVersion("1.8.0_65")
+            .setMinimumJreVersion("1.8.0_111")
             .create();
 
     static{
@@ -100,7 +102,7 @@ public class BuildConfiguration {
      * build.gradle file for more information.
      */
     public static void fullBuild(){
-        //buildISeriesExecutable();
+        buildISeriesExecutable();
     }
     
     /**
@@ -129,25 +131,35 @@ public class BuildConfiguration {
         //NO-OP
     }
     
-//    /**
-//     * Builds the executable file for the I-Series jar file.
-//     */
-//    private static void buildISeriesExecutable(){
-//        Launch4jProcessWrapper launch4jProcess = new Launch4jProcessWrapper(
-//                        new File(LAUNCH4J_PATH), executableConfiguration);
-//        StringBuilder output = new StringBuilder();
-//        
-//        System.out.println("Starting launch4j process");
-//        
-//        try{
-//            launch4jProcess.startProcess(output);
-//        } catch (IOException ex){
-//            System.err.println("The launch4j process failed: " + ex);
-//            System.err.println(
-//                    Arrays.toString(ex.getStackTrace()).replaceAll(",", ",\n"));
-//        }
-//        
-//        System.out.println("Launch4j output: " + (output.toString().equals("") 
-//                ? "No output" : output.toString()));
-//    }
+    /**
+     * Builds the executable file for the I-Series jar file.
+     */
+    private static void buildISeriesExecutable(){
+        System.out.println("Creating I-Series executable");
+        createExecutable(executableConfiguration);
+    }
+    
+    /**
+     * Creates an executable file with launch4j.
+     * 
+     * @param configuration the configuration settings for the executable file. 
+     */
+    private static void createExecutable(Launch4jConfiguration configuration){
+        Launch4jProcessWrapper launch4jProcess = new Launch4jProcessWrapper(
+                        new File(LAUNCH4J_PATH), configuration);
+        StringBuilder output = new StringBuilder();
+        
+        System.out.println("Starting launch4j process");
+        
+        try{
+            launch4jProcess.startProcess(output);
+        } catch (IOException ex){
+            System.err.println("The launch4j process failed: " + ex);
+            System.err.println(
+                    Arrays.toString(ex.getStackTrace()).replaceAll(",", ",\n"));
+        }
+        
+        System.out.println("Launch4j output: " + (output.toString().equals("") 
+                ? "No output" : output.toString()));
+    }
 }

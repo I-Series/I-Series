@@ -146,7 +146,7 @@ public final class Launch4jProcessWrapper {
                 }
         }
         
-        //CONFIGURATION_FILE.delete();
+        CONFIGURATION_FILE.delete();
         return l4jProcess.exitValue();
     }
     
