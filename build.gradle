@@ -13,8 +13,6 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import org.lmelaia.iseries.build.BuildConfiguration
-
 apply plugin: 'java'
 apply plugin: 'application'
 
@@ -29,28 +27,6 @@ if (!hasProperty('mainClass')) {
     ext.mainClass = 'org.lmelaia.iseries.Main'
 }
 
-/*
- * When called, this task runs the static method run()
- * inside the BuildConfiguration class, contained in the BuildSrc
- * subproject.
- * 
- * This task is called BEFORE running the root project.
- */
-task buildsrcRun << {
-    BuildConfiguration.run()
-}
-
-/*
- * When called, this task runs the static method build()
- * inside the BuildConfiguration class, contained in the BuildSrc
- * subproject.
- * 
- * This task is called AFTER building the root project.
- */
-task buildsrcBuild << {
-    BuildConfiguration.build()
-}
-
 repositories {
     mavenCentral()    
 }
@@ -62,17 +38,42 @@ dependencies {
 jar {
     manifest {
         attributes(
-            'Class-Path': configurations.compile.collect { "libs/" + it.getName() }.join(' '), 
+            'Class-Path': configurations.compile.collect {
+                "libs/" + it.getName() 
+            }.join(' '),
             'Main-Class': 'org.lmelaia.iseries.Main'
         )
     }
 }
 
-/*
- * Runs the task buildsrcBuild AFTER building the root project.
+/**
+ * A full build is considered a build of all the projects,
+ * subprojects AND a build of the executables, installers
+ * and what ever else needs doing. 
+ * 
+ * This task is NOT called from any other task, rather it
+ * must be called from the command line(o.e). This task
+ * is run when wanting to do a full build (defined above).
+ * 
+ * The build task is a dependency of this task to ensure:
+ * all the sources have been build before this task is run.
+ * Which ensures the build files (e.g. jar files) are
+ * up-to-date before trying to use them (which is done
+ * in a full build).
+ * 
+ * This task does NOTHING other than call the method
+ * org.lmelaia.iseries.build.BuildConfiguration:fullBuild()
+ * which does all the work.
+ * 
+ * This is used to bypass the build source main method
+ * as the build source main method is called when running
+ * the project, rather than building it. 
  */
-build.finalizedBy(buildsrcBuild)
-/*
- * Runs the task buildsrcRun BEFORE running the root project.
- */
-run.dependsOn(buildsrcRun)
+task fullBuild << {
+    println('Beginning full build...')
+    org.lmelaia.iseries.build.BuildConfiguration.fullBuild()
+}
+
+//Ensures all files (e.g. jar files) are up-to-date before
+//beginning a full build.
+fullBuild.dependsOn(build)

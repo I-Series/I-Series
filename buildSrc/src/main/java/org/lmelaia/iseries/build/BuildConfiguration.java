@@ -15,8 +15,7 @@
  */
 package org.lmelaia.iseries.build;
 
-import java.util.Arrays;
-import org.lmelaia.iseries.build.launch4j.Launch4jConfiguration;
+import java.io.File;
 import org.lmelaia.iseries.build.launch4j.Launch4jConfigurationBuilder;
 
 /**
@@ -29,7 +28,6 @@ public class BuildConfiguration {
     //******************************
     //    CONFIGURATION SETTINGS
     //******************************
-    
     /**
      * The string representation of the path to the I-Series project folder.
      */
@@ -52,60 +50,74 @@ public class BuildConfiguration {
     /**
      * The string representation of the path to the launch4j application folder.
      */
-    public static final String LAUNCH4J_PATH = "C:\\Program Files (x86)\\Launch4j";
-    
+    public static final String LAUNCH4J_PATH 
+            = "C:\\Program Files (x86)\\Launch4j";
+
     /**
      * The file name (not path) of the executable. This must end in '.exe'.
      */
     private static final String APPLICATION_NAME = "I-Series.exe";
 
-    private static final Launch4jConfiguration CONFIGURATION
+    private static Launch4jConfigurationBuilder CONFIGURATION
             = new Launch4jConfigurationBuilder()
             .setJarFile(JAR_PATH)
             .setOutputFile(OUTPUT_PATH + APPLICATION_NAME)
-            .setMinimumJreVersion("1.8.0_65")
-            .create();
-    
+            .setMinimumJreVersion("1.8.0_65");
+
+    static{
+        new File(OUTPUT_PATH).mkdirs();
+    }
     
     //*******************
     //      METHODS
     //*******************
     
     /**
-     * <b>
-     * This method is called BEFORE the root projects run task is executed.
-     * </b>
+     * This method is considered an alternative to
+     * {@link #main(java.lang.String[])}, and is
+     * called ONLY when the user whats to do a
+     * full build of the root project. 
      * 
      * <p>
-     * This allows any action to be completed before running
-     * the root project.
+     * It is guaranteed that a build of the root project
+     * and all subprojects is done before this method is called.
+     * 
+     * <p>
+     * This method begins a full build of the root project.
+     * I.E. creates the executable files, installers and
+     * so on.
+     * 
+     * <p>
+     * See the task fullBuild in the root projects
+     * build.gradle file for more information.
      */
-    public static void run(){
-        System.out.println("BuildConfiguration.run()");
-        //TODO: logic before running root project.
+    public static void fullBuild(){
+        System.out.println("fullBuild() was called");
     }
     
     /**
-     * <b>
-     * This method is called AFTER the root projects build task is executed.
-     * </b>
+     * The main method according to build source.
      * 
      * <p>
-     * This allows any action to be completed after building the root project,
-     * such as: building the executable and installer files.
-     */
-    public static void build(){
-        System.out.println("BuildConfiguration.build()");
-        //TODO: logic after building root project.
-    }
-    
-    /**
-     * Dummy main method for buildsrc:build.gradle.<p>
-     * <b>This method should NOT perform any operations!</b>
+     * This method is called from the final task when
+     * running the root project. As such, it's useless
+     * for building executables and what not as it's
+     * never called when simply building the root project,
+     * and it's called every time when running the root
+     * project.
+     * 
+     * <p>
+     * {@link #fullBuild()} can be considered an alternative
+     * to this method.
      * 
      * @param args 
+     * 
+     * @deprecated Use {@link #fullBuild() }. See the task
+     * fullBuild in the root projects build.gradle file for
+     * more information.
      */
-    public static void main(String[] args){
+    @Deprecated
+    public static void main(String[] args) {
         //NO-OP
     }
 }

@@ -135,6 +135,7 @@ public class FileTestingUtils {
             try (BufferedWriter writer = new BufferedWriter(
                     new FileWriter(ref))) {
                 writer.write(content);
+                writer.close();
             }
         }
     }
