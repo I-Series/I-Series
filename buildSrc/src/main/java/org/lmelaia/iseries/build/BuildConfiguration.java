@@ -16,7 +16,11 @@
 package org.lmelaia.iseries.build;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import org.lmelaia.iseries.build.launch4j.Launch4jConfiguration;
 import org.lmelaia.iseries.build.launch4j.Launch4jConfigurationBuilder;
+import org.lmelaia.iseries.build.launch4j.Launch4jProcessWrapper;
 
 /**
  * Holds the configuration settings for the build script.
@@ -58,11 +62,15 @@ public class BuildConfiguration {
      */
     private static final String APPLICATION_NAME = "I-Series.exe";
 
-    private static Launch4jConfigurationBuilder CONFIGURATION
+    /**
+     * The configuration settings to build the I-Series executable.
+     */
+    private static Launch4jConfiguration executableConfiguration
             = new Launch4jConfigurationBuilder()
             .setJarFile(JAR_PATH)
             .setOutputFile(OUTPUT_PATH + APPLICATION_NAME)
-            .setMinimumJreVersion("1.8.0_65");
+            .setMinimumJreVersion("1.8.0_65")
+            .create();
 
     static{
         new File(OUTPUT_PATH).mkdirs();
@@ -92,7 +100,7 @@ public class BuildConfiguration {
      * build.gradle file for more information.
      */
     public static void fullBuild(){
-        System.out.println("fullBuild() was called");
+        //buildISeriesExecutable();
     }
     
     /**
@@ -120,4 +128,26 @@ public class BuildConfiguration {
     public static void main(String[] args) {
         //NO-OP
     }
+    
+//    /**
+//     * Builds the executable file for the I-Series jar file.
+//     */
+//    private static void buildISeriesExecutable(){
+//        Launch4jProcessWrapper launch4jProcess = new Launch4jProcessWrapper(
+//                        new File(LAUNCH4J_PATH), executableConfiguration);
+//        StringBuilder output = new StringBuilder();
+//        
+//        System.out.println("Starting launch4j process");
+//        
+//        try{
+//            launch4jProcess.startProcess(output);
+//        } catch (IOException ex){
+//            System.err.println("The launch4j process failed: " + ex);
+//            System.err.println(
+//                    Arrays.toString(ex.getStackTrace()).replaceAll(",", ",\n"));
+//        }
+//        
+//        System.out.println("Launch4j output: " + (output.toString().equals("") 
+//                ? "No output" : output.toString()));
+//    }
 }

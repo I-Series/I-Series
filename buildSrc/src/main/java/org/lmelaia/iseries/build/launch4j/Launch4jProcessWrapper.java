@@ -43,6 +43,12 @@ import java.util.Objects;
 public final class Launch4jProcessWrapper {
 
     /**
+     * The launch4j configuration file name.
+     */
+    private static final String CONFIGURATION_FILE_NAME 
+            = System.getProperty("user.home") + "/launch4j%s.xml";
+    
+    /**
      * Number of milliseconds to wait before poling the process
      * while it is silent (i.e. has no more avaliable output).
      * 
@@ -65,14 +71,14 @@ public final class Launch4jProcessWrapper {
     private final Launch4jConfiguration configuration;
     
     /**
-     * The file which holds the launch4j configuration xml.
-     */
-    private File configurationFile = new File("launch4j.xml");
-
-    /**
      * Used to build the launch4j process.
      */
     private ProcessBuilder l4jProcessBuilder;
+    
+    /**
+     * The file which will hold the launch4j configuration xml.
+     */
+    private final File CONFIGURATION_FILE = getSuitableConfigurationFile();
     
     /**
      * Creates a new launch4j process wrapper.
@@ -116,8 +122,9 @@ public final class Launch4jProcessWrapper {
         Objects.requireNonNull(output);
         writeConfigurationFile();
         
-        l4jProcessBuilder = new ProcessBuilder(launch4jExecutable.getAbsolutePath(),
-                configurationFile.getAbsolutePath());
+        l4jProcessBuilder = new ProcessBuilder(
+                launch4jExecutable.getAbsolutePath(),
+                CONFIGURATION_FILE.getAbsolutePath());
         
         Process l4jProcess = l4jProcessBuilder.start();
         
@@ -139,8 +146,33 @@ public final class Launch4jProcessWrapper {
                 }
         }
         
-        configurationFile.delete();
+        //CONFIGURATION_FILE.delete();
         return l4jProcess.exitValue();
+    }
+    
+    /**
+     * @return an empty launch4j configuration file guaranteed not to exist.
+     */
+    private File getSuitableConfigurationFile(){
+        int fileNumber = 0;
+        
+        while(true){
+            File cfgFile = new File(CONFIGURATION_FILE_NAME.replace(
+                    "%s", String.valueOf(fileNumber)));
+            
+            if(!cfgFile.exists()){
+                try {
+                    cfgFile.createNewFile();
+                } catch (IOException ex) {
+                    //Should never even happen.
+                    //Done so a class level field can use this method.
+                    throw new RuntimeException(ex);
+                }
+                return cfgFile;
+            }
+            
+            fileNumber++;
+        }
     }
     
     /**
@@ -149,7 +181,7 @@ public final class Launch4jProcessWrapper {
      * @throws IOException if the file cannot be written to.
      */
     private void writeConfigurationFile() throws IOException{
-        try(FileWriter writer = new FileWriter(configurationFile)) {
+        try(FileWriter writer = new FileWriter(CONFIGURATION_FILE)) {
             writer.write(configuration.getConfigurationSourceAsString());
         }
     }
