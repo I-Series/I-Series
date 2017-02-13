@@ -22,6 +22,7 @@ import org.lmelaia.iseries.build.launch4j.Launch4jConfiguration;
 import org.lmelaia.iseries.build.launch4j.Launch4jConfigurationBuilder;
 import org.lmelaia.iseries.build.launch4j.Launch4jProcessWrapper;
 import static org.apache.commons.io.FileUtils.*;
+import org.lmelaia.iseries.build.licence.Licences;
 
 /**
  * Holds the configuration settings for the build script along with
@@ -71,7 +72,9 @@ public class BuildConfiguration {
     /**
      * The file name (not path) of the executable. This must end in '.exe'.
      */
-    private static final String APPLICATION_NAME = "I-Series.exe";
+    private static final String APPLICATION_NAME = "I-Series";
+    
+    private static final String EXECUTABLE_NAME = APPLICATION_NAME + ".exe";
 
     /**
      * The configuration settings to build the I-Series executable.
@@ -79,7 +82,7 @@ public class BuildConfiguration {
     private static Launch4jConfiguration executableConfiguration
             = new Launch4jConfigurationBuilder()
             .setJarFile(JAR_PATH)
-            .setOutputFile(OUTPUT_PATH + APPLICATION_NAME)
+            .setOutputFile(OUTPUT_PATH + EXECUTABLE_NAME)
             .setMinimumJreVersion("1.8.0_111")
             .create();
 
@@ -147,6 +150,9 @@ public class BuildConfiguration {
     private static void buildISeriesExecutable(){
         System.out.println("Creating I-Series executable");
         createExecutable(executableConfiguration);
+        
+        System.out.println("Copying over I-Series licence");
+        copyISeriesLicence();
     }
     
     /**
@@ -171,5 +177,10 @@ public class BuildConfiguration {
         
         System.out.println("Launch4j output: " + (output.toString().equals("") 
                 ? "No output" : output.toString()));
+    }
+    
+    private static void copyISeriesLicence(){
+        Licences.GNU.copyOver(new File(
+                OUTPUT_PATH + APPLICATION_NAME + " Licence.txt"));
     }
 }
