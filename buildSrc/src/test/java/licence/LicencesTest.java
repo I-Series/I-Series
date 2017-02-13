@@ -15,6 +15,8 @@
  */
 package licence;
 
+import org.lmelaia.iseries.build.licence.Licences;
+import org.lmelaia.iseries.build.licence.Licence;
 import static org.junit.Assert.fail;
 import org.junit.Test;
 
