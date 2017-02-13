@@ -21,5 +21,7 @@ public class Main {
      */
     public static void main(String[] args) {
         javax.swing.JOptionPane.showMessageDialog(null, "The application was run");
+        javax.swing.JOptionPane.showMessageDialog(null, 
+                com.google.gson.FieldNamingPolicy.LOWER_CASE_WITH_DASHES.name());
     }
 }

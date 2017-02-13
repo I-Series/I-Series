@@ -21,6 +21,7 @@ import java.util.Arrays;
 import org.lmelaia.iseries.build.launch4j.Launch4jConfiguration;
 import org.lmelaia.iseries.build.launch4j.Launch4jConfigurationBuilder;
 import org.lmelaia.iseries.build.launch4j.Launch4jProcessWrapper;
+import static org.apache.commons.io.FileUtils.*;
 
 /**
  * Holds the configuration settings for the build script along with
@@ -56,6 +57,7 @@ public class BuildConfiguration {
     /**
      * The string representation of the path to the launch4j application folder.
      */
+    //Change this to the path of launch4j on your machine.
     public static final String LAUNCH4J_PATH 
             = "C:\\Program Files (x86)\\Launch4j";
 
@@ -101,7 +103,8 @@ public class BuildConfiguration {
      * See the task fullBuild in the root projects
      * build.gradle file for more information.
      */
-    public static void fullBuild(){
+    public static void fullBuild() throws Exception{
+        cleanDirectory(new File(OUTPUT_PATH));
         buildISeriesExecutable();
     }
     
