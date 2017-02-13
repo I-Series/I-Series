@@ -62,6 +62,13 @@ public class BuildConfiguration {
             = "C:\\Program Files (x86)\\Launch4j";
 
     /**
+     * The path to the folder containing the licence for the project
+     * and libraries.
+     */
+    public static final String LICENCES_PATH
+            = PROJECT_PATH + "licences/";
+    
+    /**
      * The file name (not path) of the executable. This must end in '.exe'.
      */
     private static final String APPLICATION_NAME = "I-Series.exe";
