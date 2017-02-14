@@ -30,32 +30,36 @@ public enum Licences implements Licence{
     /**
      * The GNU General Public Licence Version 3.0.
      */
-    GNU{
-        @Override
-        public String getName(){
-            return "GNU General Public License 3.0";
-        }
-        
-        @Override
-        public File getFile(){
-            return getLicenceFile(getName() + ".txt");
-        }
-    },
+    GNU("GNU General Public License 3.0"),
     
     /**
      * The Apache 2.0 licence.
      */
-    APACHE{
-        @Override
-        public String getName(){
-            return "Apache 2.0";
-        }
-        
-        @Override
-        public File getFile(){
-            return getLicenceFile(getName() + ".txt");
-        }
-    };
+    APACHE("Apache 2.0");
+
+    /**
+     * The name of the licence.
+     * 
+     * <p>
+     * Normally, the name of the licence file is the same as the
+     * name of the licence. This allows the file name and licence
+     * name to defined in a single string. If the file name differs,
+     * the method {@link #getFile() } will need to be overridden.
+     * 
+     * <p>
+     * <b>When using the default functionality, the licence file
+     * should have a file extension of {@code .txt}.</b>
+     * 
+     */
+    private String name;
+    
+    /**
+     * @param name the name of the licence and, by convention, the
+     * name of the licence file.
+     */
+    private Licences(String name) {
+        this.name = name;
+    }
 
     /**
      * {@inheritDoc }
@@ -63,7 +67,7 @@ public enum Licences implements Licence{
      */
     @Override
     public String getName() {
-        return null;
+        return this.name;
     }
 
     /**
@@ -72,7 +76,7 @@ public enum Licences implements Licence{
      */
     @Override
     public File getFile() {
-        return null;
+        return getLicenceFile(getName() + ".txt");
     }
     
     /**
