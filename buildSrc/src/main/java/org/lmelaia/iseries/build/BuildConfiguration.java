@@ -42,6 +42,11 @@ public class BuildConfiguration {
     //******************************
     //    CONFIGURATION SETTINGS
     //******************************
+    
+    //******************************
+    //     FILES AND FILE PATHS
+    //******************************
+    
     /**
      * The string representation of the path to the I-Series project folder.
      */
@@ -49,17 +54,32 @@ public class BuildConfiguration {
             = "C:/Programming/Languages/Java/Projects/I-Series/";
 
     /**
+     * The I-Series project folder.
+     */
+    public static final File PROJECT_FOLDER = new File(PROJECT_PATH);
+    
+    /**
      * The string representation of the path to the I-Series jar file.
      */
     public static final String JAR_PATH
             = PROJECT_PATH
             + "build/libs/I-Series.jar";
+    
+    /**
+     * The I-Series jar file.
+     */
+    public static final File JAR_FILE = new File(JAR_PATH);
 
     /**
      * The string representation of the path to where the build output will be
      * written.
      */
     public static final String OUTPUT_PATH = PROJECT_PATH + "output/";
+    
+    /**
+     * The final build output folder.
+     */
+    public static final File OUTPUT_FOLDER = new File(OUTPUT_PATH);
 
     /**
      * The string representation of the path to the launch4j application folder.
@@ -67,6 +87,11 @@ public class BuildConfiguration {
     //Change this to the path of launch4j on your machine.
     public static final String LAUNCH4J_PATH
             = "C:/Program Files (x86)/Launch4j";
+    
+    /**
+     * The launch4j folder which contains the launch4j binaries and executables.
+     */
+    public static final File LAUNCH4J_FOLDER = new File(LAUNCH4J_PATH);
 
     /**
      * The path to the folder containing the licence for the project and
@@ -75,6 +100,48 @@ public class BuildConfiguration {
     public static final String LICENCES_PATH
             = PROJECT_PATH + "licences/";
 
+    /**
+     * The folder containing the licences files.
+     */
+    public static final File LICENCES_FOLDER = new File(LICENCES_PATH);
+    
+    /**
+     * The path to the folder containing the library jar files.
+     */
+    public static final String LIBRARIES_PATH
+            = PROJECT_PATH + "build/libs/libs/";
+    
+    /**
+     * The folder containing the library jar files.
+     */
+    public static final File LIBRARIES_FOLDER = new File(LIBRARIES_PATH);
+    
+    /**
+     * The path to the legal folder inside the output folder. This folder
+     * contains the licences for the libraries.
+     */
+    public static final String LEGAL_PATH = OUTPUT_PATH + "legal/";
+    
+    /**
+     * The folder containing the licences for the libraries.
+     */
+    public static final File LEGAL_FOLDER = new File(LEGAL_PATH);
+    
+    /**
+     * The path to the folder containing the copied libraries.
+     */
+    public static final String OUT_LIBRARIES_PATH = OUTPUT_PATH + "libs/";
+    
+    /**
+     * The folder containing the copied libraries.
+     */
+    public static final File OUT_LIBRARIES_FOLDER 
+            = new File(OUT_LIBRARIES_PATH);
+    
+    //******************************
+    //             NAMES
+    //******************************
+    
     /**
      * The name of the application.
      */
@@ -86,22 +153,10 @@ public class BuildConfiguration {
      */
     private static final String EXECUTABLE_NAME = APPLICATION_NAME + ".exe";
 
-    //Needs to be here or the FILES_TO_COPY array definition throws an
-    //exception.
-    static {
-        try {
-            cleanDirectory(new File(OUTPUT_PATH));
-        } catch (IOException | IllegalArgumentException ex) {
-            System.err.println("Failed to clean output directory");
-        }
-        
-        try {
-            FileUtils.forceMkdir(new File(OUTPUT_PATH));
-        } catch (IOException ex) {
-            System.err.println("Failed to create output directory: \n" + ex);
-        }
-    }
-
+    //******************************
+    //        CONFIGURATION
+    //******************************
+    
     /**
      * The configuration settings to build the I-Series executable.
      */
@@ -130,13 +185,6 @@ public class BuildConfiguration {
      */
     private static final LibraryManager LIBRARY_MANAGER;
 
-    /**
-     * A list of the libraries for the root project.
-     */
-    private static final Library[] LIBRARIES = {
-        new Library("Gson", "gson-2.8.0", Licences.APACHE)
-    };
-    
     static {
         LibraryManager pkg = null;
         
@@ -152,10 +200,18 @@ public class BuildConfiguration {
         
         LIBRARY_MANAGER = pkg;
     }
-
+    
+    /**
+     * A list of the libraries for the root project.
+     */
+    private static final Library[] LIBRARIES = {
+        new Library("Gson", "gson-2.8.0", Licences.APACHE)
+    };
+    
     //*******************
     //      METHODS
     //*******************
+    
     /**
      * This method is considered an alternative to
      * {@link #main(java.lang.String[])}, and is called ONLY when the user whats
@@ -174,10 +230,11 @@ public class BuildConfiguration {
      * information.
      */
     public static void fullBuild() throws Exception {
-        buildISeriesExecutable();
+        cleanOutput();
         copyFilesOver();
         addLibrariesToList();
         copyLibraries();
+        buildISeriesExecutable();
     }
 
     /**
@@ -209,7 +266,7 @@ public class BuildConfiguration {
         System.out.println("Creating I-Series executable");
         createExecutable(executableConfiguration);
     }
-
+    
     /**
      * Adds the list of libraries ({@link #LIBRARIES) to the library manager.
      */
@@ -221,6 +278,17 @@ public class BuildConfiguration {
                 System.err.println("Failed to add library: "
                         + library.getName() + "\n" + ex);
             }
+        }
+    }
+    
+    /**
+     * Deletes all the files in the output directory.
+     */
+    private static void cleanOutput(){
+        try {
+            cleanDirectory(new File(OUTPUT_PATH));
+        } catch (IOException | IllegalArgumentException ex) {
+            System.err.println("Failed to clean output directory: \n" + ex);
         }
     }
     

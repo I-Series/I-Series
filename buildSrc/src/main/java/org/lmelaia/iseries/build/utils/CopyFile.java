@@ -51,25 +51,12 @@ public class CopyFile {
      * @param newFileName optional new name of the copied file.
      */
     public CopyFile(File source, File destFolder, String newFileName){
-        if(!Objects.requireNonNull(source).exists()){
-            throw new IllegalArgumentException("Source file must exist");
-        }
-        
-        if(!Objects.requireNonNull(destFolder).exists()){
-            throw new IllegalArgumentException("Destination folder must exist");
-        }
-        
-        if(!destFolder.isDirectory()){
-            throw new IllegalArgumentException(
-                    "Destination folder must be a folder");
-        }
-        
         if(newFileName == null || newFileName.equals("")){
             newFileName = null;
         }
         
-        this.source = source;
-        this.destFolder = destFolder;
+        this.source = Objects.requireNonNull(source);
+        this.destFolder = Objects.requireNonNull(destFolder);
         this.newFileName = newFileName;
     }
     
@@ -91,6 +78,19 @@ public class CopyFile {
      * @return the new file.
      */
     public File copy() throws IOException{
+        if(!source.exists()){
+            throw new IllegalArgumentException("Source file must exist");
+        }
+        
+        if(!destFolder.exists()){
+            throw new IllegalArgumentException("Destination folder must exist");
+        }
+        
+        if(!destFolder.isDirectory()){
+            throw new IllegalArgumentException(
+                    "Destination folder must be a folder");
+        }
+        
         File dest;
 
         if (newFileName == null) {

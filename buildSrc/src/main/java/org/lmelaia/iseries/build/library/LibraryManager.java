@@ -113,6 +113,9 @@ public class LibraryManager {
      * @throws IOException if a file cannot be copied over.
      */
     public LibraryPackage copyOver() throws IOException {
+        FileUtils.forceMkdir(legal);
+        FileUtils.forceMkdir(to);
+        
         List<File> libraryFiles = new ArrayList<>();
         List<File> licenceFiles = new ArrayList<>();
         
