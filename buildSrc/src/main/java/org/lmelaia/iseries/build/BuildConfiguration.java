@@ -20,8 +20,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import org.lmelaia.iseries.build.launch4j.Launch4jConfiguration;
 import org.lmelaia.iseries.build.launch4j.Launch4jConfigurationBuilder;
@@ -350,6 +348,11 @@ public class BuildConfiguration {
                     Arrays.toString(ex.getStackTrace()).replaceAll(",", ",\n"));
         }
 
+        if(!output.toString().equals("launch4j: Compiling resources")){
+            System.err.println("Launch4j might have failed "
+                    + "to produce an executable");
+        }
+        
         System.out.println("Launch4j output: " + (output.toString().equals("")
                 ? "No output" : output.toString()));
     }
