@@ -57,7 +57,7 @@ public class LibraryManager {
     private final List<Library> libraries;
 
     /**
-     * Constructs a new library package.
+     * Constructs a new library manager.
      *
      * @param sourceFolder the folder containing the library jar files.
      * @param destFolder the folder to where the libraries will be copied.
@@ -109,13 +109,21 @@ public class LibraryManager {
     /**
      * Copies the library files and licence files over to the correct folders.
      *
+     * @return a library package containing the library and licence files.
      * @throws IOException if a file cannot be copied over.
      */
-    public void copyOver() throws IOException {
+    public LibraryPackage copyOver() throws IOException {
+        List<File> libraryFiles = new ArrayList<>();
+        List<File> licenceFiles = new ArrayList<>();
+        
         for (Library library : libraries) {
-            library.getLicenceFile().copy();
-            library.getLibraryFile().copy();
+            libraryFiles.add(library.getLicenceFile().copy());
+            licenceFiles.add(library.getLibraryFile().copy());
         }
+        
+        return new LibraryPackage(
+                libraryFiles.toArray(new File[libraryFiles.size()]),
+                licenceFiles.toArray(new File[licenceFiles.size()]));
     }
 
     /**
