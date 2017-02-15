@@ -16,6 +16,7 @@
 package org.lmelaia.iseries.build;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
@@ -24,6 +25,8 @@ import org.lmelaia.iseries.build.launch4j.Launch4jConfiguration;
 import org.lmelaia.iseries.build.launch4j.Launch4jConfigurationBuilder;
 import org.lmelaia.iseries.build.launch4j.Launch4jProcessWrapper;
 import static org.apache.commons.io.FileUtils.*;
+import org.lmelaia.iseries.build.library.Library;
+import org.lmelaia.iseries.build.library.LibraryManager;
 import org.lmelaia.iseries.build.licence.Licences;
 import org.lmelaia.iseries.build.utils.CopyFile;
 import org.lmelaia.iseries.build.utils.OutputCopyFile;
@@ -87,12 +90,18 @@ public class BuildConfiguration {
     //exception.
     static {
         try {
+            cleanDirectory(new File(OUTPUT_PATH));
+        } catch (IOException | IllegalArgumentException ex) {
+            System.err.println("Failed to clean output directory");
+        }
+        
+        try {
             FileUtils.forceMkdir(new File(OUTPUT_PATH));
         } catch (IOException ex) {
             System.err.println("Failed to create output directory: \n" + ex);
         }
     }
-    
+
     /**
      * The configuration settings to build the I-Series executable.
      */
@@ -112,8 +121,37 @@ public class BuildConfiguration {
         new OutputCopyFile(new File(PROJECT_PATH + "build/libs/I-Series.jar")),
         //I-Series licence
         new OutputCopyFile(Licences.GNU.getFile(),
-                APPLICATION_NAME + " Licence.txt")
+        APPLICATION_NAME + " Licence.txt")
     };
+
+    /**
+     * Contains a list of the libraries for the application and handles
+     * the copies of them and their licences.
+     */
+    private static final LibraryManager LIBRARY_MANAGER;
+
+    /**
+     * A list of the libraries for the root project.
+     */
+    private static final Library[] LIBRARIES = {
+        new Library("Gson", "gson-2.8.0", Licences.APACHE)
+    };
+    
+    static {
+        LibraryManager pkg = null;
+        
+        try {
+            pkg = new LibraryManager(
+                    new File(PROJECT_PATH + "build/libs/libs"),
+                    new File(OUTPUT_PATH + "libs/"),
+                    new File(OUTPUT_PATH + "legal/"));
+        } catch (IOException ex) {
+            System.err.println(
+                    "Failed to initialize the library package: \n" + ex);
+        }
+        
+        LIBRARY_MANAGER = pkg;
+    }
 
     //*******************
     //      METHODS
@@ -136,9 +174,10 @@ public class BuildConfiguration {
      * information.
      */
     public static void fullBuild() throws Exception {
-        cleanDirectory(new File(OUTPUT_PATH));
         buildISeriesExecutable();
         copyFilesOver();
+        addLibrariesToList();
+        copyLibraries();
     }
 
     /**
@@ -170,14 +209,40 @@ public class BuildConfiguration {
         System.out.println("Creating I-Series executable");
         createExecutable(executableConfiguration);
     }
+
+    /**
+     * Adds the list of libraries ({@link #LIBRARIES) to the library manager.
+     */
+    private static void addLibrariesToList(){
+        for(Library library : LIBRARIES){
+            try{
+                LIBRARY_MANAGER.addLibrary(library);
+            } catch (FileNotFoundException ex) {
+                System.err.println("Failed to add library: "
+                        + library.getName() + "\n" + ex);
+            }
+        }
+    }
     
     /**
-     * Copies over a list of files ({@link #FILES_TO_COPY}) to the output
-     * folder ({@link #OUTPUT_PATH}). These files include things such
-     * as the jar file, licences and so on.
+     * Uses the library manager to copy the libraries and library licences.
      */
-    private static void copyFilesOver(){
-        for(CopyFile file : FILES_TO_COPY){
+    private static void copyLibraries() {
+        System.out.println("Copying libraries and library licences");
+        try {
+            LIBRARY_MANAGER.copyOver();
+        } catch (IOException ex) {
+            System.err.println("Failed to copy over libraries: \n" + ex);
+        }
+    }
+
+    /**
+     * Copies over a list of files ({@link #FILES_TO_COPY}) to the output folder
+     * ({@link #OUTPUT_PATH}). These files include things such as the jar file,
+     * licences and so on.
+     */
+    private static void copyFilesOver() {
+        for (CopyFile file : FILES_TO_COPY) {
             System.out.println("Copying over file: " + file.toString());
             try {
                 file.copy();

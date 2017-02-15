@@ -98,7 +98,8 @@ public enum Licences implements Licence{
     /**
      * @param fileName the file name of the licence.
      * @return a licence file from the licences folder with the name
-     * matching the {@code fileName}
+     * matching the {@code fileName} or {@code null} if the file
+     * couldn't be found.
      */
     private static File getLicenceFile(String fileName){
         File licenceFile 
