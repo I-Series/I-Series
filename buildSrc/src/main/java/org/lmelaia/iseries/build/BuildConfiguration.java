@@ -20,6 +20,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import org.lmelaia.iseries.build.launch4j.Launch4jConfiguration;
 import org.lmelaia.iseries.build.launch4j.Launch4jConfigurationBuilder;
@@ -162,7 +164,8 @@ public class BuildConfiguration {
      */
     private static Launch4jConfiguration executableConfiguration
             = new Launch4jConfigurationBuilder()
-            .setJarFile(JAR_PATH)
+            .setJarRuntimePath("I-Series.jar")
+            .setWrap(false)
             .setOutputFile(OUTPUT_PATH + EXECUTABLE_NAME)
             .setMinimumJreVersion("1.8.0_111")
             .create();
@@ -285,6 +288,12 @@ public class BuildConfiguration {
      * Deletes all the files in the output directory.
      */
     private static void cleanOutput(){
+        try {
+            FileUtils.forceMkdir(OUTPUT_FOLDER);
+        } catch (IOException ex) {
+            System.out.println("Failed to create output directory: \n" + ex);
+        }
+        
         try {
             cleanDirectory(new File(OUTPUT_PATH));
         } catch (IOException | IllegalArgumentException ex) {

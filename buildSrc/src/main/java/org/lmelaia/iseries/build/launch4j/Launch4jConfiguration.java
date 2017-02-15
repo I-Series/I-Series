@@ -537,8 +537,8 @@ public class Launch4jConfiguration {
 //        jarFile.appendChild(doc.createTextNode(getJarFileName()));
 //        rootElement.appendChild(jarFile);
         
-        doc.getRootElement().addNewElement("jar")
-                .addText(getJarFileName());
+        doc.getRootElement().addNewElement("jar").addText(
+                (isWrapped()) ? getJarFileName() : getJarRuntimePath());
 
         //Element wrap = doc.createElement("dontWrapJar");
         //wrap.appendChild(doc.createTextNode(String.valueOf(!isWrapped())));
