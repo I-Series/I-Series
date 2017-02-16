@@ -169,6 +169,19 @@ public class BuildConfiguration {
             .create();
 
     /**
+     * Contains a list of the libraries for the application and handles
+     * the copies of them and their licences.
+     */
+    private static final LibraryManager LIBRARY_MANAGER = new LibraryManager(
+                    new File(PROJECT_PATH + "build/libs/libs"),
+                    new File(OUTPUT_PATH + "libs/"),
+                    new File(OUTPUT_PATH + "legal/"));
+    
+    //******************************
+    //             LISTS
+    //******************************
+    
+    /**
      * A list of files which need to be copied over to the output folder
      * ({@link #OUTPUT_PATH}).
      */
@@ -179,28 +192,6 @@ public class BuildConfiguration {
         new OutputCopyFile(Licences.GNU.getFile(),
         APPLICATION_NAME + " Licence.txt")
     };
-
-    /**
-     * Contains a list of the libraries for the application and handles
-     * the copies of them and their licences.
-     */
-    private static final LibraryManager LIBRARY_MANAGER;
-
-    static {
-        LibraryManager pkg = null;
-        
-        try {
-            pkg = new LibraryManager(
-                    new File(PROJECT_PATH + "build/libs/libs"),
-                    new File(OUTPUT_PATH + "libs/"),
-                    new File(OUTPUT_PATH + "legal/"));
-        } catch (IOException ex) {
-            System.err.println(
-                    "Failed to initialize the library package: \n" + ex);
-        }
-        
-        LIBRARY_MANAGER = pkg;
-    }
     
     /**
      * A list of the libraries for the root project.
@@ -209,57 +200,17 @@ public class BuildConfiguration {
         new Library("Gson", "gson-2.8.0", Licences.APACHE)
     };
     
+    /**
+     * A list of directories required to exist before beginning a full build.
+     */
+    private static final File[] REQUIRED_DIRECTORIES = {
+        OUTPUT_FOLDER, LEGAL_FOLDER, OUT_LIBRARIES_FOLDER
+    };
+    
     //*******************
     //      METHODS
     //*******************
     
-    /**
-     * This method is considered an alternative to
-     * {@link #main(java.lang.String[])}, and is called ONLY when the user whats
-     * to do a full build of the root project.
-     *
-     * <p>
-     * It is guaranteed that a build of the root project and all subprojects is
-     * done before this method is called.
-     *
-     * <p>
-     * This method begins a full build of the root project. I.E. creates the
-     * executable files, installers and so on.
-     *
-     * <p>
-     * See the task fullBuild in the root projects build.gradle file for more
-     * information.
-     */
-    public static void fullBuild() throws Exception {
-        cleanOutput();
-        copyFilesOver();
-        addLibrariesToList();
-        copyLibraries();
-        buildISeriesExecutable();
-    }
-
-    /**
-     * The main method according to build source.
-     *
-     * <p>
-     * This method is called from the final task when running the root project.
-     * As such, it's useless for building executables and what not as it's never
-     * called when simply building the root project, and it's called every time
-     * when running the root project.
-     *
-     * <p>
-     * {@link #fullBuild()} can be considered an alternative to this method.
-     *
-     * @param args
-     *
-     * @deprecated Use {@link #fullBuild() }. See the task fullBuild in the root
-     * projects build.gradle file for more information.
-     */
-    @Deprecated
-    public static void main(String[] args) {
-        //NO-OP
-    }
-
     /**
      * Builds the executable file for the I-Series jar file.
      */
@@ -283,20 +234,36 @@ public class BuildConfiguration {
     }
     
     /**
-     * Deletes all the files in the output directory.
+     * Creates the directories required to do a full build.
      */
-    private static void cleanOutput(){
-        try {
-            FileUtils.forceMkdir(OUTPUT_FOLDER);
-        } catch (IOException ex) {
-            System.out.println("Failed to create output directory: \n" + ex);
+    private static void createRequiredDirectories(){
+        for(File f : REQUIRED_DIRECTORIES){
+            if(!forceCleanMake(f)){
+                System.err.println("Failed to create/clean directory: " + f);
+            }
+        }
+    }
+    
+    /**
+     * Makes a directory, including any necessary but nonexistent parent
+     * directories if the directory is nonexistent, else the directory
+     * is cleaned.
+     * 
+     * @param f the directory
+     * @return {@code true} if and only if the directory was created or cleaned,
+     * {@code false} otherwise.
+     */
+    private static boolean forceCleanMake(File f){
+        try{
+            if(f.exists())
+                FileUtils.cleanDirectory(f);
+             else 
+                FileUtils.forceMkdir(f);
+        } catch (IOException ex){
+            return false;
         }
         
-        try {
-            cleanDirectory(new File(OUTPUT_PATH));
-        } catch (IOException | IllegalArgumentException ex) {
-            System.err.println("Failed to clean output directory: \n" + ex);
-        }
+        return true;
     }
     
     /**
@@ -401,5 +368,52 @@ public class BuildConfiguration {
         }
 
         FileUtils.copyFile(source, dest);
+    }
+    
+    /**
+     * This method is considered an alternative to
+     * {@link #main(java.lang.String[])}, and is called ONLY when the user whats
+     * to do a full build of the root project.
+     *
+     * <p>
+     * It is guaranteed that a build of the root project and all subprojects is
+     * done before this method is called.
+     *
+     * <p>
+     * This method begins a full build of the root project. I.E. creates the
+     * executable files, installers and so on.
+     *
+     * <p>
+     * See the task fullBuild in the root projects build.gradle file for more
+     * information.
+     */
+    public static void fullBuild() throws Exception {
+        createRequiredDirectories();
+        copyFilesOver();
+        addLibrariesToList();
+        copyLibraries();
+        buildISeriesExecutable();
+    }
+
+    /**
+     * The main method according to build source.
+     *
+     * <p>
+     * This method is called from the final task when running the root project.
+     * As such, it's useless for building executables and what not as it's never
+     * called when simply building the root project, and it's called every time
+     * when running the root project.
+     *
+     * <p>
+     * {@link #fullBuild()} can be considered an alternative to this method.
+     *
+     * @param args
+     *
+     * @deprecated Use {@link #fullBuild() }. See the task fullBuild in the root
+     * projects build.gradle file for more information.
+     */
+    @Deprecated
+    public static void main(String[] args) {
+        //NO-OP
     }
 }

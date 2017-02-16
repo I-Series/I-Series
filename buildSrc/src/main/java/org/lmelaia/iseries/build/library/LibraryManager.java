@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import org.apache.commons.io.FileUtils;
 import org.lmelaia.iseries.build.utils.CopyFile;
 
 /**
@@ -62,10 +61,8 @@ public class LibraryManager {
      * @param sourceFolder the folder containing the library jar files.
      * @param destFolder the folder to where the libraries will be copied.
      * @param legalFolder the folder to where the licences will be copied.
-     *
-     * @throws IOException if the destination folders couldn't be created.
      */
-    public LibraryManager(File sourceFolder, File destFolder, File legalFolder) throws IOException {
+    public LibraryManager(File sourceFolder, File destFolder, File legalFolder){
         if (!Objects.requireNonNull(sourceFolder).exists()) {
             throw new IllegalArgumentException("The source folder must exist");
         }
@@ -79,9 +76,6 @@ public class LibraryManager {
         this.to = Objects.requireNonNull(destFolder);
         this.legal = Objects.requireNonNull(legalFolder);
         libraries = new ArrayList<>();
-
-        FileUtils.forceMkdir(destFolder);
-        FileUtils.forceMkdir(legalFolder);
     }
 
     /**
@@ -113,9 +107,6 @@ public class LibraryManager {
      * @throws IOException if a file cannot be copied over.
      */
     public LibraryPackage copyOver() throws IOException {
-        FileUtils.forceMkdir(legal);
-        FileUtils.forceMkdir(to);
-        
         List<File> libraryFiles = new ArrayList<>();
         List<File> licenceFiles = new ArrayList<>();
         
