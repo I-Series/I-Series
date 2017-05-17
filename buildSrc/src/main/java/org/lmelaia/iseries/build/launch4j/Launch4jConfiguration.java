@@ -591,7 +591,7 @@ public class Launch4jConfiguration {
      * @param rootElement
      * @param doc
      */
-    public void appendHeader(XmlDocumentHelper doc) {
+    private void appendHeader(XmlDocumentHelper doc) {
         doc.getRootElement().addNewElement("headerType")
                 .addText(getHeaderType().toString().toLowerCase());
         
@@ -616,7 +616,7 @@ public class Launch4jConfiguration {
      * @param rootElement
      * @param doc
      */
-    public void appendSingleInstance(XmlDocumentHelper doc) {
+    private void appendSingleInstance(XmlDocumentHelper doc) {
         ElementHelper singleInstance 
                 = doc.getRootElement().addNewElement("singleInstance");
         
@@ -627,7 +627,7 @@ public class Launch4jConfiguration {
                 .addText(getWindowTitle());
     }
 
-    public void appendJre(XmlDocumentHelper doc) {
+    private void appendJre(XmlDocumentHelper doc) {
         ElementHelper jre = doc.getRootElement().addNewElement("jre");
         
         jre.addNewElement("path")
@@ -672,7 +672,7 @@ public class Launch4jConfiguration {
         //rootElement.appendChild(jre);
     }
     
-    public void appendEnvironmentVariables(XmlDocumentHelper doc) {
+    private void appendEnvironmentVariables(XmlDocumentHelper doc) {
         if(getEnvironmentVariables() != null)
             for(String variable : getEnvironmentVariables()){
                 doc.getRootElement().addNewElement("var")
@@ -680,7 +680,7 @@ public class Launch4jConfiguration {
             }
     }
     
-    public void appendSplashScreen(XmlDocumentHelper doc){
+    private void appendSplashScreen(XmlDocumentHelper doc){
         if(!isSplashScreenEnabled()){
             return;
         }
@@ -700,7 +700,7 @@ public class Launch4jConfiguration {
                 .addText(willSingleErrorOnTimeout());
     }
     
-    public void appendVersionInfo(XmlDocumentHelper doc){
+    private void appendVersionInfo(XmlDocumentHelper doc){
         if(!this.isVersionInformationAdded()){
             return;
         }
@@ -738,7 +738,7 @@ public class Launch4jConfiguration {
                 .addText(getOriginalFileName());
     }
 
-    public void appendMessages(XmlDocumentHelper doc){
+    private void appendMessages(XmlDocumentHelper doc){
         ElementHelper messages = doc.getRootElement().addNewElement("messages");
         
         messages.addNewElement("startupErr")

@@ -20,11 +20,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import org.lmelaia.iseries.build.launch4j.Launch4jConfiguration;
 import org.lmelaia.iseries.build.launch4j.Launch4jConfigurationBuilder;
 import org.lmelaia.iseries.build.launch4j.Launch4jProcessWrapper;
-import static org.apache.commons.io.FileUtils.*;
 import org.lmelaia.iseries.build.library.Library;
 import org.lmelaia.iseries.build.library.LibraryManager;
 import org.lmelaia.iseries.build.licence.Licences;
@@ -51,7 +52,7 @@ public class BuildConfiguration {
      * The string representation of the path to the I-Series project folder.
      */
     public static final String PROJECT_PATH
-            = "C:/Programming/Languages/Java/Projects/I-Series/";
+            = "C:/Users/Luke/Projects/Java/I-Series/";
 
     /**
      * The I-Series project folder.
@@ -414,6 +415,10 @@ public class BuildConfiguration {
      */
     @Deprecated
     public static void main(String[] args) {
-        //NO-OP
+        try {
+            fullBuild();
+        } catch (Exception ex) {
+            Logger.getLogger(BuildConfiguration.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

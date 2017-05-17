@@ -18,6 +18,7 @@ package org.lmelaia.iseries.build.launch4j;
 import java.io.File;
 import java.io.IOException;
 import static org.junit.Assert.fail;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.lmelaia.iseries.build.BuildConfiguration;
 import static org.lmelaia.iseries.build.BuildConfiguration.*;
@@ -75,6 +76,7 @@ public class Launch4jTest {
      *
      * @throws IOException
      */
+    @Ignore
     @Test
     public void testExecutableCreation() throws IOException {
         Launch4jProcessWrapper l4jProcessWrapper
