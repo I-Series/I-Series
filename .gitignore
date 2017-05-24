@@ -1,3 +1,6 @@
 /buildSrc/build/
 /build/
 /output/
+/buildSrc/.gradle/
+/.idea/
+/.gradle/
