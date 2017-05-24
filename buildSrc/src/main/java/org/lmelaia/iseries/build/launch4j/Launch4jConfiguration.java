@@ -526,99 +526,41 @@ public class Launch4jConfiguration {
      * @param doc
      */
     private void appendBasic(XmlDocumentHelper doc) {
-//        Element outputFile = doc.createElement("outfile");
-//        outputFile.appendChild(doc.createTextNode(getOutputFileName()));
-//        rootElement.appendChild(outputFile);
-        
         doc.getRootElement().addNewElement("outfile")
                 .addText(getOutputFileName());
 
-//        Element jarFile = doc.createElement("jar");
-//        jarFile.appendChild(doc.createTextNode(getJarFileName()));
-//        rootElement.appendChild(jarFile);
-        
         doc.getRootElement().addNewElement("jar").addText(
                 (isWrapped()) ? getJarFileName() : getJarRuntimePath());
-
-        //Element wrap = doc.createElement("dontWrapJar");
-        //wrap.appendChild(doc.createTextNode(String.valueOf(!isWrapped())));
-        //rootElement.appendChild(wrap);
 
         doc.getRootElement().addNewElement("dontWrapJar")
                 .addText(!isWrapped());
         
-//        Element manifest = doc.createElement("manifest");
-//        manifest.appendChild(doc.createTextNode(
-//                nullToEmpty(getWrapperManifest())));
-//        rootElement.appendChild(manifest);
-
         doc.getRootElement().addNewElement("manifest")
                 .addText(getWrapperManifest());
         
-        //Element icon = doc.createElement("icon");
-        //icon.appendChild(doc.createTextNode(nullToEmpty(getIconFileName())));
-        //rootElement.appendChild(icon);
-
         doc.getRootElement().addNewElement("icon")
                 .addText(getIconFileName());
         
-        //Element changeDirectory = doc.createElement("chdir");
-        //changeDirectory.appendChild(doc.createTextNode(getChangeDirectory()));
-        //rootElement.appendChild(changeDirectory);
-
         doc.getRootElement().addNewElement("chdir")
                 .addText(getChangeDirectory());
         
-        //Element cmdLine = doc.createElement("cmdLine");
-        //cmdLine.appendChild(doc.createTextNode(
-        //        nullToEmpty(getCommandLineArguments())));
-        //rootElement.appendChild(cmdLine);
-
         doc.getRootElement().addNewElement("cmdLine")
                 .addText(getCommandLineArguments());
         
-        //Element priority = doc.createElement("priority");
-        //priority.appendChild(doc.createTextNode(
-        //        getProcessPriority().name().toLowerCase()));
-        //rootElement.appendChild(priority);
-
         doc.getRootElement().addNewElement("priority")
                 .addText(getProcessPriority().name().toLowerCase());
         
-        //Element stayAlive = doc.createElement("stayAlive");
-        //stayAlive.appendChild(doc.createTextNode(
-        //        String.valueOf(willStayAlive())));
-        //rootElement.appendChild(stayAlive);
-
         doc.getRootElement().addNewElement("stayAlive")
                 .addText(willStayAlive());
         
-        //Element restartOnCrash = doc.createElement("restartOnCrash");
-        //restartOnCrash.appendChild(doc.createTextNode(
-        //        String.valueOf(willRestartAfterCrash())));
-        //rootElement.appendChild(restartOnCrash);
-
         doc.getRootElement().addNewElement("restartOnCrash")
                 .addText(willRestartAfterCrash());
         
-        //Element errTitle = doc.createElement("errTitle");
-        //errTitle.appendChild(doc.createTextNode(nullToEmpty(getErrorTitle())));
-        //rootElement.appendChild(errTitle);
-
         doc.getRootElement().addNewElement("errTitle")
                 .addText(getErrorTitle());
         
-        //Element downloadUrl = doc.createElement("downloadUrl");
-        //downloadUrl.appendChild(doc.createTextNode(getDownloadUrl()));
-        //rootElement.appendChild(downloadUrl);
-
         doc.getRootElement().addNewElement("downloadUrl")
                 .addText(getDownloadUrl());
-        
-        //Element supportUrl = doc.createElement("supportUrl");
-        //supportUrl.appendChild(doc.createTextNode(
-        //        nullToEmpty(getSupportUrl())));
-        //rootElement.appendChild(supportUrl);
         
         doc.getRootElement().addNewElement("supportUrl")
                 .addText(getSupportUrl());
@@ -631,23 +573,13 @@ public class Launch4jConfiguration {
      * @param doc
      */
     private void appendClasspath(XmlDocumentHelper doc) {
-        //Element classPath = doc.createElement("classPath");
-
         XmlDocumentHelper.ElementHelper classpath 
                 = doc.getRootElement().addNewElement("classPath");
         
-        //Element mainClass = doc.createElement("mainClass");
-        //mainClass.appendChild(doc.createTextNode(nullToEmpty(getMainClass())));
-        //classPath.appendChild(mainClass);
-
         classpath.addNewElement("mainClass")
                 .addText(getMainClass());
                 
         for (String s : getClasspath()) {
-            //cp = doc.createElement("cp");
-            //cp.appendChild(doc.createTextNode(s));
-            //classPath.appendChild(cp);
-            
             classpath.addNewElement("cp")
                     .addText(s);
         }
@@ -659,18 +591,12 @@ public class Launch4jConfiguration {
      * @param rootElement
      * @param doc
      */
-    public void appendHeader(XmlDocumentHelper doc) {
-        //Element headerType = doc.createElement("headerType");
-        
+    private void appendHeader(XmlDocumentHelper doc) {
         doc.getRootElement().addNewElement("headerType")
                 .addText(getHeaderType().toString().toLowerCase());
         
         if (getObjectFiles() != null) {
             for (String objectFile : getObjectFiles()) {
-                //Element obj = doc.createElement("obj");
-                //obj.appendChild(doc.createTextNode(objectFile));
-                //rootElement.appendChild(obj);
-                
                 doc.getRootElement().addNewElement("obj")
                         .addText(objectFile);
             }
@@ -678,10 +604,6 @@ public class Launch4jConfiguration {
 
         if (getW32Api() != null) {
             for (String w32api : getW32Api()) {
-                //Element api = doc.createElement("api");
-                //api.appendChild(doc.createTextNode(w32api));
-                //rootElement.appendChild(api);
-                
                 doc.getRootElement().addNewElement("api")
                         .addText(w32api);
             }
@@ -694,120 +616,48 @@ public class Launch4jConfiguration {
      * @param rootElement
      * @param doc
      */
-    public void appendSingleInstance(XmlDocumentHelper doc) {
-        //Element singleInstance = doc.createElement("singleInstance");
-
+    private void appendSingleInstance(XmlDocumentHelper doc) {
         ElementHelper singleInstance 
                 = doc.getRootElement().addNewElement("singleInstance");
         
-        //Element mutexName = doc.createElement("mutexName");
-        //mutexName.appendChild(doc.createTextNode(getMutexName()));
-        //singleInstance.appendChild(mutexName);
-
         singleInstance.addNewElement("mutexName")
                 .addText(getMutexName());
         
-        //Element windowTitle = doc.createElement("windowTitle");
-        //windowTitle.appendChild(doc.createTextNode(
-        //        (getWindowTitle() == null) ? "" : getWindowTitle()));
-        //singleInstance.appendChild(windowTitle);
-
         singleInstance.addNewElement("windowTitle")
                 .addText(getWindowTitle());
-        
-        //rootElement.appendChild(singleInstance);
     }
 
-    public void appendJre(XmlDocumentHelper doc) {
-        //Element jre = doc.createElement("jre");
-
+    private void appendJre(XmlDocumentHelper doc) {
         ElementHelper jre = doc.getRootElement().addNewElement("jre");
         
-        //Element path = doc.createElement("path");
-        //path.appendChild(doc.createTextNode(
-        //        (getBundledJrePath() == null) ? "" : getBundledJrePath()));
-        //jre.appendChild(path);
-
         jre.addNewElement("path")
                 .addText(getBundledJrePath());
         
-        //Element bundledJre64Bit = doc.createElement("bundledJre64Bit");
-        //bundledJre64Bit.appendChild(doc.createTextNode(
-        //        String.valueOf(is64Bit())));
-        //jre.appendChild(bundledJre64Bit);
-
         jre.addNewElement("bundledJre64Bit")
                 .addText(is64Bit());
         
-        //Element bundledJreAsFallback
-        //        = doc.createElement("bundledJreAsFallback");
-        //bundledJreAsFallback.appendChild(doc.createTextNode(
-        //        String.valueOf(isFallbackOption())));
-        //jre.appendChild(bundledJreAsFallback);
-
         jre.addNewElement("bundledJreAsFallback")
                 .addText(isFallbackOption());
         
-        //Element minVersion = doc.createElement("minVersion");
-        //minVersion.appendChild(doc.createTextNode(getMinimumJreVersion()));
-        //jre.appendChild(minVersion);
-
         jre.addNewElement("minVersion")
                 .addText(getMinimumJreVersion());
-        
-        //Element maxVersion = doc.createElement("maxVersion");
-        //maxVersion.appendChild(doc.createTextNode(
-        //        (getMaximumJreVersion() == null) ?
-        //                "" : getMaximumJreVersion()
-        //));
-        //jre.appendChild(maxVersion);
         
         jre.addNewElement("maxVersion")
                 .addText(getMaximumJreVersion());
 
-        //Element jdkPreference = doc.createElement("jdkPreference");
-        //jdkPreference.appendChild(doc.createTextNode(
-        //        this.getJavaUsageOptions().getOfficalName())
-        //);
-        //jre.appendChild(jdkPreference);
-
         jre.addNewElement("jdkPreference")
                 .addText(getJavaUsageOptions().getOfficalName());
         
-        //Element runtimeBits = doc.createElement("runtimeBits");
-        //runtimeBits.appendChild(doc.createTextNode(
-        //        getJavaArchitecture().getOfficalName())
-        //);
-        //jre.appendChild(runtimeBits);
-
         jre.addNewElement("runtimeBits")
                 .addText(getJavaArchitecture().getOfficalName());
         
         if (getInitialHeapSize() != 0) {
-            //Element initialHeapSize = doc.createElement(
-            //        (areHeapSizesPercentages()) ? "initialHeapPercent"
-            //                : "initialHeapSize"
-            //);
-            //initialHeapSize.appendChild(doc.createTextNode(
-            //        getInitialHeapSize() + ""
-            //));
-            //jre.appendChild(initialHeapSize);
-            
             jre.addNewElement((areHeapSizesPercentages()) ? "initialHeapPercent"
                             : "initialHeapSize")
                     .addText(getInitialHeapSize());
         }
         
         if (getMaximumHeapSize() != 0) {
-            //Element maxHeapSize = doc.createElement(
-            //        (areHeapSizesPercentages()) ? "maxHeapPercent"
-            //                : "maxHeapSize"
-            //);
-            //maxHeapSize.appendChild(doc.createTextNode(
-            //        getMaximumHeapSize() + ""
-            //));
-            //jre.appendChild(maxHeapSize);
-            
             jre.addNewElement((areHeapSizesPercentages()) ? "maxHeapPercent"
                             : "maxHeapSize")
                     .addText(getMaximumHeapSize());
@@ -815,10 +665,6 @@ public class Launch4jConfiguration {
         
         if(getJvmOptions() != null)
             for(String option : getJvmOptions()){
-                //Element opt = doc.createElement("opt");
-                //opt.appendChild(doc.createTextNode(option));
-                //jre.appendChild(opt);
-                
                 jre.addNewElement("opt")
                         .addText(option);
             }
@@ -826,167 +672,89 @@ public class Launch4jConfiguration {
         //rootElement.appendChild(jre);
     }
     
-    public void appendEnvironmentVariables(XmlDocumentHelper doc) {
+    private void appendEnvironmentVariables(XmlDocumentHelper doc) {
         if(getEnvironmentVariables() != null)
             for(String variable : getEnvironmentVariables()){
-                //Element var = doc.createElement("var");
-                //var.appendChild(doc.createTextNode(variable));
-                //doc.appendChild(var);
-                
                 doc.getRootElement().addNewElement("var")
                         .addText(variable);
             }
     }
     
-    public void appendSplashScreen(XmlDocumentHelper doc){
+    private void appendSplashScreen(XmlDocumentHelper doc){
         if(!isSplashScreenEnabled()){
             return;
         }
         
-        //Element splash = doc.createElement("splash");
-        
         ElementHelper splash = doc.getRootElement().addNewElement("splash");
-        
-        //Element file = doc.createElement("file");
-        //file.appendChild(doc.createTextNode(getSplashScreenFileName()));
-        //splash.appendChild(file);
         
         splash.addNewElement("file")
                 .addText(getSplashScreenFileName());
         
-        //Element waitForWindow = doc.createElement("waitForWindow");
-        //waitForWindow.appendChild(doc.createTextNode(willWaitForWindow() + ""));
-        //splash.appendChild(waitForWindow);
-        
         splash.addNewElement("waitForWindow")
                 .addText(willWaitForWindow());
-        
-        //Element timeout = doc.createElement("timeout");
-        //timeout.appendChild(doc.createTextNode(this.getTimeout() + ""));
-        //splash.appendChild(timeout);
         
         splash.addNewElement("timeout")
                 .addText(getTimeout());
         
-        //Element timeoutErr = doc.createElement("timeoutErr");
-        //timeoutErr.appendChild(doc.createTextNode(
-        //        willSingleErrorOnTimeout() + ""));
-        //splash.appendChild(timeoutErr);
-        
         splash.addNewElement("timeoutErr")
                 .addText(willSingleErrorOnTimeout());
-        
-        //doc.appendChild(splash);
     }
     
-    public void appendVersionInfo(XmlDocumentHelper doc){
+    private void appendVersionInfo(XmlDocumentHelper doc){
         if(!this.isVersionInformationAdded()){
             return;
         }
         
-        //Element versionInfo = createNewElement(doc, "versionInfo", null);
-        
         ElementHelper versionInfo = doc.getRootElement().addNewElement("versionInfo");
-        
-        //versionInfo.appendChild(createNewElement(doc, "fileVersion",
-        //        this.getFileVersion()));
         
         versionInfo.addNewElement("fileVersion")
                 .addText(getFileVersion());
         
-        //versionInfo.appendChild(createNewElement(doc, "txtFileVersion",
-        //        this.getFreeFormFileVersion()));
-        
         versionInfo.addNewElement("txtFileVersion")
                 .addText(getFreeFormFileVersion());
-        
-        //versionInfo.appendChild(createNewElement(doc, "fileDescription",
-        //        this.getFileDescription()));
         
         versionInfo.addNewElement("fileDescription")
                 .addText(getFileDescription());
         
-        //versionInfo.appendChild(createNewElement(doc, "copyright", 
-        //        this.getCopyright()));
-        
         versionInfo.addNewElement("copyright")
                 .addText(getCopyright());
-        
-        //versionInfo.appendChild(createNewElement(doc, "productVersion",
-        //        this.getProductVersion()));
         
         versionInfo.addNewElement("productVersion")
                 .addText(getProductVersion());
         
-        //versionInfo.appendChild(createNewElement(doc, "txtProductVersion",
-        //        this.getFreeFormProductVersion()));
-        
         versionInfo.addNewElement("txtProductVersion")
                 .addText(getFreeFormProductVersion());
-        
-        //versionInfo.appendChild(createNewElement(doc, "productName", 
-        //        this.getProductName()));
         
         versionInfo.addNewElement("productName")
                 .addText(getProductName());
         
-        //versionInfo.appendChild(createNewElement(doc, "companyName",
-        //        this.getCompanyName()));
-        
         versionInfo.addNewElement("companyName")
                 .addText(getCompanyName());
-        
-        //versionInfo.appendChild(createNewElement(doc, "internalName", 
-        //        this.getInternalName()));
         
         versionInfo.addNewElement("internalName")
                 .addText(getInternalName());
         
-        //versionInfo.appendChild(createNewElement(doc, "originalFileName", 
-        //        this.getOriginalFileName()));
-        
         versionInfo.addNewElement("originalFileName")
                 .addText(getOriginalFileName());
-        
-        //rootElement.appendChild(versionInfo);
     }
 
-    public void appendMessages(XmlDocumentHelper doc){
-        //Element messages = createNewElement(doc, "messages", null);
-        
+    private void appendMessages(XmlDocumentHelper doc){
         ElementHelper messages = doc.getRootElement().addNewElement("messages");
-        
-        //messages.appendChild(createNewElement(doc, "startupErr",
-        //        this.getStartupErrorMessage()));
         
         messages.addNewElement("startupErr")
                 .addText(getStartupErrorMessage());
         
-        //messages.appendChild(createNewElement(doc, "bundledJreErr",
-        //        this.getBundledJreErrorMessage()));
-        
         messages.addNewElement("bundledJreErr")
                 .addText(getBundledJreErrorMessage());
-        
-        //messages.appendChild(createNewElement(doc, "jreVersionErr", 
-        //        this.getJreVersionErrorMessage()));
         
         messages.addNewElement("jreVersionErr")
                 .addText(getJreVersionErrorMessage());
         
-        //messages.appendChild(createNewElement(doc, "launcherErr",
-        //        this.getLauncherErrorMessage()));
-        
         messages.addNewElement("launcherErr")
                 .addText(getLauncherErrorMessage());
         
-        //messages.appendChild(createNewElement(doc, "instanceAlreadyExistsMsg", 
-        //        this.getInstanceAlreadyRunningErrorMessage()));
-        
         messages.addNewElement("instanceAlreadyExistsMsg")
                 .addText(getInstanceAlreadyRunningErrorMessage());
-        
-        //rootElement.appendChild(messages);
     }
     
     /**

@@ -54,7 +54,7 @@ public class Launch4jConfigurationBuilderTest {
         try {
             getNewTestObject().create();
         } catch (InvalidLaunch4jConfigurationException ex) {
-            fail("Test object is invalid at creation time\n" + ex);
+            fail("Test object is invalid\n" + ex);
         }
     }
 
