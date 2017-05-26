@@ -16,10 +16,13 @@
 package org.lmelaia.iseries.build;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -46,6 +49,55 @@ public class BuildConfiguration {
     //******************************
     
     //******************************
+    //   NB FILES AND FILE PATHS
+    //******************************
+    
+    /**
+     * The string representation of the path to the I-Series project folder.
+     */
+    public static final String PROJECT_PATH
+            = "C:/Users/Luke/Projects/Java/I-Series/";
+    //Change this to the path on your machine.
+    
+    /**
+     * The I-Series project folder.
+     */
+    public static final File PROJECT_FOLDER = new File(PROJECT_PATH);
+    
+    //******************************
+    //       BUILD PROPERTIES
+    //******************************
+    
+    /**
+     * Path to the build properties file.
+     */
+    private static final String BUILD_PROPERTIES_PATH
+            = PROJECT_FOLDER + "/build.cfg";
+    
+    /**
+     * The build properties file.
+     */
+    private static final File BUILD_PROPERTIES_FILE 
+            = new File(BUILD_PROPERTIES_PATH);
+    
+    /**
+     * Build properties object. Holds the properties.
+     */
+    private static final Properties BUILD_PROPERTIES = new Properties();
+    
+    /**
+     * The build version property name.
+     */
+    private static final String BUILD_VERSION_CID = "build.version";
+    
+    /**
+     * Reads the properties from file and puts them in the properties object.
+     */
+    static{
+        readBuildProperties();
+    }
+    
+    //******************************
     //             NAMES
     //******************************
     /**
@@ -63,18 +115,6 @@ public class BuildConfiguration {
     //     FILES AND FILE PATHS
     //******************************
     
-    /**
-     * The string representation of the path to the I-Series project folder.
-     */
-    public static final String PROJECT_PATH
-            = "C:/Users/Luke/Projects/Java/I-Series/";
-    //Change this to the path on your machine.
-    
-    /**
-     * The I-Series project folder.
-     */
-    public static final File PROJECT_FOLDER = new File(PROJECT_PATH);
-
     /**
      * The string representation of the path to the I-Series jar file.
      */
@@ -171,7 +211,9 @@ public class BuildConfiguration {
      * The path to the windows distribution zip file
      */
     public static final String WINDOWS_ZIP_PATH = DISTRIBUTION_PATH
-            + APPLICATION_NAME + " Windows.zip";
+            + APPLICATION_NAME
+            + " v" + BUILD_PROPERTIES.getProperty(BUILD_VERSION_CID)
+            + " Windows.zip";
 
     /**
      * The windows distribution file.
@@ -182,14 +224,16 @@ public class BuildConfiguration {
      * The path to the cross-platform distribution zip file.
      */
     public static final String CROSSPLATFORM_ZIP_PATH = DISTRIBUTION_PATH
-            + APPLICATION_NAME + " Cross-platform.zip";
+            + APPLICATION_NAME 
+            + " v" + BUILD_PROPERTIES.getProperty(BUILD_VERSION_CID)
+            + " Cross-platform.zip";
 
     /**
      * The cross-platform distribution zip file.
      */
     public static final File CROSSPLATFORM_ZIP_FILE
             = new File(CROSSPLATFORM_ZIP_PATH);
-
+    
     //******************************
     //        CONFIGURATION
     //******************************
@@ -197,7 +241,7 @@ public class BuildConfiguration {
     /**
      * The configuration settings to build the I-Series executable.
      */
-    private static Launch4jConfiguration executableConfiguration
+    private static final Launch4jConfiguration EXEC_CONFIGURATION
             = new Launch4jConfigurationBuilder()
                     .setJarRuntimePath("I-Series.jar")
                     .setWrap(false)
@@ -213,7 +257,7 @@ public class BuildConfiguration {
             new File(PROJECT_PATH + "build/libs/libs"),
             new File(OUTPUT_PATH + "libs/"),
             new File(OUTPUT_PATH + "legal/"));
-
+    
     //******************************
     //             LISTS
     //******************************
@@ -253,7 +297,7 @@ public class BuildConfiguration {
      */
     private static void buildISeriesExecutable() {
         System.out.println("Creating I-Series executable");
-        createExecutable(executableConfiguration);
+        createExecutable(EXEC_CONFIGURATION);
     }
 
     /**
@@ -389,7 +433,34 @@ public class BuildConfiguration {
         //Delete output copy
         FileUtils.deleteDirectory(nwof);
     }
+    
+    /**
+     * Reads the build properties from file and writes them to the properties
+     * object.
+     */
+    private static void readBuildProperties(){
+        try (FileInputStream inputStream 
+                = new FileInputStream(BUILD_PROPERTIES_FILE)) {
+            BUILD_PROPERTIES.load(inputStream);
+        } catch (IOException iox){/**TODO: Log*/}
+    }
 
+    /**
+     * Writes the build properties from object to file.
+     * 
+     * @throws IOException 
+     */
+    private static void saveProperties(){
+        try (FileWriter writer = new FileWriter(BUILD_PROPERTIES_FILE)) {
+            BUILD_PROPERTIES.store(writer,
+                    "Contains the configuration settings"
+                            + " for the build (e.g. version number)");
+        } catch (IOException ex) {
+            System.err.println(ex.toString());
+            //TODO: Log
+        }
+    }
+    
     /**
      * Copies over a file to the output directory (Specified by
      * {@link #OUTPUT_PATH}). The new file will have the same name as the old.
@@ -452,6 +523,7 @@ public class BuildConfiguration {
      * <p>
      * See the task fullBuild in the root projects build.gradle file for more
      * information.
+     * @throws java.lang.Exception
      */
     public static void fullBuild() throws Exception {
         createRequiredDirectories();
@@ -461,8 +533,9 @@ public class BuildConfiguration {
         buildISeriesExecutable();
         //Give windows explorer time to refresh
         try{Thread.sleep(1000);}
-        catch(Exception ex){}
+        catch(InterruptedException ex){}
         zipProject();
+        saveProperties();
     }
 
     /**
