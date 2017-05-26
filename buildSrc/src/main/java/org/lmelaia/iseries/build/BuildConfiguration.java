@@ -23,9 +23,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.Logger;
 import org.lmelaia.iseries.build.launch4j.Launch4jConfiguration;
 import org.lmelaia.iseries.build.launch4j.Launch4jConfigurationBuilder;
 import org.lmelaia.iseries.build.launch4j.Launch4jProcessWrapper;
@@ -44,6 +43,8 @@ import org.lmelaia.iseries.build.utils.OutputCopyFile;
  */
 public class BuildConfiguration {
 
+    private static final Logger LOG = BuildLogger.getLogger();
+
     //******************************
     //    CONFIGURATION SETTINGS
     //******************************
@@ -58,12 +59,12 @@ public class BuildConfiguration {
     public static final String PROJECT_PATH
             = "C:/Users/Luke/Projects/Java/I-Series/";
     //Change this to the path on your machine.
-    
+
     /**
      * The I-Series project folder.
      */
     public static final File PROJECT_FOLDER = new File(PROJECT_PATH);
-    
+
     //******************************
     //       BUILD PROPERTIES
     //******************************
@@ -73,33 +74,34 @@ public class BuildConfiguration {
      */
     private static final String BUILD_PROPERTIES_PATH
             = PROJECT_FOLDER + "/build.cfg";
-    
+
     /**
      * The build properties file.
      */
-    private static final File BUILD_PROPERTIES_FILE 
+    private static final File BUILD_PROPERTIES_FILE
             = new File(BUILD_PROPERTIES_PATH);
-    
+
     /**
      * Build properties object. Holds the properties.
      */
     private static final Properties BUILD_PROPERTIES = new Properties();
-    
+
     /**
      * The build version property name.
      */
     private static final String BUILD_VERSION_CID = "build.version";
-    
+
     /**
      * Reads the properties from file and puts them in the properties object.
      */
-    static{
+    static {
         readBuildProperties();
     }
-    
+
     //******************************
     //             NAMES
     //******************************
+    
     /**
      * The name of the application.
      */
@@ -191,8 +193,8 @@ public class BuildConfiguration {
             = PROJECT_PATH + "distribution/";
 
     /**
-     * The distribution folder. Contains the files which will be distributed
-     * to the user.
+     * The distribution folder. Contains the files which will be distributed to
+     * the user.
      */
     public static final File DISTRIBUTION_FOLDER = new File(DISTRIBUTION_PATH);
 
@@ -224,7 +226,7 @@ public class BuildConfiguration {
      * The path to the cross-platform distribution zip file.
      */
     public static final String CROSSPLATFORM_ZIP_PATH = DISTRIBUTION_PATH
-            + APPLICATION_NAME 
+            + APPLICATION_NAME
             + " v" + BUILD_PROPERTIES.getProperty(BUILD_VERSION_CID)
             + " Cross-platform.zip";
 
@@ -233,7 +235,6 @@ public class BuildConfiguration {
      */
     public static final File CROSSPLATFORM_ZIP_FILE
             = new File(CROSSPLATFORM_ZIP_PATH);
-    
     //******************************
     //        CONFIGURATION
     //******************************
@@ -257,7 +258,7 @@ public class BuildConfiguration {
             new File(PROJECT_PATH + "build/libs/libs"),
             new File(OUTPUT_PATH + "libs/"),
             new File(OUTPUT_PATH + "legal/"));
-    
+
     //******************************
     //             LISTS
     //******************************
@@ -296,7 +297,7 @@ public class BuildConfiguration {
      * Builds the executable file for the I-Series jar file.
      */
     private static void buildISeriesExecutable() {
-        System.out.println("Creating I-Series executable");
+        LOG.debug("Creating executable");
         createExecutable(EXEC_CONFIGURATION);
     }
 
@@ -308,8 +309,7 @@ public class BuildConfiguration {
             try {
                 LIBRARY_MANAGER.addLibrary(library);
             } catch (FileNotFoundException ex) {
-                System.err.println("Failed to add library: "
-                        + library.getName() + "\n" + ex);
+                LOG.error("Failed to add library: " + library.getName(), ex);
             }
         }
     }
@@ -319,9 +319,7 @@ public class BuildConfiguration {
      */
     private static void createRequiredDirectories() {
         for (File f : REQUIRED_DIRECTORIES) {
-            if (!forceCleanMake(f)) {
-                System.err.println("Failed to create/clean directory: " + f);
-            }
+            forceCleanMake(f);
         }
     }
 
@@ -342,6 +340,8 @@ public class BuildConfiguration {
                 FileUtils.forceMkdir(f);
             }
         } catch (IOException ex) {
+            LOG.warn("Failed to force a clean make of the directory: " + f,
+                    ex);
             return false;
         }
 
@@ -352,11 +352,11 @@ public class BuildConfiguration {
      * Uses the library manager to copy the libraries and library licences.
      */
     private static void copyLibraries() {
-        System.out.println("Copying libraries and library licences");
+        LOG.debug("Copying libraries and library licences");
         try {
             LIBRARY_MANAGER.copyOver();
         } catch (IOException ex) {
-            System.err.println("Failed to copy over libraries: \n" + ex);
+            LOG.error("Failed to copy over libraries", ex);
         }
     }
 
@@ -367,12 +367,11 @@ public class BuildConfiguration {
      */
     private static void copyFilesOver() {
         for (CopyFile file : FILES_TO_COPY) {
-            System.out.println("Copying over file: " + file.toString());
+            LOG.debug("Copying file: " + file + " to output directory.");
             try {
                 file.copy();
             } catch (IOException ex) {
-                System.err.println("Failed to copy file: " + file.toString()
-                        + "\n" + ex);
+                LOG.error("Failed to copy file", ex);
             }
         }
     }
@@ -387,30 +386,26 @@ public class BuildConfiguration {
                 new File(LAUNCH4J_PATH), configuration);
         StringBuilder output = new StringBuilder();
 
-        System.out.println("Starting launch4j process");
+        LOG.debug("Starting launch4j process");
 
         try {
             launch4jProcess.startProcess(output);
         } catch (IOException ex) {
-            System.err.println("The launch4j process failed: " + ex);
-            System.err.println(
-                    Arrays.toString(ex.getStackTrace()).replaceAll(",", ",\n"));
+            LOG.error("Launch4j process failed", ex);
         }
 
         if (!output.toString().equals("launch4j: Compiling resources")) {
-            System.err.println("Launch4j might have failed "
-                    + "to produce an executable");
+            LOG.error("Launch4j produced unexpected output: " 
+                    + (output.toString().equals("") 
+                            ? "No output" : output.toString()) );
         }
-
-        System.out.println("Launch4j output: " + (output.toString().equals("")
-                ? "No output" : output.toString()));
     }
 
     /**
-     * Zips the projects build output into a windows and a cross-platform
-     * zip file.
-     * 
-     * @throws IOException 
+     * Zips the projects build output into a windows and a cross-platform zip
+     * file.
+     *
+     * @throws IOException
      */
     private static void zipProject() throws IOException {
         //Create a copy of the output folder without
@@ -433,34 +428,37 @@ public class BuildConfiguration {
         //Delete output copy
         FileUtils.deleteDirectory(nwof);
     }
-    
+
     /**
      * Reads the build properties from file and writes them to the properties
      * object.
      */
-    private static void readBuildProperties(){
-        try (FileInputStream inputStream 
+    private static void readBuildProperties() {
+        LOG.debug("Reading build config from file: " + BUILD_PROPERTIES_PATH);
+        try (FileInputStream inputStream
                 = new FileInputStream(BUILD_PROPERTIES_FILE)) {
             BUILD_PROPERTIES.load(inputStream);
-        } catch (IOException iox){/**TODO: Log*/}
+        } catch (IOException iox) {
+            LOG.error("Failed to load build config", iox);
+        }
     }
 
     /**
      * Writes the build properties from object to file.
-     * 
-     * @throws IOException 
+     *
+     * @throws IOException
      */
-    private static void saveProperties(){
+    private static void saveProperties() {
+        LOG.debug("Saving build config to file: " + BUILD_PROPERTIES_PATH);
         try (FileWriter writer = new FileWriter(BUILD_PROPERTIES_FILE)) {
             BUILD_PROPERTIES.store(writer,
                     "Contains the configuration settings"
-                            + " for the build (e.g. version number)");
+                    + " for the build (e.g. version number)");
         } catch (IOException ex) {
-            System.err.println(ex.toString());
-            //TODO: Log
+            LOG.error("Failed to save build config", ex);
         }
     }
-    
+
     /**
      * Copies over a file to the output directory (Specified by
      * {@link #OUTPUT_PATH}). The new file will have the same name as the old.
@@ -523,6 +521,7 @@ public class BuildConfiguration {
      * <p>
      * See the task fullBuild in the root projects build.gradle file for more
      * information.
+     *
      * @throws java.lang.Exception
      */
     public static void fullBuild() throws Exception {
@@ -532,8 +531,10 @@ public class BuildConfiguration {
         copyLibraries();
         buildISeriesExecutable();
         //Give windows explorer time to refresh
-        try{Thread.sleep(1000);}
-        catch(InterruptedException ex){}
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+        }
         zipProject();
         saveProperties();
     }
@@ -557,10 +558,12 @@ public class BuildConfiguration {
      */
     @Deprecated
     public static void main(String[] args) {
+        LOG.info("Beginning full build...");
+        
         try {
             fullBuild();
         } catch (Exception ex) {
-            Logger.getLogger(BuildConfiguration.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.error("Full build failed", ex);
         }
     }
 }

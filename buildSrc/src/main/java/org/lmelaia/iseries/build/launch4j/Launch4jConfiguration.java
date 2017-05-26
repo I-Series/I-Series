@@ -16,16 +16,14 @@
 package org.lmelaia.iseries.build.launch4j;
 
 import java.io.StringWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import org.apache.logging.log4j.Logger;
+import org.lmelaia.iseries.build.BuildLogger;
 import org.lmelaia.iseries.build.utils.XmlDocumentHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -48,7 +46,9 @@ import static org.lmelaia.iseries.build.utils.XmlDocumentHelper.ElementHelper;
  */
 public class Launch4jConfiguration {
 
-    private Launch4jConfigurationBuilder l4jConfigurationBuilder;
+    private static final Logger LOG = BuildLogger.getLogger();
+    
+    private final Launch4jConfigurationBuilder l4jConfigurationBuilder;
 
     protected Launch4jConfiguration(
             Launch4jConfigurationBuilder l4jConfigurationBuilder) {
@@ -774,11 +774,7 @@ public class Launch4jConfiguration {
 
             return br.toString();
         } catch (TransformerException | ParserConfigurationException ex) {
-            Logger.getLogger(Launch4jConfiguration.class.getName())
-                    .log(Level.SEVERE, null, ex);
-            //TODO: Fix this by adding propper logging.
-            System.err.println("Failed to parse launch4j xml configuration"
-                    + " and turn it into a string.\n" + ex);
+            LOG.error("Failed to parse launch4j xml configuration", ex);
         }
         return null;//Shouldn't get here
     }

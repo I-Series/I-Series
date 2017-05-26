@@ -85,8 +85,6 @@ public class Launch4jTest {
 
         int l4jExitCode = l4jProcessWrapper.startProcess(output);
 
-        System.out.println("Launch4j output: " + output.toString());
-        
         //Launch4j failed to create the executable
         if (l4jExitCode != 0) {
             fail("Launch4j failed with exit code: " + l4jExitCode);
