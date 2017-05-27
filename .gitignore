@@ -13,4 +13,6 @@
 >>>>>>> Iz-pack
 buildSrc/.gradle/2.13/taskArtifacts/cache.properties.lock
 /buildoutput/
+/buildSrc/logs/
+/buildOutput/
 /distribution/
