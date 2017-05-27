@@ -1,20 +1,4 @@
-[[INFO ] on [main] at [00:26:57(.092)] in [org.lmelaia.iseries.build.BuildLogger]]:
+[[INFO ] on [Test worker] at [23:42:59(.320)] in [org.lmelaia.iseries.build.BuildLogger]]:
 		 Logger initialized with configuration file: /C:/Users/Luke/Projects/Java/I-Series/buildSrc/build/resources/main/configuration/log4j2_configuration.xml
-[[INFO ] on [main] at [00:26:57(.095)] in [org.lmelaia.iseries.build.BuildLogger]]:
+[[INFO ] on [Test worker] at [23:42:59(.330)] in [org.lmelaia.iseries.build.BuildLogger]]:
 		 Ignore configuration file not found warning.
-[[DEBUG] on [main] at [00:26:57(.096)] in [org.lmelaia.iseries.build.BuildConfiguration]]:
-		 Reading build config from file: C:\Users\Luke\Projects\Java\I-Series/build.cfg
-[[INFO ] on [main] at [00:26:57(.117)] in [org.lmelaia.iseries.build.BuildConfiguration]]:
-		 Beginning full build...
-[[DEBUG] on [main] at [00:26:57(.147)] in [org.lmelaia.iseries.build.BuildConfiguration]]:
-		 Copying file: org.lmelaia.iseries.build.utils.OutputCopyFile[source=C:\Users\Luke\Projects\Java\I-Series\build\libs\I-Series.jar, destination=C:\Users\Luke\Projects\Java\I-Series\buildoutput, newName=null] to output directory.
-[[DEBUG] on [main] at [00:26:57(.166)] in [org.lmelaia.iseries.build.BuildConfiguration]]:
-		 Copying file: org.lmelaia.iseries.build.utils.OutputCopyFile[source=C:\Users\Luke\Projects\Java\I-Series\licences\GNU General Public License 3.0.txt, destination=C:\Users\Luke\Projects\Java\I-Series\buildoutput, newName=I-Series Licence.txt] to output directory.
-[[DEBUG] on [main] at [00:26:57(.187)] in [org.lmelaia.iseries.build.BuildConfiguration]]:
-		 Copying libraries and library licences
-[[DEBUG] on [main] at [00:26:57(.227)] in [org.lmelaia.iseries.build.BuildConfiguration]]:
-		 Creating executable
-[[DEBUG] on [main] at [00:26:57(.232)] in [org.lmelaia.iseries.build.BuildConfiguration]]:
-		 Starting launch4j process
-[[DEBUG] on [main] at [00:26:59(.340)] in [org.lmelaia.iseries.build.BuildConfiguration]]:
-		 Saving build config to file: C:\Users\Luke\Projects\Java\I-Series/build.cfg
