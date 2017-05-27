@@ -38,8 +38,8 @@ public class CopyFileTest {
                     new TestFile("File1.txt").setContent("Some content"),
                     new TestFile("File2.txt").setContent("Some more content"));
     
-    private static final File DEST_FOLDER = new File(
-            BuildConfiguration.PROJECT_PATH + "copyFileTestFolder");
+    private static final File DEST_FOLDER = BuildConfiguration.SPROJECT_FOLDER
+                    .forward("copyFileTestFolder").getFile();
     
     public CopyFileTest() {
     }

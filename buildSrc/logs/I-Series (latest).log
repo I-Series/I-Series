@@ -1,4 +1,8 @@
-[[INFO ] on [Test worker] at [23:42:59(.320)] in [org.lmelaia.iseries.build.BuildLogger]]:
+[[INFO ] on [main] at [01:29:23(.882)] in [org.lmelaia.iseries.build.BuildLogger.<init>(BuildLogger.java:60)]]:
 		 Logger initialized with configuration file: /C:/Users/Luke/Projects/Java/I-Series/buildSrc/build/resources/main/configuration/log4j2_configuration.xml
-[[INFO ] on [Test worker] at [23:42:59(.330)] in [org.lmelaia.iseries.build.BuildLogger]]:
+[[INFO ] on [main] at [01:29:23(.887)] in [org.lmelaia.iseries.build.BuildLogger.<init>(BuildLogger.java:62)]]:
 		 Ignore configuration file not found warning.
+[[INFO ] on [main] at [01:29:23(.930)] in [org.lmelaia.iseries.build.BuildConfiguration.main(BuildConfiguration.java:511)]]:
+		 Beginning full build...
+[[INFO ] on [main] at [01:29:26(.196)] in [org.lmelaia.iseries.build.BuildConfiguration.fullBuild(BuildConfiguration.java:489)]]:
+		 Full build completed without fatal errors

@@ -20,7 +20,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Properties;
 import org.apache.commons.io.FileUtils;
@@ -34,6 +33,7 @@ import org.lmelaia.iseries.build.licence.Licences;
 import org.lmelaia.iseries.build.packaging.ZipPackager;
 import org.lmelaia.iseries.build.utils.CopyFile;
 import org.lmelaia.iseries.build.utils.OutputCopyFile;
+import org.lmelaia.iseries.build.utils.SmartFile;
 
 /**
  * Holds the configuration settings for the build script along with methods to
@@ -50,36 +50,25 @@ public class BuildConfiguration {
     //******************************
     
     //******************************
-    //   NB FILES AND FILE PATHS
+    //   NB FILES AND FOLDERS
     //******************************
     
     /**
-     * The string representation of the path to the I-Series project folder.
-     */
-    public static final String PROJECT_PATH
-            = "C:/Users/Luke/Projects/Java/I-Series/";
-    //Change this to the path on your machine.
-
-    /**
      * The I-Series project folder.
      */
-    public static final File PROJECT_FOLDER = new File(PROJECT_PATH);
+    public static final SmartFile SPROJECT_FOLDER = SmartFile.getSmartFile(
+            //CHANGE: Change this to the project folder path on your machine
+            "C:/Users/Luke/Projects/Java/I-Series");
 
     //******************************
     //       BUILD PROPERTIES
     //******************************
     
     /**
-     * Path to the build properties file.
-     */
-    private static final String BUILD_PROPERTIES_PATH
-            = PROJECT_FOLDER + "/build.cfg";
-
-    /**
      * The build properties file.
      */
-    private static final File BUILD_PROPERTIES_FILE
-            = new File(BUILD_PROPERTIES_PATH);
+    private static final SmartFile SBUILD_PROPERTIES_FILE
+            = SPROJECT_FOLDER.forward("build.cfg");
 
     /**
      * Build properties object. Holds the properties.
@@ -101,7 +90,6 @@ public class BuildConfiguration {
     //******************************
     //             NAMES
     //******************************
-    
     /**
      * The name of the application.
      */
@@ -118,127 +106,79 @@ public class BuildConfiguration {
     //******************************
     
     /**
-     * The string representation of the path to the I-Series jar file.
-     */
-    public static final String JAR_PATH
-            = PROJECT_PATH
-            + "build/libs/I-Series.jar";
-
-    /**
      * The I-Series jar file.
      */
-    public static final File JAR_FILE = new File(JAR_PATH);
-
-    /**
-     * The string representation of the path to where the build output will be
-     * written.
-     */
-    public static final String OUTPUT_PATH = PROJECT_PATH + "buildoutput/";
+    public static final SmartFile SJAR_FILE = SPROJECT_FOLDER
+            .forward("build")
+            .forward("libs")
+            .forward(APPLICATION_NAME + ".jar");
 
     /**
      * The final build output folder.
      */
-    public static final File OUTPUT_FOLDER = new File(OUTPUT_PATH);
+    public static final SmartFile SOUTPUT_FOLDER = SPROJECT_FOLDER
+            .forward("buildOutput");
 
-    /**
-     * The string representation of the path to the launch4j application folder.
-     */
-    //Change this to the path of launch4j on your machine.
-    public static final String LAUNCH4J_PATH
-            = "C:/Program Files (x86)/Launch4j";
-
+    
     /**
      * The launch4j folder which contains the launch4j binaries and executables.
      */
-    public static final File LAUNCH4J_FOLDER = new File(LAUNCH4J_PATH);
-
-    /**
-     * The path to the folder containing the licence for the project and
-     * libraries.
-     */
-    public static final String LICENCES_PATH
-            = PROJECT_PATH + "licences/";
+    public static final SmartFile SLAUNCH4J_FOLDER = SmartFile.getSmartFile(
+            //CHANGE: Change this to the path of launch4j on your machine.
+            "C:/Program Files (x86)/Launch4j");
 
     /**
      * The folder containing the licences files.
      */
-    public static final File LICENCES_FOLDER = new File(LICENCES_PATH);
-
-    /**
-     * The path to the folder containing the library jar files.
-     */
-    public static final String LIBRARIES_PATH
-            = PROJECT_PATH + "build/libs/libs/";
+    public static final SmartFile SLICENCES_FOLDER = SPROJECT_FOLDER
+            .forward("licences");
 
     /**
      * The folder containing the library jar files.
      */
-    public static final File LIBRARIES_FOLDER = new File(LIBRARIES_PATH);
-
-    /**
-     * The path to the legal folder inside the output folder. This folder
-     * contains the licences for the libraries.
-     */
-    public static final String LEGAL_PATH = OUTPUT_PATH + "legal/";
+    public static final SmartFile SLIBRARIES_FOLDER = SPROJECT_FOLDER
+            .forward("build").forward("libs").forward("libs");
 
     /**
      * The folder containing the licences for the libraries.
      */
-    public static final File LEGAL_FOLDER = new File(LEGAL_PATH);
-
-    /**
-     * The path to the distribution folder.
-     */
-    public static final String DISTRIBUTION_PATH
-            = PROJECT_PATH + "distribution/";
+    public static final SmartFile SLEGAL_FOLDER = SOUTPUT_FOLDER
+            .forward("legal");
 
     /**
      * The distribution folder. Contains the files which will be distributed to
      * the user.
      */
-    public static final File DISTRIBUTION_FOLDER = new File(DISTRIBUTION_PATH);
-
-    /**
-     * The path to the folder containing the copied libraries.
-     */
-    public static final String OUT_LIBRARIES_PATH = OUTPUT_PATH + "libs/";
+    public static final SmartFile SDISTRIBUTION_FOLDER = SPROJECT_FOLDER
+            .forward("distribution");
 
     /**
      * The folder containing the copied libraries.
      */
-    public static final File OUT_LIBRARIES_FOLDER
-            = new File(OUT_LIBRARIES_PATH);
+    public static final SmartFile SOUT_LIBRARIES_FOLDER = SOUTPUT_FOLDER
+            .forward("libs");
 
     /**
-     * The path to the windows distribution zip file
+     * The windows distribution zip file.
      */
-    public static final String WINDOWS_ZIP_PATH = DISTRIBUTION_PATH
-            + APPLICATION_NAME
-            + " v" + BUILD_PROPERTIES.getProperty(BUILD_VERSION_CID)
-            + " Windows.zip";
-
-    /**
-     * The windows distribution file.
-     */
-    public static final File WINDOWS_ZIP_FILE = new File(WINDOWS_ZIP_PATH);
-
-    /**
-     * The path to the cross-platform distribution zip file.
-     */
-    public static final String CROSSPLATFORM_ZIP_PATH = DISTRIBUTION_PATH
-            + APPLICATION_NAME
-            + " v" + BUILD_PROPERTIES.getProperty(BUILD_VERSION_CID)
-            + " Cross-platform.zip";
+    public static final SmartFile SWINDOWS_ZIP_FILE = SDISTRIBUTION_FOLDER
+            .forward(
+                    APPLICATION_NAME
+                    + " v"
+                    + BUILD_PROPERTIES.getProperty(BUILD_VERSION_CID)
+                    + " Windows.zip");
 
     /**
      * The cross-platform distribution zip file.
      */
-    public static final File CROSSPLATFORM_ZIP_FILE
-            = new File(CROSSPLATFORM_ZIP_PATH);
+    public static final SmartFile SCROSSPLATFORM_ZIP_FILE = SDISTRIBUTION_FOLDER
+            .forward(APPLICATION_NAME
+                    + " v" + BUILD_PROPERTIES.getProperty(BUILD_VERSION_CID)
+                    + " Cross-platform.zip");
     //******************************
     //        CONFIGURATION
     //******************************
-    
+
     /**
      * The configuration settings to build the I-Series executable.
      */
@@ -246,7 +186,8 @@ public class BuildConfiguration {
             = new Launch4jConfigurationBuilder()
                     .setJarRuntimePath("I-Series.jar")
                     .setWrap(false)
-                    .setOutputFile(OUTPUT_PATH + EXECUTABLE_NAME)
+                    .setOutputFile(
+                            SOUTPUT_FOLDER.forward(EXECUTABLE_NAME).getPath())
                     .setMinimumJreVersion("1.8.0_111")
                     .create();
 
@@ -255,21 +196,22 @@ public class BuildConfiguration {
      * copies of them and their licences.
      */
     private static final LibraryManager LIBRARY_MANAGER = new LibraryManager(
-            new File(PROJECT_PATH + "build/libs/libs"),
-            new File(OUTPUT_PATH + "libs/"),
-            new File(OUTPUT_PATH + "legal/"));
+            SPROJECT_FOLDER.forward("build").forward("libs")
+                    .forward("libs").getFile(),
+            SOUTPUT_FOLDER.forward("libs").getFile(),
+            SOUTPUT_FOLDER.forward("legal").getFile());
 
     //******************************
     //             LISTS
     //******************************
-    
     /**
      * A list of files which need to be copied over to the output folder
      * ({@link #OUTPUT_PATH}).
      */
     private static final CopyFile[] FILES_TO_COPY = {
         //Jar file
-        new OutputCopyFile(new File(PROJECT_PATH + "build/libs/I-Series.jar")),
+        new OutputCopyFile(SPROJECT_FOLDER.forward("build").forward("libs")
+                        .forward("I-Series.jar").getFile()),
         //I-Series licence
         new OutputCopyFile(Licences.GNU.getFile(),
         APPLICATION_NAME + " Licence.txt")
@@ -286,13 +228,13 @@ public class BuildConfiguration {
      * A list of directories required to exist before beginning a full build.
      */
     private static final File[] REQUIRED_DIRECTORIES = {
-        OUTPUT_FOLDER, LEGAL_FOLDER, OUT_LIBRARIES_FOLDER, DISTRIBUTION_FOLDER
+        SOUTPUT_FOLDER.getFile(), SLEGAL_FOLDER.getFile(),
+        SOUT_LIBRARIES_FOLDER.getFile(), SDISTRIBUTION_FOLDER.getFile()
     };
 
     //*******************
     //      METHODS
     //*******************
-    
     /**
      * Builds the executable file for the I-Series jar file.
      */
@@ -383,7 +325,7 @@ public class BuildConfiguration {
      */
     private static void createExecutable(Launch4jConfiguration configuration) {
         Launch4jProcessWrapper launch4jProcess = new Launch4jProcessWrapper(
-                new File(LAUNCH4J_PATH), configuration);
+                SLAUNCH4J_FOLDER.getFile(), configuration);
         StringBuilder output = new StringBuilder();
 
         LOG.debug("Starting launch4j process");
@@ -395,9 +337,9 @@ public class BuildConfiguration {
         }
 
         if (!output.toString().equals("launch4j: Compiling resources")) {
-            LOG.error("Launch4j produced unexpected output: " 
-                    + (output.toString().equals("") 
-                            ? "No output" : output.toString()) );
+            LOG.error("Launch4j produced unexpected output: "
+                    + (output.toString().equals("")
+                    ? "No output" : output.toString()));
         }
     }
 
@@ -411,18 +353,20 @@ public class BuildConfiguration {
         //Create a copy of the output folder without
         //windows executables for packaging
         //into the cross-platform zip.
-        File nwof = new File(OUTPUT_PATH.substring(0, OUTPUT_PATH.length() - 1)
+        File nwof = new File(SOUTPUT_FOLDER.getPath().substring(
+                0, SOUTPUT_FOLDER.getPath().length() - 1)
                 + "nw");
-        FileUtils.copyDirectory(OUTPUT_FOLDER, nwof);
+        FileUtils.copyDirectory(SOUTPUT_FOLDER.getFile(), nwof);
         new File(nwof.getCanonicalPath() + "/" + APPLICATION_NAME + ".exe")
                 .delete();
 
         //Zip files
-        ZipPackager windows = new ZipPackager(WINDOWS_ZIP_FILE, OUTPUT_FOLDER);
+        ZipPackager windows = new ZipPackager(SWINDOWS_ZIP_FILE.getFile(),
+                SOUTPUT_FOLDER.getFile());
         windows.create();
 
         ZipPackager crossPlatform = new ZipPackager(
-                CROSSPLATFORM_ZIP_FILE, nwof);
+                SCROSSPLATFORM_ZIP_FILE.getFile(), nwof);
         crossPlatform.create();
 
         //Delete output copy
@@ -434,9 +378,11 @@ public class BuildConfiguration {
      * object.
      */
     private static void readBuildProperties() {
-        LOG.debug("Reading build config from file: " + BUILD_PROPERTIES_PATH);
+        LOG.debug("Reading build config from file: "
+                + SBUILD_PROPERTIES_FILE.getPath());
+        
         try (FileInputStream inputStream
-                = new FileInputStream(BUILD_PROPERTIES_FILE)) {
+                = new FileInputStream(SBUILD_PROPERTIES_FILE.getFile())) {
             BUILD_PROPERTIES.load(inputStream);
         } catch (IOException iox) {
             LOG.error("Failed to load build config", iox);
@@ -449,8 +395,11 @@ public class BuildConfiguration {
      * @throws IOException
      */
     private static void saveProperties() {
-        LOG.debug("Saving build config to file: " + BUILD_PROPERTIES_PATH);
-        try (FileWriter writer = new FileWriter(BUILD_PROPERTIES_FILE)) {
+        LOG.debug("Saving build config to file: "
+                + SBUILD_PROPERTIES_FILE.getPath());
+        
+        try (FileWriter writer = new FileWriter(
+                SBUILD_PROPERTIES_FILE.getFile())) {
             BUILD_PROPERTIES.store(writer,
                     "Contains the configuration settings"
                     + " for the build (e.g. version number)");
@@ -496,10 +445,10 @@ public class BuildConfiguration {
         }
 
         if (newFileName == null || newFileName.equals("")) {
-            dest = new File(OUTPUT_PATH + source.getName());
+            dest = SOUTPUT_FOLDER.forward(source.getName()).getFile();
         } else {
             newFileName = newFileName.replace("\\", "/");
-            dest = new File(OUTPUT_PATH + newFileName);
+            dest = SOUTPUT_FOLDER.forward(newFileName).getFile();
         }
 
         FileUtils.copyFile(source, dest);
@@ -537,6 +486,7 @@ public class BuildConfiguration {
         }
         zipProject();
         saveProperties();
+        LOG.info("Full build completed without fatal errors");
     }
 
     /**
@@ -559,7 +509,7 @@ public class BuildConfiguration {
     @Deprecated
     public static void main(String[] args) {
         LOG.info("Beginning full build...");
-        
+
         try {
             fullBuild();
         } catch (Exception ex) {

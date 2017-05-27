@@ -34,15 +34,15 @@ public class Launch4jTest {
      * The path to the launch4j application folder.
      */
     private static final File LAUNCH4J_PATH
-            = new File(BuildConfiguration.LAUNCH4J_PATH);
+            = BuildConfiguration.SLAUNCH4J_FOLDER.getFile();
 
     /**
      * The output executable file created with launch4j.
      * <br>
      * <b>This file is never deleted by the application.</b>
      */
-    private static final File EXECUTABLE_FILE = new File(
-            PROJECT_PATH + "buildSrc/output.exe");
+    private static final File EXECUTABLE_FILE = SPROJECT_FOLDER
+            .forward("buildSrc").forward("output.exe").getFile();
 
     /**
      * Basic configuration for creating a standard executable.
@@ -52,7 +52,8 @@ public class Launch4jTest {
             .setOutputFile(EXECUTABLE_FILE.getAbsolutePath())
             .setJarFile(
                     //This is the jar file created from the application source.
-                    PROJECT_PATH + "/build/libs/I-Series.jar"
+                    SPROJECT_FOLDER.forward("build").forward("libs")
+                            .forward("I-Series.jar").getPath()
             )
             .setMinimumJreVersion("1.8.0")
             .create();

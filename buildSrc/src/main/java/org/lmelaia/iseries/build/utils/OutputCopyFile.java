@@ -34,7 +34,7 @@ public class OutputCopyFile extends CopyFile{
      * @param newFileName optional new name of the copied file.
      */
     public OutputCopyFile(File source, String newFileName) {
-        super(source, new File(BuildConfiguration.OUTPUT_PATH), newFileName);
+        super(source, BuildConfiguration.SOUTPUT_FOLDER.getFile(), newFileName);
     }
     
     /**

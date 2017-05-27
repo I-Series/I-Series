@@ -83,7 +83,13 @@ public class CopyFile {
         }
         
         if(!destFolder.exists()){
-            throw new IllegalArgumentException("Destination folder must exist");
+            try{
+                FileUtils.forceMkdir(destFolder);
+            } catch (IOException ex){
+                throw new IllegalArgumentException(
+                        "Destination folder must exist and couldn't be created"
+                );
+            }
         }
         
         if(!destFolder.isDirectory()){

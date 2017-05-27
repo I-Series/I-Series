@@ -103,7 +103,8 @@ public enum Licences implements Licence{
      */
     private static File getLicenceFile(String fileName){
         File licenceFile 
-                = new File(BuildConfiguration.LICENCES_PATH + fileName);
+                = BuildConfiguration.SLICENCES_FOLDER.forward(fileName)
+                        .getFile();
         
         if(!licenceFile.exists()){
             return null;

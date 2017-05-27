@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * A utility class for working with a file or directory.
@@ -38,10 +40,14 @@ import org.apache.commons.io.FileUtils;
  * Provides utilities for reading and writing, modifying, moving and navigating.
  * </p>
  *
+ * <b>WARNING: NOT FULLY TESTED</b>
+ * 
  * @author Luke
  */
 public class SmartFile {
 
+    private static final Logger LOG = LogManager.getLogger();
+    
     /**
      * The path to the file or directory in string form.
      */
@@ -117,6 +123,7 @@ public class SmartFile {
      * @return the newly created smart file.
      */
     public static SmartFile getSmartFile(String path) {
+        SmartFile createdFile = new SmartFile(path);
         return new SmartFile(path);
     }
 
@@ -138,9 +145,12 @@ public class SmartFile {
         this.path = normalize(Objects.requireNonNull(path));
         //Throws an exception if the path looks invalid.
         Path p = Paths.get(path).normalize();
-        paths = path.split(separator);
+        paths = path.split(separator.equals("\\")
+                ? separator + separator : separator);
         backingFile = p.toFile();
         backingPath = p;
+        
+        LOG.debug("Created smart file: " + this.path);
     }
 
     /**
@@ -254,7 +264,7 @@ public class SmartFile {
      * @return true if this file is an actual file and not a directory.
      */
     public boolean isFile() {
-        return !isDirectory();
+        return backingFile.isFile();
     }
 
     /**
