@@ -24,6 +24,7 @@ import java.util.Objects;
 import java.util.Properties;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.Logger;
+import org.lmelaia.iseries.build.BuildOutputVerifier.ExpectedFile;
 import org.lmelaia.iseries.build.launch4j.Launch4jConfiguration;
 import org.lmelaia.iseries.build.launch4j.Launch4jConfigurationBuilder;
 import org.lmelaia.iseries.build.launch4j.Launch4jProcessWrapper;
@@ -90,6 +91,7 @@ public class BuildConfiguration {
     //******************************
     //             NAMES
     //******************************
+    
     /**
      * The name of the application.
      */
@@ -175,35 +177,12 @@ public class BuildConfiguration {
             .forward(APPLICATION_NAME
                     + " v" + BUILD_PROPERTIES.getProperty(BUILD_VERSION_CID)
                     + " Cross-platform.zip");
-    //******************************
-    //        CONFIGURATION
-    //******************************
-
-    /**
-     * The configuration settings to build the I-Series executable.
-     */
-    private static final Launch4jConfiguration EXEC_CONFIGURATION
-            = new Launch4jConfigurationBuilder()
-                    .setJarRuntimePath("I-Series.jar")
-                    .setWrap(false)
-                    .setOutputFile(
-                            SOUTPUT_FOLDER.forward(EXECUTABLE_NAME).getPath())
-                    .setMinimumJreVersion("1.8.0_111")
-                    .create();
-
-    /**
-     * Contains a list of the libraries for the application and handles the
-     * copies of them and their licences.
-     */
-    private static final LibraryManager LIBRARY_MANAGER = new LibraryManager(
-            SPROJECT_FOLDER.forward("build").forward("libs")
-                    .forward("libs").getFile(),
-            SOUTPUT_FOLDER.forward("libs").getFile(),
-            SOUTPUT_FOLDER.forward("legal").getFile());
+    
 
     //******************************
     //             LISTS
     //******************************
+    
     /**
      * A list of files which need to be copied over to the output folder
      * ({@link #OUTPUT_PATH}).
@@ -232,6 +211,67 @@ public class BuildConfiguration {
         SOUT_LIBRARIES_FOLDER.getFile(), SDISTRIBUTION_FOLDER.getFile()
     };
 
+    /**
+     * List of files expected to be in the output directory.
+     */
+    private static final ExpectedFile[] OUTPUT_DIR_FILES = {
+        new ExpectedFile("legal"),
+        new ExpectedFile("libs"),
+        new ExpectedFile(APPLICATION_NAME + " Licence.txt"),
+        new ExpectedFile(APPLICATION_NAME + ".exe"),
+        new ExpectedFile(APPLICATION_NAME + ".jar")
+    };
+    
+    /**
+     * List of files expected to be in the distribution directory.
+     */
+    private static final ExpectedFile[] DIST_DIR_FILES = {
+        new ExpectedFile(SWINDOWS_ZIP_FILE.getFileName()),
+        new ExpectedFile(SCROSSPLATFORM_ZIP_FILE.getFileName())
+    };
+    
+    //******************************
+    //        CONFIGURATION
+    //******************************
+
+    /**
+     * The verifier for the output folder.
+     */
+    private static final BuildOutputVerifier BUILD_DIR_VERIFIER 
+            = new BuildOutputVerifier(SOUTPUT_FOLDER.getFile(),
+                    OUTPUT_DIR_FILES)
+            .setLogExtraFiles(true);
+    
+    /**
+     * The verifier for the output folder.
+     */
+    private static final BuildOutputVerifier DIST_DIR_VERIFIER 
+            = new BuildOutputVerifier(SDISTRIBUTION_FOLDER.getFile(),
+                    DIST_DIR_FILES)
+            .setLogExtraFiles(true);
+    
+    /**
+     * The configuration settings to build the I-Series executable.
+     */
+    private static final Launch4jConfiguration EXEC_CONFIGURATION
+            = new Launch4jConfigurationBuilder()
+                    .setJarRuntimePath("I-Series.jar")
+                    .setWrap(false)
+                    .setOutputFile(
+                            SOUTPUT_FOLDER.forward(EXECUTABLE_NAME).getPath())
+                    .setMinimumJreVersion("1.8.0_111")
+                    .create();
+
+    /**
+     * Contains a list of the libraries for the application and handles the
+     * copies of them and their licences.
+     */
+    private static final LibraryManager LIBRARY_MANAGER = new LibraryManager(
+            SPROJECT_FOLDER.forward("build").forward("libs")
+                    .forward("libs").getFile(),
+            SOUTPUT_FOLDER.forward("libs").getFile(),
+            SOUTPUT_FOLDER.forward("legal").getFile());
+    
     //*******************
     //      METHODS
     //*******************
@@ -486,6 +526,8 @@ public class BuildConfiguration {
         }
         zipProject();
         saveProperties();
+        BUILD_DIR_VERIFIER.verify();
+        DIST_DIR_VERIFIER.verify();
         LOG.info("Full build completed without fatal errors");
     }
 

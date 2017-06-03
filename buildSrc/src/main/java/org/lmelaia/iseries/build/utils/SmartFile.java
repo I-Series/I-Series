@@ -227,13 +227,7 @@ public class SmartFile {
      * @return the name of the file and file extension.
      */
     public String getFileName() {
-        String lastPath = null;
-
-        for (String lpath : paths) {
-            lastPath = lpath;
-        }
-
-        return lastPath;
+        return backingFile.getName();
     }
 
     /**
