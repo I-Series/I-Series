@@ -3,8 +3,6 @@
 /output/
 /.nb-gradle/
 /buildSrc/.gradle/
-/.gradle/
-/.idea/
 buildSrc/.gradle/2.13/taskArtifacts/cache.properties.lock
 /buildoutput/
 /buildSrc/logs/
@@ -13,3 +11,11 @@ buildSrc/.gradle/2.13/taskArtifacts/cache.properties.lock
 /launcher/build/
 /common/build/
 /BuildSource/build/
+/Common/build/
+/Launcher/build/
+/logs/
+/BuildSource/logs/
+BuildSource/.gradle/
+Common/src/test/
+Launcher/src/test/
+/.idea/
