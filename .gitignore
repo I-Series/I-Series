@@ -1,18 +1,15 @@
 /buildSrc/build/
 /build/
 /output/
-<<<<<<< HEAD
 /.nb-gradle/
 /buildSrc/.gradle/
 /.gradle/
 /.idea/
-=======
-/buildSrc/.gradle/
-/.idea/
-/.gradle/
->>>>>>> Iz-pack
 buildSrc/.gradle/2.13/taskArtifacts/cache.properties.lock
 /buildoutput/
 /buildSrc/logs/
 /buildOutput/
 /distribution/
+/launcher/build/
+/common/build/
+/BuildSource/build/

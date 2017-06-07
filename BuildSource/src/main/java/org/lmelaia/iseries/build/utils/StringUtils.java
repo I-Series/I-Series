@@ -13,24 +13,33 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.lmelaia.iseries;
+package org.lmelaia.iseries.build.utils;
 
-import java.util.Arrays;
-import org.apache.logging.log4j.Logger;
+import java.util.Objects;
 
 /**
- * Starting point.
+ * A set of String utilities.
  * 
- * @author Luke
+ * @author Luke Melaia
  */
-public class Main {
+public class StringUtils {
     
-    private static final Logger LOG = AppLogger.getLogger();
+    private StringUtils(){}
     
     /**
-     * @param args the command line arguments
+     * Null checks the String and ensures it's not empty.
+     * 
+     * @param s the String to check
+     * @return the String
+     * @throws NullPointerException if the String is null
+     * @throws IllegalArgumentException if the String is empty
      */
-    public static void main(String[] args) {
-        LOG.info("Starting with arguments: " + Arrays.toString(args));
+    public static String validate(String s){
+        Objects.requireNonNull(s);
+        
+        if(s.equals(""))
+            throw new IllegalArgumentException("String cannot be empty");
+        
+        return s;
     }
 }

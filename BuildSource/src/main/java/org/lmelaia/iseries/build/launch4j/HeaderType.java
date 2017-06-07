@@ -13,24 +13,21 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.lmelaia.iseries;
-
-import java.util.Arrays;
-import org.apache.logging.log4j.Logger;
+package org.lmelaia.iseries.build.launch4j;
 
 /**
- * Starting point.
- * 
- * @author Luke
+ * The type of application (e.g console or gui).
+ *
+ * @author Luke Melaia
  */
-public class Main {
-    
-    private static final Logger LOG = AppLogger.getLogger();
-    
+public enum HeaderType {
+
     /**
-     * @param args the command line arguments
+     * Represents a graphical user interface application.
      */
-    public static void main(String[] args) {
-        LOG.info("Starting with arguments: " + Arrays.toString(args));
-    }
+    GUI,
+    /**
+     * Represents a console application.
+     */
+    CONSOLE
 }

@@ -13,24 +13,25 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.lmelaia.iseries;
-
-import java.util.Arrays;
-import org.apache.logging.log4j.Logger;
+package org.lmelaia.iseries.build.launch4j;
 
 /**
- * Starting point.
- * 
- * @author Luke
+ * The thread priority of the application.
+ *
+ * @author Luke Melaia
  */
-public class Main {
-    
-    private static final Logger LOG = AppLogger.getLogger();
-    
+public enum ProcessPriority {
+
     /**
-     * @param args the command line arguments
+     * Normal priority.
      */
-    public static void main(String[] args) {
-        LOG.info("Starting with arguments: " + Arrays.toString(args));
-    }
+    NORMAL,
+    /**
+     * Idle or background priority.
+     */
+    IDLE,
+    /**
+     * High priority.
+     */
+    HIGH
 }

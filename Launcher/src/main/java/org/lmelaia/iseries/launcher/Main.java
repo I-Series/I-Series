@@ -13,24 +13,19 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.lmelaia.iseries;
-
-import java.util.Arrays;
-import org.apache.logging.log4j.Logger;
+package org.lmelaia.iseries.launcher;
 
 /**
- * Starting point.
- * 
+ *
  * @author Luke
  */
 public class Main {
-    
-    private static final Logger LOG = AppLogger.getLogger();
-    
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        LOG.info("Starting with arguments: " + Arrays.toString(args));
+        System.out.println("Hello World! Launcher run successfully.");
     }
+    
 }

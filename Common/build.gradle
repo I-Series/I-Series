@@ -1,4 +1,4 @@
-/*   Copyright (C) 2016  Luke Melaia
+gradle/*   Copyright (C) 2016  Luke Melaia
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -13,24 +13,21 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.lmelaia.iseries;
+apply plugin: 'java'
+apply plugin: 'application'
 
-import java.util.Arrays;
-import org.apache.logging.log4j.Logger;
+test.testLogging.showStandardStreams = true
+test.testLogging.exceptionFormat = 'full'
 
-/**
- * Starting point.
- * 
- * @author Luke
- */
-public class Main {
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
     
-    private static final Logger LOG = AppLogger.getLogger();
-    
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        LOG.info("Starting with arguments: " + Arrays.toString(args));
-    }
+    // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.8.2'
+
+    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.8.2'
 }
