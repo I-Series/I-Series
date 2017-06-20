@@ -23,8 +23,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.apache.logging.log4j.Logger;
-import org.lmelaia.iseries.build.BuildLogger;
 import org.lmelaia.iseries.build.utils.XmlDocumentHelper;
+import org.lmelaia.iseries.common.AppLogger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import static org.lmelaia.iseries.build.utils.XmlDocumentHelper.ElementHelper;
@@ -46,7 +46,7 @@ import static org.lmelaia.iseries.build.utils.XmlDocumentHelper.ElementHelper;
  */
 public class Launch4jConfiguration {
 
-    private static final Logger LOG = BuildLogger.getLogger();
+    private static final Logger LOG = AppLogger.getLogger();
     
     private final Launch4jConfigurationBuilder l4jConfigurationBuilder;
 

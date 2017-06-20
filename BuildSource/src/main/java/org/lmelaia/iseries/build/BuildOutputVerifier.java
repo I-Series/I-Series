@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 import org.apache.logging.log4j.Logger;
+import org.lmelaia.iseries.common.AppLogger;
 
 /**
  * Utility class to verify that the build task outputs the correct content.
@@ -48,7 +49,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class BuildOutputVerifier {
 
-    private static final Logger LOG = BuildLogger.getLogger();
+    private static final Logger LOG = AppLogger.getLogger();
 
     /**
      * The output directory to verify.

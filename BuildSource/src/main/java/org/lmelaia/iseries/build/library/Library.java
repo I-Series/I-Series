@@ -35,6 +35,11 @@ public class Library {
      * The file name of the licence. Excluding the {@code .jar} extension.
      */
     private final String fileName;
+
+    /**
+     * The file names of the licences. Excluding the {@code .jar} extension.
+     */
+    private final String[] fileNames;
     
     /**
      * The licence the library is licensed under.
@@ -45,7 +50,12 @@ public class Library {
      * The library jar file that will be copied over.
      */
     private CopyFile libraryFile;
-    
+
+    /**
+     * The library jar files that will be copied over.
+     */
+    private CopyFile[] libraryFiles;
+
     /**
      * The licence file that will be copied over.
      */
@@ -62,7 +72,24 @@ public class Library {
      */
     public Library(String name, String fileName, Licence licence){
         this.name = Objects.requireNonNull(name);
-        this.fileName = Objects.requireNonNull(fileName + ".jar");
+        this.fileName = Objects.requireNonNull(fileName) + ".jar";
+        this.fileNames = null;
+        this.licence = Objects.requireNonNull(licence);
+    }
+
+    /**
+     * Creates a new instance of library which represents a library used
+     * by the root project.
+     *
+     * @param name The actual name of the library. Excluding version numbers.
+     * @param fileNames The file name(s) of the licence(s). Excluding the {@code .jar}
+     *                 extension.
+     * @param licence The licence the library is licensed under.
+     */
+    public Library(String name, String[] fileNames, Licence licence){
+        this.name = Objects.requireNonNull(name);
+        this.fileName = null;
+        this.fileNames = Objects.requireNonNull(fileNames);
         this.licence = Objects.requireNonNull(licence);
     }
 
@@ -113,5 +140,23 @@ public class Library {
      */
     protected void setLicenceFile(CopyFile licenceFile) {
         this.licenceFile = Objects.requireNonNull(licenceFile);
+    }
+
+    /**
+     * The file names of the licences. Excluding the {@code .jar} extension.
+     */
+    protected String[] getFileNames() {
+        return fileNames;
+    }
+
+    /**
+     * The library jar files that will be copied over.
+     */
+    public CopyFile[] getLibraryFiles() {
+        return libraryFiles;
+    }
+
+    public void setLibraryFiles(CopyFile[] libraryFiles) {
+        this.libraryFiles = libraryFiles;
     }
 }

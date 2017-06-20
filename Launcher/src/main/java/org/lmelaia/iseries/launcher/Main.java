@@ -15,17 +15,33 @@
  */
 package org.lmelaia.iseries.launcher;
 
+import org.apache.logging.log4j.Logger;
+import org.lmelaia.iseries.common.AppLogger;
+
+import javax.swing.*;
+import java.io.File;
+import java.util.Arrays;
+
 /**
  *
  * @author Luke
  */
 public class Main {
 
+    static{
+        AppLogger.silentConfigure("/configuration/log4j2_configuration.xml");
+    }
+
+    static Logger LOG = AppLogger.getLogger();
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        LOG.info("Starting Launcher with arguments: " + Arrays.toString(args));
+        JOptionPane.showMessageDialog(null, "Launcher executing.");
+        System.out.println(Arrays.toString(new File(System.getProperty("user.dir")).listFiles()));
         System.out.println("Hello World! Launcher run successfully.");
     }
-    
+
 }

@@ -19,3 +19,5 @@ BuildSource/.gradle/
 Common/src/test/
 Launcher/src/test/
 /.idea/
+/Launcher/logs/
+/I-Series-Common/build/

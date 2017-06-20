@@ -1,6 +1,6 @@
-[[INFO ] on [main] at [18:46:55(454)]]:
-		 Logger initialized with configuration file: /C:/Users/Luke/Projects/Java/I-Series-Idea-Import-Test/build/resources/main/configuration/log4j.xml
-[[INFO ] on [main] at [18:46:55(458)]]:
-		 Logging error level: [Fatal:true, Error:true, Warn:true, Info:true, Debug:true, Trace:false]
-[[INFO ] on [main] at [18:46:55(459)]]:
+[[INFO ] on [main] at [00:32:39(713)]]:
+		 Logger initialized with configuration file: /C:/Users/Luke/Projects/Java/I-Series/build/resources/main/configuration/log4j.xml
+[[INFO ] on [main] at [00:32:39(719)]]:
+		 Ignore configuration file not found warning.
+[[INFO ] on [main] at [00:32:39(720)]]:
 		 Starting with arguments: []

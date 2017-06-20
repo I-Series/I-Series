@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
+
 import org.lmelaia.iseries.build.utils.CopyFile;
 
 /**
@@ -109,10 +111,19 @@ public class LibraryManager {
     public LibraryPackage copyOver() throws IOException {
         List<File> libraryFiles = new ArrayList<>();
         List<File> licenceFiles = new ArrayList<>();
-        
+
         for (Library library : libraries) {
-            libraryFiles.add(library.getLicenceFile().copy());
-            licenceFiles.add(library.getLibraryFile().copy());
+            if(library.getFileName() != null){
+                libraryFiles.add(library.getLibraryFile().copy());
+                licenceFiles.add(library.getLicenceFile().copy());
+            }else{
+                for (CopyFile file : library.getLibraryFiles()) {
+                    libraryFiles.add(file.copy());
+                }
+
+                licenceFiles.add(library.getLicenceFile().copy());
+            }
+
         }
         
         return new LibraryPackage(
@@ -131,14 +142,34 @@ public class LibraryManager {
         library.setLicenceFile(new CopyFile(library.getLicence().getFile(),
                 legal, library.getName() + " Licence.txt"));
 
-        File libraryFile = new File(
-                from.getAbsoluteFile() + "/" + library.getFileName());
+        File libraryFile = null;
 
-        if (!libraryFile.exists()) {
-            throw new java.io.FileNotFoundException(
-                    "The library file: " + libraryFile + " does not exist");
+        if(library.getFileName() != null) {
+            libraryFile = new File(
+                    from.getAbsoluteFile() + "/" + library.getFileName());
+
+            if (!libraryFile.exists()) {
+                throw new java.io.FileNotFoundException(
+                        "The library file: " + libraryFile + " does not exist");
+            }
+
+            library.setLibraryFile(new CopyFile(libraryFile, to));
+        }else{
+            List<CopyFile> names = new ArrayList<>();
+
+            for (String fileName : library.getFileNames()) {
+                libraryFile = new File(
+                        from.getAbsoluteFile() + "/" + fileName + ".jar");
+
+                if (!libraryFile.exists()) {
+                    throw new java.io.FileNotFoundException(
+                            "The library file: " + libraryFile + " does not exist");
+                }
+
+                names.add(new CopyFile(libraryFile, to));
+            }
+
+            library.setLibraryFiles(names.toArray(new CopyFile[names.size()]));
         }
-
-        library.setLibraryFile(new CopyFile(libraryFile, to));
     }
 }

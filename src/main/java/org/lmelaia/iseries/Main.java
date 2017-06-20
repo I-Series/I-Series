@@ -17,6 +17,7 @@ package org.lmelaia.iseries;
 
 import java.util.Arrays;
 import org.apache.logging.log4j.Logger;
+import org.lmelaia.iseries.common.AppLogger;
 
 /**
  * Starting point.
@@ -24,7 +25,11 @@ import org.apache.logging.log4j.Logger;
  * @author Luke
  */
 public class Main {
-    
+
+    static{
+        AppLogger.silentConfigure("/configuration/log4j.xml");
+    }
+
     private static final Logger LOG = AppLogger.getLogger();
     
     /**

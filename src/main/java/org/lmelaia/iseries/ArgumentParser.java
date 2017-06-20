@@ -17,13 +17,14 @@ package org.lmelaia.iseries;
 
 import java.util.HashMap;
 import org.apache.logging.log4j.Logger;
+import org.lmelaia.iseries.common.AppLogger;
 
 /**
  *
  * @author Luke
  */
 public class ArgumentParser {
-    
+
     private static final Logger LOG = AppLogger.getLogger();
     
     private final HashMap<String, ArgumentValue> args = new HashMap<>();

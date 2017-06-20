@@ -20,8 +20,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.function.Consumer;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.Logger;
 import org.lmelaia.iseries.build.BuildOutputVerifier.ExpectedFile;
@@ -35,6 +39,7 @@ import org.lmelaia.iseries.build.packaging.ZipPackager;
 import org.lmelaia.iseries.build.utils.CopyFile;
 import org.lmelaia.iseries.build.utils.OutputCopyFile;
 import org.lmelaia.iseries.build.utils.SmartFile;
+import org.lmelaia.iseries.common.AppLogger;
 
 /**
  * Holds the configuration settings for the build script along with methods to
@@ -44,7 +49,11 @@ import org.lmelaia.iseries.build.utils.SmartFile;
  */
 public class BuildConfiguration {
 
-    private static final Logger LOG = BuildLogger.getLogger();
+    static{
+        AppLogger.silentConfigure("/configuration/log4j2_configuration.xml");
+    }
+
+    private static final Logger LOG = AppLogger.getLogger();
 
     //******************************
     //    CONFIGURATION SETTINGS
@@ -88,9 +97,7 @@ public class BuildConfiguration {
      */
     private static final String BUILD_VERSION_CID = "build.version";
 
-    /**
-     * Reads the properties from file and puts them in the properties object.
-     */
+    //Reads the properties from file and puts them in the properties object.
     static {
         readBuildProperties();
     }
@@ -127,6 +134,12 @@ public class BuildConfiguration {
      */
     public static final SmartFile SOUTPUT_FOLDER = SPROJECT_FOLDER
             .forward("buildOutput");
+
+    /**
+     * The launcher project directory.
+     */
+    public static final SmartFile SLAUNCHER_FOLDER = SPROJECT_FOLDER
+            .forward("Launcher");
 
     /**
      * The folder containing the licences files.
@@ -189,10 +202,13 @@ public class BuildConfiguration {
     private static final CopyFile[] FILES_TO_COPY = {
         //Jar file
         new OutputCopyFile(SPROJECT_FOLDER.forward("build").forward("libs")
-                        .forward("I-Series.jar").getFile()),
+                        .forward("I-Series.jar").getFile(), "I-Series-Base.jar"),
         //I-Series licence
         new OutputCopyFile(Licences.GNU.getFile(),
-        APPLICATION_NAME + " Licence.txt")
+        APPLICATION_NAME + " Licence.txt"),
+
+        new OutputCopyFile(SLAUNCHER_FOLDER.forward("build").forward("libs")
+                        .forward("launcher.jar").getFile(), "I-Series.jar")
     };
 
     /**
@@ -200,9 +216,15 @@ public class BuildConfiguration {
      */
     private static final Library[] LIBRARIES = {
         new Library("Gson", "gson-2.8.0", Licences.APACHE),
-        new Library("Log4j-api", "log4j-api-2.8.2", Licences.APACHE),
-        new Library("Log4j-core", "log4j-core-2.8.2", Licences.APACHE),
-        new Library("Common-utilities", "Common", Licences.GNU)
+        new Library("Log4j", new String[]{"log4j-api-2.8.2", "log4j-core-2.8.2"}, Licences.APACHE),
+        new Library("I-Series-Common", "I-Series-Common", Licences.GNU)
+    };
+
+    /**
+     * A list of the libraries for the launcher project.
+     */
+    private static final Library[] LAUNCHER_LIBRARIES = {
+
     };
 
     /**
@@ -227,7 +249,8 @@ public class BuildConfiguration {
         new ExpectedFile("libs"),
         new ExpectedFile(APPLICATION_NAME + " Licence.txt"),
         new ExpectedFile(APPLICATION_NAME + ".exe"),
-        new ExpectedFile(APPLICATION_NAME + ".jar")
+        new ExpectedFile(APPLICATION_NAME + ".jar"),
+        new ExpectedFile(APPLICATION_NAME + "-Base.jar")
     };
     
     /**
@@ -272,13 +295,24 @@ public class BuildConfiguration {
 
     /**
      * Contains a list of the libraries for the application and handles the
-     * copies of them and their licences.
+     * copying of them and their licences.
      */
     private static final LibraryManager LIBRARY_MANAGER = new LibraryManager(
             SPROJECT_FOLDER.forward("build").forward("libs")
                     .forward("libs").getFile(),
             SOUTPUT_FOLDER.forward("libs").getFile(),
             SOUTPUT_FOLDER.forward("legal").getFile());
+
+    /**
+     * Contains a list of the libraries for the launcher application and handles the
+     * copying of them and their licences.
+     */
+    private static final LibraryManager LAUNCHER_LIBRARY_MANAGER = new LibraryManager(
+            SLAUNCHER_FOLDER.forward("build").forward("libs")
+                    .forward("libs").getFile(),
+            SOUTPUT_FOLDER.forward("libs").getFile(),
+            SOUTPUT_FOLDER.forward("legal").getFile()
+    );
     
     //*******************
     //      METHODS
@@ -342,6 +376,18 @@ public class BuildConfiguration {
     }
 
     /**
+     * Uses the library manager to copy the libraries and library licences.
+     */
+    private static void copyLauncherLibraries() {
+        LOG.debug("Copying launcher libraries and library licences");
+        try {
+            LAUNCHER_LIBRARY_MANAGER.copyOver();
+        } catch (IOException ex) {
+            LOG.error("Failed to copy over launcher libraries", ex);
+        }
+    }
+
+    /**
      * Copies over a list of files ({@link #FILES_TO_COPY}) to the output folder
      * ({@link #SOUTPUT_FOLDER}). These files include things such as the jar file,
      * licences and so on.
@@ -380,6 +426,54 @@ public class BuildConfiguration {
                     + (output.toString().equals("")
                     ? "No output" : output.toString()));
         }
+    }
+
+    /**
+     * Compares the library(.jar) files in the buildOutput/libs folder to the
+     * folders containing the libraries for the application and launcher. This ensures
+     * no required library is missing from the buildOutput.
+     */
+    private static void compareLibraries(){
+        File buildOutputLibs = SOUTPUT_FOLDER.forward("libs").getFile();
+        compare(SLIBRARIES_FOLDER.getFile(), buildOutputLibs);
+        compare(SLAUNCHER_FOLDER.forward("build").forward("libs").forward("libs").getFile(), buildOutputLibs);
+    }
+
+    /**
+     * Compares the files in the primary folder to the files in the secondary folder.
+     * If a file in the primary is not contained in the secondary, a warning is written
+     * to the console.
+     *
+     * @param primary
+     * @param secondary
+     */
+    private static void compare(File primary, File secondary){
+        for(File f : primary.listFiles()){
+            if(f.isDirectory())
+                continue;
+
+            if(!contains(secondary, f.getName()))
+                LOG.warn("File: " + f.getName() + " from folder: " + primary.getAbsolutePath()
+                        + " is not contained in the folder: " + secondary);
+        }
+    }
+
+    /**
+     * Checks if the given folder contains a file with the name of {@code fileName}.
+     *
+     * @param folder the folder to check.
+     * @param fileName the name of the file.
+     * @return {@code true} if there is a file with name of {@code fileName} in the folder,
+     * {@code false} otherwise.
+     */
+    private static boolean contains(File folder, String fileName){
+        ArrayList<String> fileNames = new ArrayList<>();
+
+        for (File f : folder.listFiles()) {
+            fileNames.add(f.getName());
+        }
+
+        return fileNames.contains(fileName);
     }
 
     /**
@@ -516,6 +610,7 @@ public class BuildConfiguration {
         copyFilesOver();
         addLibrariesToList();
         copyLibraries();
+        copyLauncherLibraries();
         buildISeriesExecutable();
         //Give windows explorer time to refresh
         try {
@@ -526,6 +621,7 @@ public class BuildConfiguration {
         saveProperties();
         BUILD_DIR_VERIFIER.verify();
         DIST_DIR_VERIFIER.verify();
+        compareLibraries();
         LOG.info("Full build completed without fatal errors");
     }
 

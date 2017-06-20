@@ -1,4 +1,4 @@
 rootProject.name = 'I-Series'
 include ':Launcher'
-include ':Common'
+include ':I-Series-Common'
 include ':BuildSource'
