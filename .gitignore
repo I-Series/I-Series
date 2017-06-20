@@ -21,3 +21,4 @@ Launcher/src/test/
 /.idea/
 /Launcher/logs/
 /I-Series-Common/build/
+*.log
