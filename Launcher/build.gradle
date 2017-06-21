@@ -74,6 +74,10 @@ task deleteBuildFrom(type: Delete){
     }
 }
 
+/**
+ * Copies the gradle dependencies to a lib folder
+ * inside the project folder.
+ */
 task copyDependencies(type: Copy){
     into "$buildDir/libs/libs"
     from configurations.runtime

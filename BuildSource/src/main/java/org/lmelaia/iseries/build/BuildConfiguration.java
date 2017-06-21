@@ -50,6 +50,7 @@ import org.lmelaia.iseries.common.AppLogger;
 public class BuildConfiguration {
 
     static{
+        Thread.currentThread().setName("I-Series Builder");
         AppLogger.silentConfigure("/configuration/log4j2_configuration.xml");
     }
 

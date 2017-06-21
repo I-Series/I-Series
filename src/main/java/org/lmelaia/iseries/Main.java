@@ -20,19 +20,25 @@ import org.apache.logging.log4j.Logger;
 import org.lmelaia.iseries.common.AppLogger;
 
 /**
- * Starting point.
+ * Starting point of the i-series application.
  * 
  * @author Luke
  */
 public class Main {
 
+    /**
+     * Pre-start initialization.
+     */
     static{
+        Thread.currentThread().setName("I-Series Main");
         AppLogger.silentConfigure("/configuration/log4j.xml");
     }
 
     private static final Logger LOG = AppLogger.getLogger();
     
     /**
+     * Entry point.
+     *
      * @param args the command line arguments
      */
     public static void main(String[] args) {
