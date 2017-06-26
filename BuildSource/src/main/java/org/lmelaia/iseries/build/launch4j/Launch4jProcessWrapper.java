@@ -47,19 +47,7 @@ public final class Launch4jProcessWrapper {
      */
     private static final String CONFIGURATION_FILE_NAME 
             = System.getProperty("user.home") + "/launch4j%s.xml";
-    
-    /**
-     * Number of milliseconds to wait before poling the process
-     * while it is silent (i.e. has no more avaliable output).
-     * 
-     * <p>
-     * The smaller the number, the quicker the current thread will
-     * pole the process and the quicker it will respond once its finished
-     * execution. Although a smaller number will use more computer resources
-     * than larger one.
-     */
-    private static int waitTime = 500;
-    
+
     /**
      * The Launch4j executable (Launch4j/launch4j.exe).
      */
@@ -69,12 +57,7 @@ public final class Launch4jProcessWrapper {
      * The passed in launch4j configuration.
      */
     private final Launch4jConfiguration configuration;
-    
-    /**
-     * Used to build the launch4j process.
-     */
-    private ProcessBuilder l4jProcessBuilder;
-    
+
     /**
      * The file which will hold the launch4j configuration xml.
      */
@@ -117,12 +100,15 @@ public final class Launch4jProcessWrapper {
      * @throws IOException if an error occurs while managing a file or handling
      * the process.
      */
-    @SuppressWarnings("SleepWhileInLoop")
+    @SuppressWarnings({"SleepWhileInLoop", "ResultOfMethodCallIgnored"})
     public int startProcess(StringBuilder output) throws IOException {
         Objects.requireNonNull(output);
         writeConfigurationFile();
         
-        l4jProcessBuilder = new ProcessBuilder(
+        /*
+      Used to build the launch4j process.
+     */
+        ProcessBuilder l4jProcessBuilder = new ProcessBuilder(
                 launch4jExecutable.getAbsolutePath(),
                 CONFIGURATION_FILE.getAbsolutePath());
         
@@ -140,7 +126,17 @@ public final class Launch4jProcessWrapper {
                 try{
                     //Just so we don't waist resources if the process is being
                     //quiet
-                    Thread.sleep(waitTime);
+                    /*
+      Number of milliseconds to wait before poling the process
+      while it is silent (i.e. has no more avaliable output).
+
+      <p>
+      The smaller the number, the quicker the current thread will
+      pole the process and the quicker it will respond once its finished
+      execution. Although a smaller number will use more computer resources
+      than larger one.
+     */
+                    Thread.sleep(500);
                 } catch (InterruptedException ex){
                     //NO-OP
                 }
@@ -153,6 +149,7 @@ public final class Launch4jProcessWrapper {
     /**
      * @return an empty launch4j configuration file guaranteed not to exist.
      */
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     private File getSuitableConfigurationFile(){
         int fileNumber = 0;
         
@@ -180,26 +177,9 @@ public final class Launch4jProcessWrapper {
      * 
      * @throws IOException if the file cannot be written to.
      */
-    private void writeConfigurationFile() throws IOException{
-        try(FileWriter writer = new FileWriter(CONFIGURATION_FILE)) {
+    private void writeConfigurationFile() throws IOException {
+        try (FileWriter writer = new FileWriter(CONFIGURATION_FILE)) {
             writer.write(configuration.getConfigurationSourceAsString());
         }
-    }
-    
-    /**
-     * Sets the number of milliseconds to wait before poling the process
-     * while it's silent.
-     * 
-     * @param waitTime between 1 millisecond ({@code 1}) and 10 seconds
-     * ({@code 10*1000}). Default is {@code 500} (half a second)
-     */
-    public static void setWaitTime(int waitTime){
-        if(waitTime < 1){
-            waitTime = 1;
-        } else if(waitTime > 10*1000){//10 seconds
-            waitTime = 10*1000;
-        }
-        
-        Launch4jProcessWrapper.waitTime = waitTime;
     }
 }

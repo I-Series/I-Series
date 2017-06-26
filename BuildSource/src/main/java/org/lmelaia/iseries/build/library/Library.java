@@ -24,6 +24,7 @@ import org.lmelaia.iseries.build.utils.CopyFile;
  * 
  * @author Luke Melaia
  */
+@SuppressWarnings("WeakerAccess")
 public class Library {
     
     /**

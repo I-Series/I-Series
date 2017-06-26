@@ -79,6 +79,7 @@ public class XmlDocumentHelper {
      * @return an XmlDocumentHelper with a new document.
      * @throws ParserConfigurationException if the document cannot be parsed.
      */
+    @SuppressWarnings("WeakerAccess")
     public static XmlDocumentHelper getInstanceWithNewDocument()
             throws ParserConfigurationException{
         Document doc = DocumentBuilderFactory.newInstance()
@@ -92,6 +93,7 @@ public class XmlDocumentHelper {
      * 
      * @param doc the xml document this object will be working on. 
      */
+    @SuppressWarnings("WeakerAccess")
     public XmlDocumentHelper(Document doc){
         this.DOCUMENT = Objects.requireNonNull(doc);
     }
@@ -101,6 +103,7 @@ public class XmlDocumentHelper {
      * @return a new ElementHelper instance with a new element, which is linked
      * to the current xml document.
      */
+    @SuppressWarnings("WeakerAccess")
     public ElementHelper newElement(String tagName){
         return ElementHelper.getInstanceWithNewElement(this, tagName);
     }
@@ -156,6 +159,7 @@ public class XmlDocumentHelper {
          * @param tagName the tag name of the element.
          * @return a new ElementHelper instance with a new Element instance.
          */
+        @SuppressWarnings("WeakerAccess")
         public static ElementHelper getInstanceWithNewElement(
                 XmlDocumentHelper doc, String tagName){
             return new ElementHelper(doc,
@@ -170,6 +174,7 @@ public class XmlDocumentHelper {
          * @return a new ElementHelper instance with a new Document and Element.
          * @throws ParserConfigurationException if the document cannot be parsed.
          */
+        @SuppressWarnings("unused")
         public static ElementHelper getInstanceWithNewDocumentAndElement(
                 String tagName) throws ParserConfigurationException{
             Document doc = getInstanceWithNewDocument().getXmlDocument();
@@ -183,6 +188,7 @@ public class XmlDocumentHelper {
          * @param element the element which this object will be working on.
          * @param doc the xml document this object will be working on.
          */
+        @SuppressWarnings("WeakerAccess")
         public ElementHelper(XmlDocumentHelper doc, Element element){
             this.ELEMENT = Objects.requireNonNull(element);
             this.DOCUMENT = Objects.requireNonNull(doc);
@@ -191,6 +197,7 @@ public class XmlDocumentHelper {
         /**
          * @return the element object this object is working on.
          */
+        @SuppressWarnings("WeakerAccess")
         public Element getElement(){
             return this.ELEMENT;
         }
@@ -198,6 +205,7 @@ public class XmlDocumentHelper {
         /**
          * @return the xml document being worked on. 
          */
+        @SuppressWarnings("WeakerAccess")
         public Document getDocument(){
             return this.DOCUMENT.getXmlDocument();
         }
@@ -216,9 +224,10 @@ public class XmlDocumentHelper {
          * which was added.</b>
          * 
          * @param node the node.
-         * @return an instance of this so {@link #addNode(org.w3c.dom.Node)}
-         * calls can be chained together.
+         * @return an instance of this object so calls to this method
+         * can be chained together.
          */
+        @SuppressWarnings("WeakerAccess")
         public ElementHelper addNode(Node node){
             this.ELEMENT.appendChild(node);
             return this;
@@ -228,8 +237,8 @@ public class XmlDocumentHelper {
          * Appends a new text node to the element.
          * 
          * @param text the text nodes text.
-         * @return an instance of this so {@link #addText(java.lang.String)}
-         * calls can be chained together.
+         * @return an instance of this object so calls to this method
+         * can be chained together.
          */
         public ElementHelper addText(String text){
             if(text == null)
@@ -245,6 +254,7 @@ public class XmlDocumentHelper {
          * @return an instance of this so {@link #addText(java.lang.String)}
          * calls can be chained together.
          */
+        @SuppressWarnings("UnusedReturnValue")
         public ElementHelper addText(Object text){
             if(text == null){
                 text = "";
@@ -276,6 +286,7 @@ public class XmlDocumentHelper {
          * @param node the node the element object will be appended to.
          * @return an instance of this so calls can be chained.
          */
+        @SuppressWarnings("unused")
         public ElementHelper addTo(Node node){
             node.appendChild(this.ELEMENT);
             return this;
@@ -285,6 +296,7 @@ public class XmlDocumentHelper {
          * @return the element helper instance obtained by calling 
          * {@link XmlDocumentHelper#getRootElement()} on the current document.
          */
+        @SuppressWarnings("WeakerAccess")
         public ElementHelper getRootElement(){
             return this.DOCUMENT.getRootElement();
         }

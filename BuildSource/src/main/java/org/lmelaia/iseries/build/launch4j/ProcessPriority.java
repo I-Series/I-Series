@@ -20,6 +20,7 @@ package org.lmelaia.iseries.build.launch4j;
  *
  * @author Luke Melaia
  */
+@SuppressWarnings("unused")
 public enum ProcessPriority {
 
     /**

@@ -21,6 +21,7 @@ package org.lmelaia.iseries.build.launch4j;
  *
  * @author Luke Melaia
  */
+@SuppressWarnings("unused")
 public enum JavaUsageOptions {
 
     /**
@@ -51,7 +52,7 @@ public enum JavaUsageOptions {
     /**
      * @return the name of the property used in the launch4j configuration file. 
      */
-    public String getOfficalName(){
+    public String getOfficialName(){
         return this.l4jOfficalName;
     }
     

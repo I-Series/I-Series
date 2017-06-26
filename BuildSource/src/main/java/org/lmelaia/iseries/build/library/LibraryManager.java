@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Consumer;
 
 import org.lmelaia.iseries.build.utils.CopyFile;
 
@@ -87,6 +86,7 @@ public class LibraryManager {
      * @return {@code true} if the library was added, {@code false} otherwise.
      * @throws FileNotFoundException if the library jar file cannot be found.
      */
+    @SuppressWarnings("UnusedReturnValue")
     public boolean addLibrary(Library library) throws FileNotFoundException {
         setLibraryCopyFiles(library);
         return this.libraries.add(Objects.requireNonNull(library));
@@ -98,6 +98,7 @@ public class LibraryManager {
      * @param library the library to remove.
      * @return {@code true} if the library was removed, {@code false} otherwise.
      */
+    @SuppressWarnings("unused")
     public boolean removeLibrary(Library library) {
         return this.libraries.remove(Objects.requireNonNull(library));
     }
@@ -108,6 +109,7 @@ public class LibraryManager {
      * @return a library package containing the library and licence files.
      * @throws IOException if a file cannot be copied over.
      */
+    @SuppressWarnings("UnusedReturnValue")
     public LibraryPackage copyOver() throws IOException {
         List<File> libraryFiles = new ArrayList<>();
         List<File> licenceFiles = new ArrayList<>();
@@ -142,7 +144,7 @@ public class LibraryManager {
         library.setLicenceFile(new CopyFile(library.getLicence().getFile(),
                 legal, library.getName() + " Licence.txt"));
 
-        File libraryFile = null;
+        File libraryFile;
 
         if(library.getFileName() != null) {
             libraryFile = new File(

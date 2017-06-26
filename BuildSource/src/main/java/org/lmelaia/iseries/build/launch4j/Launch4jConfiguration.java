@@ -25,8 +25,6 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.logging.log4j.Logger;
 import org.lmelaia.iseries.build.utils.XmlDocumentHelper;
 import org.lmelaia.iseries.common.AppLogger;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import static org.lmelaia.iseries.build.utils.XmlDocumentHelper.ElementHelper;
 
 /**
@@ -44,13 +42,14 @@ import static org.lmelaia.iseries.build.utils.XmlDocumentHelper.ElementHelper;
  *
  * @author Luke Melaia
  */
+@SuppressWarnings("WeakerAccess")
 public class Launch4jConfiguration {
 
     private static final Logger LOG = AppLogger.getLogger();
     
     private final Launch4jConfigurationBuilder l4jConfigurationBuilder;
 
-    protected Launch4jConfiguration(
+    Launch4jConfiguration(
             Launch4jConfigurationBuilder l4jConfigurationBuilder) {
         this.l4jConfigurationBuilder = l4jConfigurationBuilder;
     }
@@ -522,7 +521,7 @@ public class Launch4jConfiguration {
     /**
      * Appends the basic properties to the {@code rootElement}.
      *
-     * @param doc
+     * @param doc the document file (wrapped in an {@link XmlDocumentHelper})
      */
     private void appendBasic(XmlDocumentHelper doc) {
         doc.getRootElement().addNewElement("outfile")
@@ -568,7 +567,7 @@ public class Launch4jConfiguration {
     /**
      * Appends the classpath properties to the {@code rootElement}.
      *
-     * @param doc
+     * @param doc the document file (wrapped in an {@link XmlDocumentHelper})
      */
     private void appendClasspath(XmlDocumentHelper doc) {
         XmlDocumentHelper.ElementHelper classpath 
@@ -586,7 +585,7 @@ public class Launch4jConfiguration {
     /**
      * Appends the header properties to the {@code rootElement}.
      *
-     * @param doc
+     * @param doc the document file (wrapped in an {@link XmlDocumentHelper})
      */
     private void appendHeader(XmlDocumentHelper doc) {
         doc.getRootElement().addNewElement("headerType")
@@ -610,7 +609,7 @@ public class Launch4jConfiguration {
     /**
      * Appends the single instance properties to the {@code rootElement}.
      *
-     * @param doc
+     * @param doc the document file (wrapped in an {@link XmlDocumentHelper})
      */
     private void appendSingleInstance(XmlDocumentHelper doc) {
         ElementHelper singleInstance 
@@ -642,7 +641,7 @@ public class Launch4jConfiguration {
                 .addText(getMaximumJreVersion());
 
         jre.addNewElement("jdkPreference")
-                .addText(getJavaUsageOptions().getOfficalName());
+                .addText(getJavaUsageOptions().getOfficialName());
         
         jre.addNewElement("runtimeBits")
                 .addText(getJavaArchitecture().getOfficalName());
@@ -773,15 +772,5 @@ public class Launch4jConfiguration {
             LOG.error("Failed to parse launch4j xml configuration", ex);
         }
         return null;//Shouldn't get here
-    }
-
-    private static Element createNewElement(Document doc, 
-            String tagName, String tagContent){
-        Element el = doc.createElement(tagName);
-        
-        if(tagContent != null)
-            el.appendChild(doc.createTextNode(tagContent));
-        
-        return el;
     }
 }

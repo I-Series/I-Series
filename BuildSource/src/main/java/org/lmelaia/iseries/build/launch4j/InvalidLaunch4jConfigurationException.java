@@ -21,6 +21,7 @@ package org.lmelaia.iseries.build.launch4j;
  *
  * @author Luke Melaia
  */
+@SuppressWarnings("unused")
 public class InvalidLaunch4jConfigurationException extends RuntimeException {
 
     public InvalidLaunch4jConfigurationException() {

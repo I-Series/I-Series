@@ -21,10 +21,8 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Properties;
-import java.util.function.Consumer;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.Logger;
@@ -47,6 +45,7 @@ import org.lmelaia.iseries.common.AppLogger;
  *
  * @author Luke Melaia
  */
+@SuppressWarnings({"SpellCheckingInspection", "WeakerAccess"})
 public class BuildConfiguration {
 
     static{
@@ -125,6 +124,7 @@ public class BuildConfiguration {
     /**
      * The I-Series jar file.
      */
+    @SuppressWarnings("unused")
     public static final SmartFile SJAR_FILE = SPROJECT_FOLDER
             .forward("build")
             .forward("libs")
@@ -224,6 +224,7 @@ public class BuildConfiguration {
     /**
      * A list of the libraries for the launcher project.
      */
+    @SuppressWarnings("MismatchedReadAndWriteOfArray")
     private static final Library[] LAUNCHER_LIBRARIES = {
 
     };
@@ -340,6 +341,20 @@ public class BuildConfiguration {
     }
 
     /**
+     * Adds the list of libraries ({@link #LIBRARIES) to the library manager.
+     */
+    @SuppressWarnings("unused")
+    private static void addLauncherLibrariesToList() {
+        for (Library library : LAUNCHER_LIBRARIES) {
+            try {
+                LAUNCHER_LIBRARY_MANAGER.addLibrary(library);
+            } catch (FileNotFoundException ex) {
+                LOG.error("Failed to add library: " + library.getName(), ex);
+            }
+        }
+    }
+
+    /**
      * Makes a directory, including any necessary but nonexistent parent
      * directories if the directory is nonexistent, else the directory is
      * cleaned.
@@ -348,6 +363,7 @@ public class BuildConfiguration {
      * @return {@code true} if and only if the directory was created or cleaned,
      * {@code false} otherwise.
      */
+    @SuppressWarnings("UnusedReturnValue")
     private static boolean forceCleanMake(File f) {
         try {
             if (f.exists()) {
@@ -445,9 +461,10 @@ public class BuildConfiguration {
      * If a file in the primary is not contained in the secondary, a warning is written
      * to the console.
      *
-     * @param primary
-     * @param secondary
+     * @param primary the folder to compare to.
+     * @param secondary the folder being compared.
      */
+    @SuppressWarnings("ConstantConditions")
     private static void compare(File primary, File secondary){
         for(File f : primary.listFiles()){
             if(f.isDirectory())
@@ -467,6 +484,7 @@ public class BuildConfiguration {
      * @return {@code true} if there is a file with name of {@code fileName} in the folder,
      * {@code false} otherwise.
      */
+    @SuppressWarnings("ConstantConditions")
     private static boolean contains(File folder, String fileName){
         ArrayList<String> fileNames = new ArrayList<>();
 
@@ -481,8 +499,9 @@ public class BuildConfiguration {
      * Zips the projects build output into a windows and a cross-platform zip
      * file.
      *
-     * @throws IOException
+     * @throws IOException if the project cannot be zipped due to an IO error.
      */
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     private static void zipProject() throws IOException {
         //Create a copy of the output folder without
         //windows executables for packaging
@@ -525,8 +544,6 @@ public class BuildConfiguration {
 
     /**
      * Writes the build properties from object to file.
-     *
-     * @throws IOException
      */
     private static void saveProperties() {
         LOG.debug("Saving build config to file: "
@@ -550,6 +567,7 @@ public class BuildConfiguration {
      * @throws IOException if an IOException occurs during copying or if the
      * source file is a directory.
      */
+    @SuppressWarnings("unused")
     public static void copyFileToOutput(File source) throws IOException {
         copyFileToOutput(source, null);
     }
@@ -570,6 +588,7 @@ public class BuildConfiguration {
      * @throws IOException if an IOException occurs during copying or if the
      * source file is a directory.
      */
+    @SuppressWarnings("SameParameterValue")
     public static void copyFileToOutput(File source, String newFileName)
             throws IOException {
         File dest;
@@ -605,8 +624,9 @@ public class BuildConfiguration {
      * See the task fullBuild in the root projects build.gradle file for more
      * information.
      *
-     * @throws java.lang.Exception
+     * @throws java.lang.Exception if for any reason the full build fails.
      */
+    @SuppressWarnings("EmptyCatchBlock")
     public static void fullBuild() throws Exception {
         copyFilesOver();
         addLibrariesToList();
@@ -638,12 +658,8 @@ public class BuildConfiguration {
      * <p>
      * {@link #fullBuild()} can be considered an alternative to this method.
      *
-     * @param args
-     *
-     * @deprecated Use {@link #fullBuild() }. See the task fullBuild in the root
-     * projects build.gradle file for more information.
+     * @param args the command line arguments
      */
-    @Deprecated
     public static void main(String[] args) {
         LOG.info("Beginning full build...");
 

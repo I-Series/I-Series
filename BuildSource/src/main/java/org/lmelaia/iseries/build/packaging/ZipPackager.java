@@ -73,7 +73,8 @@ public class ZipPackager {
     /**
      * @return the zip file.
      */
-    public File getZIP_FILE() {
+    @SuppressWarnings("unused")
+    public File getZipFile() {
         return ZIP_FILE;
     }
 
@@ -84,10 +85,11 @@ public class ZipPackager {
      * @param zipfile the zip file
      * @throws IOException  if the zip file cannot be written to.
      */
+    @SuppressWarnings("ConstantConditions")
     private static void zip(File directory, File zipfile) throws IOException {
         URI base = directory.toURI();
         Deque<File> queue = new LinkedList<>();
-        queue.push(directory);
+        queue.push(Objects.requireNonNull(directory));
         OutputStream out = new FileOutputStream(zipfile);
         Closeable res = out;
         try {
@@ -130,6 +132,7 @@ public class ZipPackager {
         }
     }
 
+    @SuppressWarnings("unused")
     private static void copy(InputStream in, File file) throws IOException {
         try (OutputStream out = new FileOutputStream(file)) {
             copy(in, out);

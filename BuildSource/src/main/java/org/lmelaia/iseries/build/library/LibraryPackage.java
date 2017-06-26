@@ -24,6 +24,7 @@ import java.util.Objects;
  * 
  * @author Luke Melaia
  */
+@SuppressWarnings("unused")
 public class LibraryPackage {
     
     /**

@@ -29,5 +29,5 @@ public enum HeaderType {
     /**
      * Represents a console application.
      */
-    CONSOLE
+    @SuppressWarnings("unused")CONSOLE
 }

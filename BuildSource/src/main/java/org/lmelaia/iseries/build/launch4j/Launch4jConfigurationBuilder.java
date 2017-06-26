@@ -48,6 +48,7 @@ import java.util.Arrays;
  * @see InvalidLaunch4jConfigurationException
  * @author Luke Melaia
  */
+@SuppressWarnings({"WeakerAccess", "UnusedReturnValue"})
 public class Launch4jConfigurationBuilder {
 
     //Basic
@@ -743,7 +744,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #outputFileName} for documentation.
      *
-     * @param name
+     * @param name name of the output file (should end with .exe).
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder setOutputFile(String name) {
@@ -754,7 +755,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #jarFileName} for documentation.
      *
-     * @param name
+     * @param name the name of the jar file.
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder setJarFile(String name) {
@@ -765,7 +766,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #wrap} for documentation.
      *
-     * @param wrap
+     * @param wrap {@code true} if the exe should wrap the jar, false to link to it.
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder setWrap(boolean wrap) {
@@ -776,7 +777,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #jarRuntimePath} for documentation.
      *
-     * @param runtimePath
+     * @param runtimePath -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder setJarRuntimePath(String runtimePath) {
@@ -787,7 +788,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #wrapperManifest} for documentation.
      *
-     * @param name
+     * @param name -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder setWrapperManifest(String name) {
@@ -798,7 +799,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #outputFileName} for documentation.
      *
-     * @param name
+     * @param name -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder setIconFile(String name) {
@@ -809,7 +810,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #changeDirectory} for documentation.
      *
-     * @param changeDir
+     * @param changeDir -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder setChangeDirectory(String changeDir) {
@@ -820,7 +821,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #commandLineArguments} for documentation.
      *
-     * @param arguments
+     * @param arguments -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder
@@ -832,7 +833,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #processPriority} for documentation.
      *
-     * @param priority
+     * @param priority -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder
@@ -844,7 +845,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #stayAlive} for documentation.
      *
-     * @param stayAlive
+     * @param stayAlive -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder setStayAlive(boolean stayAlive) {
@@ -855,7 +856,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #restartAfterCrash} for documentation.
      *
-     * @param restart
+     * @param restart -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder setRestartAfterCrash(boolean restart) {
@@ -866,7 +867,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #errorTitle} for documentation.
      *
-     * @param title
+     * @param title -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder setErrorTitle(String title) {
@@ -877,7 +878,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #downloadUrl} for documentation.
      *
-     * @param url
+     * @param url -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder setDownloadUrl(String url) {
@@ -888,7 +889,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #supportUrl} for documentation.
      *
-     * @param url
+     * @param url -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder setSupportURL(String url) {
@@ -902,7 +903,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #customClasspath} for documentation.
      *
-     * @param customClasspath
+     * @param customClasspath -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder
@@ -914,7 +915,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #mainClass} for documentation.
      *
-     * @param mainClass
+     * @param mainClass -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder setMainClass(String mainClass) {
@@ -925,7 +926,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #classpath} for documentation.
      *
-     * @param classpath
+     * @param classpath -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder setClasspath(String... classpath) {
@@ -939,7 +940,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #headerType} for documentation.
      *
-     * @param type
+     * @param type -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder setHeaderType(HeaderType type) {
@@ -950,7 +951,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #objectFiles} for documentation.
      *
-     * @param objectFiles
+     * @param objectFiles -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder setObjectFiles(String... objectFiles) {
@@ -961,7 +962,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #w32Api} for documentation.
      *
-     * @param w32Api
+     * @param w32Api -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder setW32Api(String... w32Api) {
@@ -975,7 +976,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #singleInstance} for documentation.
      *
-     * @param singleInstance
+     * @param singleInstance -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder
@@ -987,7 +988,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #mutexName} for documentation.
      *
-     * @param mutexName
+     * @param mutexName -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder setMutexName(String mutexName) {
@@ -998,7 +999,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #windowTitle} for documentation.
      *
-     * @param title
+     * @param title -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder setWindowTitle(String title) {
@@ -1012,7 +1013,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #bundledJrePath} for documentation.
      *
-     * @param path
+     * @param path -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder setBundledJrePath(String path) {
@@ -1023,7 +1024,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #is64bit} for documentation.
      *
-     * @param is64bit
+     * @param is64bit -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder set64Bit(boolean is64bit) {
@@ -1034,7 +1035,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #isFallbackOption} for documentation.
      *
-     * @param isFallbackOption
+     * @param isFallbackOption -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder setFallback(boolean isFallbackOption) {
@@ -1045,7 +1046,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #minimumJreVersion} for documentation.
      *
-     * @param jreVersion
+     * @param jreVersion -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder
@@ -1057,7 +1058,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #maximumJreVersion} for documentation.
      *
-     * @param jreVersion
+     * @param jreVersion -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder
@@ -1069,7 +1070,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #isHeapInPercent} for documentation.
      *
-     * @param isInPercent
+     * @param isInPercent -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder setHeapInPercent(boolean isInPercent) {
@@ -1080,7 +1081,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #javaUsageOptions} for documentation.
      *
-     * @param juo
+     * @param juo -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder
@@ -1092,7 +1093,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #javaArchitecture} for documentation.
      *
-     * @param ja
+     * @param ja -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder
@@ -1104,7 +1105,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #initialHeapSize} for documentation.
      *
-     * @param heapSize
+     * @param heapSize -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder
@@ -1116,7 +1117,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #maximumHeapSize} for documentation.
      *
-     * @param heapSize
+     * @param heapSize -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder
@@ -1128,7 +1129,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #jvmOptions} for documentation.
      *
-     * @param jvmOptions
+     * @param jvmOptions -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder setJvmOptions(String... jvmOptions) {
@@ -1142,7 +1143,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #environmentVariables} for documentation.
      *
-     * @param vars
+     * @param vars -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder
@@ -1157,7 +1158,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #isSplashScreenEnabled} for documentation.
      *
-     * @param enable
+     * @param enable -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder enableSplashScreen(boolean enable) {
@@ -1168,7 +1169,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #splashScreenFileName} for documentation.
      *
-     * @param splashFile
+     * @param splashFile -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder setSplashFile(String splashFile) {
@@ -1179,7 +1180,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #waitForWindow} for documentation.
      *
-     * @param waitForWindow
+     * @param waitForWindow -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder
@@ -1191,7 +1192,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #timeout} for documentation.
      *
-     * @param timeout
+     * @param timeout -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder setTimeout(int timeout) {
@@ -1202,7 +1203,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #signalErrorOnTimeout} for documentation.
      *
-     * @param signalError
+     * @param signalError -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder
@@ -1217,7 +1218,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #addVersionInfo} for documentation.
      *
-     * @param info
+     * @param info -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder addVersionInfo(boolean info) {
@@ -1228,7 +1229,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #fileVersion} for documentation.
      *
-     * @param version
+     * @param version -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder setFileVersion(String version) {
@@ -1239,7 +1240,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #freeFormFileVersion} for documentation.
      *
-     * @param version
+     * @param version -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder setFreeFormFileVersion(String version) {
@@ -1250,7 +1251,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #fileDescription} for documentation.
      *
-     * @param description
+     * @param description -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder setFileDescription(String description) {
@@ -1261,7 +1262,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #copyright} for documentation.
      *
-     * @param copyright
+     * @param copyright -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder setCopyright(String copyright) {
@@ -1272,7 +1273,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #productVersion} for documentation.
      *
-     * @param version
+     * @param version -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder setProductVersion(String version) {
@@ -1283,7 +1284,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #freeFormProductVersion} for documentation.
      *
-     * @param version
+     * @param version -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder
@@ -1295,7 +1296,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #productName} for documentation.
      *
-     * @param productName
+     * @param productName -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder setProductName(String productName) {
@@ -1306,7 +1307,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #companyName} for documentation.
      *
-     * @param name
+     * @param name -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder setCompanyName(String name) {
@@ -1317,7 +1318,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #internalName} for documentation.
      *
-     * @param name
+     * @param name -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder setInternalName(String name) {
@@ -1328,7 +1329,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #originalFileName} for documentation.
      *
-     * @param name
+     * @param name -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder setOriginalFileName(String name) {
@@ -1342,7 +1343,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #startupErrorMessage} for documentation.
      *
-     * @param message
+     * @param message -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder setStartupErrorMessage(String message) {
@@ -1353,7 +1354,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #bundledJreErrorMessage} for documentation.
      *
-     * @param message
+     * @param message -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder
@@ -1365,7 +1366,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #jreVersionErrorMessage} for documentation.
      *
-     * @param message
+     * @param message -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder
@@ -1377,7 +1378,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #launcherErrorMessage} for documentation.
      *
-     * @param message
+     * @param message -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder
@@ -1389,7 +1390,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * See {@link #instanceAlreadyRunningErrorMessage} for documentation.
      *
-     * @param message
+     * @param message -
      * @return this for convenience.
      */
     public Launch4jConfigurationBuilder
@@ -1405,7 +1406,7 @@ public class Launch4jConfigurationBuilder {
      * Validates all the options provided to this class and creates a
      * {@link Launch4jConfiguration} object with the options provided to this
      * class. The Launch4jConfiguration object can then be used to create an
-     * executable with launch4j with the {@link Launc} class.
+     * executable with launch4j with the {@link Launch4jProcessWrapper} class.
      *
      * @return a {@link Launch4jConfiguration} object with the settings from
      * this class.
@@ -1852,12 +1853,12 @@ public class Launch4jConfigurationBuilder {
     }
 
     private void validateEnvironmentVariables() {
-        if (environmentVariables == null) {
-            return;
-        }
-
         if (environmentVariables.length == 0) {
             environmentVariables = null;
+        }
+
+        if (environmentVariables == null) {
+            return;
         }
 
         for (String variable : environmentVariables) {

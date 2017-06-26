@@ -44,6 +44,7 @@ import org.apache.logging.log4j.Logger;
  * 
  * @author Luke
  */
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class SmartFile {
 
     private static final Logger LOG = LogManager.getLogger();
@@ -76,6 +77,7 @@ public class SmartFile {
      * @return the newly created smart file.
      * @throws Exception if one of the rules cannot be enforced.
      */
+    @SuppressWarnings("unused")
     public static SmartFile getSmartFile(File path, Rule... rules)
             throws Exception {
         SmartFile p = getSmartFile(path);
@@ -93,6 +95,7 @@ public class SmartFile {
      * @param path the file path
      * @return the newly created smart file.
      */
+    @SuppressWarnings("WeakerAccess")
     public static SmartFile getSmartFile(File path) {
         return new SmartFile(path);
     }
@@ -103,7 +106,7 @@ public class SmartFile {
      * @param path the file path
      * @param rules a set of rules the file must adhere to.
      * @return the newly created smart file.
-     * @throws Exception
+     * @throws Exception if a rule cannot be enforced.
      */
     public static SmartFile getSmartPath(String path, Rule... rules)
             throws Exception {
@@ -130,7 +133,7 @@ public class SmartFile {
     /**
      * Creates a new smart file from a file object.
      *
-     * @param file
+     * @param file the file object.
      */
     private SmartFile(File file) {
         this(file.getAbsolutePath());
@@ -139,7 +142,7 @@ public class SmartFile {
     /**
      * Creates a new smart file from a file path in String form.
      *
-     * @param path
+     * @param path the path to the file.
      */
     private SmartFile(String path) {
         this.path = normalize(Objects.requireNonNull(path));
@@ -234,6 +237,7 @@ public class SmartFile {
      * @return a list of all the files contained within this directory cast as
      * smart files or null if the file is an actual file not a directory.
      */
+    @SuppressWarnings("ConstantConditions")
     public SmartFile[] list() {
         if(isFile())
             return null;
@@ -312,14 +316,14 @@ public class SmartFile {
      * @throws IOException if the content cannot be read.
      */
     public String read() throws IOException {
-        String ret = "";
+        StringBuilder ret = new StringBuilder();
 
         try (FileInputStream reader = this.getInputStream()) {
             Scanner sc = new Scanner(reader);
             while (sc.hasNextLine()) {
-                ret += sc.nextLine();
+                ret.append(sc.nextLine());
             }
-            return ret;
+            return ret.toString();
         }
     }
 
@@ -357,6 +361,7 @@ public class SmartFile {
      * 
      * @throws IOException if the file or directories cannot be created.
      */
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public void make() throws IOException {
         if (isFile()) {
             backingFile.createNewFile();
@@ -513,17 +518,18 @@ public class SmartFile {
 
     /**
      * @param times how many directories to go back.
-     * @return one of the parent directories (determined by {@codde times})
+     * @return one of the parent directories (determined by {@code times})
      * of this file or directory.
      */
+    @SuppressWarnings("SameParameterValue")
     public SmartFile goBack(int times) {
-        String newpath = "";
+        StringBuilder newpath = new StringBuilder();
         
         for(int i = 0; i < paths.length - times; i++){
-            newpath += paths[i] + separator;
+            newpath.append(paths[i]).append(separator);
         }
         
-        return new SmartFile(newpath);
+        return new SmartFile(newpath.toString());
     }
 
     /**
@@ -547,8 +553,8 @@ public class SmartFile {
     /**
      * Makes the provided path absolute (i.e. begins with a path separator).
      * 
-     * @param path
-     * @return 
+     * @param path - the path string
+     * @return the path passed in converted to an absolute.
      */
     public static String makeAbsolute(String path) {
         if (path.indexOf(separator) != 1) {
@@ -562,8 +568,8 @@ public class SmartFile {
      * Makes the provided path relative (i.e. doesn't begin with a path
      * separator).
      * 
-     * @param path
-     * @return 
+     * @param path the path string
+     * @return the path passed in converted to a relative path.
      */
     public static String makeRelative(String path) {
         if (path.indexOf(separator) == 1) {

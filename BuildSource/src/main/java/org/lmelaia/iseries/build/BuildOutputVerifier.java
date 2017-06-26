@@ -47,6 +47,7 @@ import org.lmelaia.iseries.common.AppLogger;
  *
  * @author Luke
  */
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class BuildOutputVerifier {
 
     private static final Logger LOG = AppLogger.getLogger();
@@ -123,7 +124,7 @@ public class BuildOutputVerifier {
      *
      * Default: {@code true}
      *
-     * @param log
+     * @param log logs files not found if true.
      * @return this object for convenience.
      */
     public BuildOutputVerifier setLogFilesNotFound(boolean log) {
@@ -137,7 +138,7 @@ public class BuildOutputVerifier {
      *
      * Default: {@code false}
      *
-     * @param log
+     * @param log logs extra files found if true.
      * @return this object for convenience.
      */
     public BuildOutputVerifier setLogExtraFiles(boolean log) {
@@ -151,7 +152,7 @@ public class BuildOutputVerifier {
      *
      * Default: {@code true}
      *
-     * @param log
+     * @param log logs empty files found if true.
      * @return this object for convenience.
      */
     public BuildOutputVerifier setLogEmptyFiles(boolean log) {
@@ -162,6 +163,7 @@ public class BuildOutputVerifier {
     /**
      * Begins verifying the file content.
      */
+    @SuppressWarnings("ConstantConditions")
     public void verify() {
         LOG.info("Verifying output directory: " + outputDirectory);
 
@@ -185,20 +187,17 @@ public class BuildOutputVerifier {
         if (logFilesNotFound) {
             expectedFiles.stream().filter((ef)
                     -> (!contentNames.contains(ef.name))).forEachOrdered((ef)
-                    -> {
-                LOG.warn("File: (" + ef.name + ") is not contained in the"
-                        + " output directory: " + outputDirectory.getName());
-            });
+                    -> LOG.warn("File: (" + ef.name + ") is not contained in the"
+                            + " output directory: " + outputDirectory.getName()));
         }
 
         if (logExtraFiles) {
             contentNames.stream().filter((f)
                     -> (!expectedFiles.contains(
-                            new ExpectedFile(f)))).forEachOrdered((f) -> {
-                LOG.warn("File: (" + f + ") is not contained in the list"
-                        + " of expected files, but it is in the output"
-                        + " directory: " + outputDirectory.getName());
-            });
+                            new ExpectedFile(f)))).forEachOrdered((f) -> LOG.warn("File: (" + f + ") is not contained"
+                                + " in the list"
+                                + " of expected files, but it is in the output"
+                                + " directory: " + outputDirectory.getName()));
         }
 
     }
@@ -224,10 +223,7 @@ public class BuildOutputVerifier {
 
         @Override
         public boolean equals(Object e) {
-            if (e instanceof ExpectedFile) {
-                return name.equals(((ExpectedFile) e).name);
-            }
-            return false;
+            return e instanceof ExpectedFile && name.equals(((ExpectedFile) e).name);
         }
 
         @Override

@@ -43,6 +43,7 @@ public class OutputCopyFile extends CopyFile{
      * 
      * @param source the source file to copy over.
      */
+    @SuppressWarnings("unused")
     public OutputCopyFile(File source){
         this(source, null);
     }

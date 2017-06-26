@@ -16,8 +16,6 @@
 package org.lmelaia.iseries.build.licence;
 
 import java.io.File;
-import java.io.IOException;
-import org.apache.commons.io.FileUtils;
 import org.lmelaia.iseries.build.BuildConfiguration;
 
 /**
@@ -78,23 +76,7 @@ public enum Licences implements Licence{
     public File getFile() {
         return getLicenceFile(getName() + ".txt");
     }
-    
-    /**
-     * Copies the licence file to a new file.
-     * 
-     * @param dest the destination file.
-     * @return {@code true} if the file was successfully copied, {@code false}
-     * if an exception was thrown while copying.
-     */
-    public boolean copyOver(File dest){
-        try {
-            FileUtils.copyFile(this.getFile(), dest);
-            return true;
-        } catch (IOException ex) {
-            return false;
-        }
-    }
-    
+
     /**
      * @param fileName the file name of the licence.
      * @return a licence file from the licences folder with the name
