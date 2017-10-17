@@ -1,3 +1,5 @@
+import org.apache.commons.io.FileUtils
+
 /*   Copyright (C) 2016  Luke Melaia
  *
  *   This program is free software: you can redistribute it and/or modify
@@ -31,7 +33,15 @@ repositories {
     mavenCentral()    
 }
 
+buildscript {
+    repositories {
+        mavenCentral();
+    }
 
+    dependencies{
+        classpath group: 'commons-io', name: 'commons-io', version: '2.4'
+    }
+}
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
@@ -69,6 +79,8 @@ configurations.compile.each {
 } 
 
 /**
+ * Produces a full distributable version of the application.
+ *
  * A full build is considered a build of all the projects,
  * subprojects AND a build of the executables, installers
  * and what ever else needs doing. 
@@ -86,15 +98,77 @@ configurations.compile.each {
  * This task does NOTHING other than call the method
  * org.lmelaia.iseries.build.BuildConfiguration:fullBuild()
  * which does all the work.
- * 
+ *
  * This is used to bypass the build source main method
  * as the build source main method is called when running
- * the project, rather than building it. 
+ * the project, rather than building it.
  */
 task fullBuild << {
     println('Beginning full build...')
-    //BuildSource:run
-    //org.lmelaia.iseries.build.BuildConfiguration.Main(null);
+}
+
+/**
+ * Runs the application as though it was run
+ * by the user from a full working envrionment.
+ *
+ * Basically does a full build, copies the build
+ * to a run folder and runs the launcher. This
+ * allows running the full application from a
+ * dev environment.
+ */
+task trueRun << {
+    println("Beginning true run")
+
+    File rundir = new File(System.getProperty("user.dir") + "/run");
+    rundir.mkdir();
+
+    File source = new File(System.getProperty("user.dir") + "/buildOutput");
+    File dest = rundir;
+
+    try {
+        FileUtils.copyDirectory(source, dest);
+    } catch (IOException e) {
+        println("Could not copy to run directory: " + e.getMessage());
+    }
+}
+
+task cleanTrueRun << {
+    FileUtils.deleteDirectory(new File(System.getProperty("user.dir") + "/run"));
+}
+
+task runLauncher << {
+
+    String command = "java -jar " +
+            new File(System.getProperty("user.dir")).getAbsolutePath() +
+            File.separator + "run" +
+            File.separator + "I-Series.jar"
+
+    System.out.println("Executing launcher with arguments: " + command)
+
+    Process appProcess = Runtime.getRuntime().exec(command, null, new File(new File(
+            System.getProperty("user.dir")).getAbsolutePath() +
+            File.separator + "run"))
+
+    Thread t = new Thread(new Runnable() {
+        @Override
+        void run() {
+            String line
+            BufferedReader inn = new BufferedReader(
+                    new InputStreamReader(appProcess.getInputStream()))
+
+            try {
+                while ((line = inn.readLine()) != null) {
+                    System.out.println(line)
+                }
+            } catch (ignored) {
+            }
+
+        }
+    }, "Process output printer")
+    t.setDaemon(true)
+    t.start()
+
+    System.out.println("Launcher exit code: " + appProcess.waitFor())
 }
 
 /**
@@ -108,5 +182,12 @@ task copyDependencies(type: Copy){
 //Ensures all files (e.g. jar files) are up-to-date before
 //beginning a full build.
 build.finalizedBy(copyDependencies)
+fullBuild.dependsOn("I-Series-Common:build")
+fullBuild.dependsOn("Launcher:build")
 fullBuild.dependsOn(build)
-//fullBuild.finalizedBy: "BuildSource:run"
+fullBuild.finalizedBy("BuildSource:run")
+
+trueRun.dependsOn(fullBuild)
+trueRun.finalizedBy(runLauncher)
+
+cleanTrueRun.finalizedBy(trueRun)

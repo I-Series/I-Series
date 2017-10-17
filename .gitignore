@@ -23,3 +23,4 @@ Launcher/src/test/
 /I-Series-Common/build/
 *.log
 /.gradle/
+/run/

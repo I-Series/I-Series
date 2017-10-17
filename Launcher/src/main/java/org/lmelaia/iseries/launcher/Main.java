@@ -15,12 +15,10 @@
  */
 package org.lmelaia.iseries.launcher;
 
-import jdk.nashorn.internal.scripts.JO;
 import org.apache.logging.log4j.Logger;
 import org.lmelaia.iseries.common.AppLogger;
+import org.lmelaia.iseries.common.intercommunication.*;
 
-import javax.swing.*;
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -39,32 +37,74 @@ public class Main {
         AppLogger.silentConfigure("/configuration/log4j2_configuration.xml");
     }
 
+    /**
+     * Logging framework instance.
+     */
     static Logger LOG = AppLogger.getLogger();
 
+    //End of logging configuration
+
     /**
-     * The process container for the i-series jar.
+     * Client communication instance.
      */
-    private static AppProcess process = new AppProcess();
+    public static Client client;
+
+    /**
+     * Server communication instance.
+     */
+    public static Server server;
 
     /**
      * Starts the launcher.
      *
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        LOG.info("Starting Launcher with arguments: " + Arrays.toString(args));
-        LOG.debug("Directory List: " + Arrays.toString(
-                new File(System.getProperty("user.dir")).listFiles())
-                .replace(",", ",\n\t\t"));
+    public static void main(String[] args) throws IOException {
+        LOG.info("New launcher instance starting.");
+        LOG.info("New launcher being run with args: " + Arrays.toString(args));
 
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            LOG.info("Launcher shutting down.");
-        }, "Launcher Shutdown Hook"));
+        LOG.info("Attempting to get port number");
 
+        int port = FileComUtil.getLastKnownPort();
+
+        if (port == -1) {
+            LOG.info("No port number could be obtained. Starting new instance.");
+            start();
+        } else {
+            LOG.info("Found server port number: " + port);
+            LOG.info("Attempting connection...");
+
+            client = new Client();
+            if (!client.pingServer(port)) {
+                client.close();
+                LOG.info("Server not responding, assuming no server exists. Starting new instance.");
+                start();
+            } else {
+                LOG.info("Arguments sent: " + Arrays.toString(args));
+                Message m = client.sendToServer(new Message(MessageType.ARGS, port, Arrays.toString(args)));
+                if (m.getMsgType().equals(MessageType.RECEIVED)) {
+                    LOG.info("Message received");
+                }
+            }
+        }
+
+        LOG.info("End");
+        System.exit(0);
+    }
+
+    /**
+     * Starts the main application process.s
+     */
+    private static void start() {
         try {
-            process.start("I-Series-Base.jar", 1201);//TODO: Implement port
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Couldn't start process: " + e);
+            AppProcess process = new AppProcess();
+            LOG.info("Host server started");
+            server = new Server();
+            server.start("Launchers");
+            LOG.info("I-Series instance starting");
+            process.start("I-Series-Base.jar", server.getPort());
+        } catch (Exception e) {
+            LOG.error("Exception on start", e);
         }
     }
 

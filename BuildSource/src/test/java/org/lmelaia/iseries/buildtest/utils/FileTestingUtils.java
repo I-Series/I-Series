@@ -23,8 +23,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import org.apache.logging.log4j.Logger;
-import org.lmelaia.iseries.build.BuildLogger;
 
 /**
  * Utility object for tests that require files.
@@ -36,8 +34,6 @@ import org.lmelaia.iseries.build.BuildLogger;
  */
 public class FileTestingUtils {
 
-    private static final Logger LOG = BuildLogger.getLogger();
-    
     /**
      * Default path.
      */
@@ -126,7 +122,6 @@ public class FileTestingUtils {
             String content = testFile.content;
 
             if (!ref.createNewFile()) {
-                LOG.error("Couldn't create file: " + ref);
                 continue;
             }
 

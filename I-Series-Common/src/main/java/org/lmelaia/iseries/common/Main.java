@@ -15,20 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lmelaia.iseries.common.intercommunication;
+package org.lmelaia.iseries.common;
 
-/**
- * Created by Luke on 6/21/2017.
- */
-public class LockFile {
+public class Main {
 
-    private static final String DEFAULT_NAME = ".lock";
-
-    public LockFile(){
-
-    }
-
-    public LockFile(String name){
-
+    public static void Main(String[] args) {
+        //NO-OP
     }
 }

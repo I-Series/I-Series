@@ -41,47 +41,4 @@ dependencies {
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.8.2'
     
     compile project(path: ':I-Series-Common')
-    //runtime project(path: ':Common')
-    //testCompile project(path: ':Common')
 }
-
-/**
- * Executes the launcher in the buildOutput directory.
- *
- * The launcher is executed as a process so the output is directed
- * to the console.
- */
-task runInBuildOutput << {
-    String command = "java -jar " +
-            new File(System.getProperty("user.dir")).getAbsolutePath() +
-            File.separator + "buildOutput" +
-            File.separator + "I-Series.jar"
-
-    System.out.println("Executing launcher with arguments: " + command)
-
-    Process appProcess = Runtime.getRuntime().exec(command, null, new File(new File(
-            System.getProperty("user.dir")).getAbsolutePath() +
-                File.separator + "buildOutput"))
-
-    Thread t = new Thread(new Runnable() {
-        @Override
-        void run() {
-            String line
-            BufferedReader inn = new BufferedReader(
-                    new InputStreamReader(appProcess.getInputStream()))
-
-            try {
-                while ((line = inn.readLine()) != null) {
-                    System.out.println(line)
-                }
-            } catch (ignored) {
-            }
-
-        }
-    }, "Process output printer")
-    t.setDaemon(true)
-    t.start()
-
-    System.out.println("Exit code: " + appProcess.waitFor())
-}
-runInBuildOutput.dependsOn(run)

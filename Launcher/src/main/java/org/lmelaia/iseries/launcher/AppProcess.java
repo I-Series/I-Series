@@ -21,10 +21,11 @@ import org.apache.logging.log4j.Logger;
 import org.lmelaia.iseries.common.AppLogger;
 
 import javax.swing.*;
-import java.awt.*;
-import java.io.*;
-import java.util.*;
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Objects;
 
 /**
  * Used to create and monitor an I-Series process.
@@ -69,12 +70,12 @@ public class AppProcess {
      * @throws IOException
      */
     private void _start() throws IOException {
-        String command = "\"" + getJavaHome() + "\"" //Java executable
-                + " -jar " //Java command
+        String command = "\"" + getJavaHome() + "\""        //Java executable
+                + " -jar "                                  //Java command
                 + "\"" + System.getProperty("user.dir")
-                + File.separator // Jar file
-                + jarName + "\""
-                + " " + port //Port as argument
+                + File.separator
+                + jarName + "\""                            // Jar file
+                + " " + port                                //Port as argument
         ;
 
         LOG.info("Running I-Series with arguments: " + command);
@@ -102,6 +103,7 @@ public class AppProcess {
         try {
             int code = appProcess.waitFor();
             LOG.info("Process finished with exit code: " + code);
+            System.exit(0);
         } catch (InterruptedException e) {
             LOG.warn("waitFor() failed", e);
         }

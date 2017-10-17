@@ -19,6 +19,12 @@ apply plugin: 'application'
 test.testLogging.showStandardStreams = true
 test.testLogging.exceptionFormat = 'full'
 
+mainClassName = "org.lmelaia.iseries.common.Main"
+
+if (!hasProperty('mainClass')) {
+    ext.mainClass = 'org.lmelaia.iseries.common.Main'
+}
+
 repositories {
     mavenCentral()
 }

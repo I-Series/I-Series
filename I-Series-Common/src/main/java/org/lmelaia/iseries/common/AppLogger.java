@@ -41,8 +41,8 @@ public final class AppLogger {
     private static Logger LOG;
 
     /**
-     * Has the logger been initialized, either though the
-     * access or configure methods.
+     * Has the logger been initialized, though one
+     * of the configure methods.
      */
     private static boolean initialized = false;
 
@@ -101,7 +101,7 @@ public final class AppLogger {
 
         LOG = getLogger();
         LOG.info("Logger initialized with configuration file: "
-                + config.getPath());
+                + config.toString());
         LOG.info("Ignore configuration file not found warning.");
 
         initialized = true;

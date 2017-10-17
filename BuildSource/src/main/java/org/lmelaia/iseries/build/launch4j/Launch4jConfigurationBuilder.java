@@ -1853,7 +1853,7 @@ public class Launch4jConfigurationBuilder {
     }
 
     private void validateEnvironmentVariables() {
-        if (environmentVariables.length == 0) {
+        if (environmentVariables != null && environmentVariables.length == 0) {
             environmentVariables = null;
         }
 
