@@ -15,15 +15,6 @@
  */
 package org.lmelaia.iseries.build;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.Properties;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.Logger;
 import org.lmelaia.iseries.build.BuildOutputVerifier.ExpectedFile;
@@ -38,6 +29,11 @@ import org.lmelaia.iseries.build.utils.CopyFile;
 import org.lmelaia.iseries.build.utils.OutputCopyFile;
 import org.lmelaia.iseries.build.utils.SmartFile;
 import org.lmelaia.iseries.common.AppLogger;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Properties;
 
 /**
  * Holds the configuration settings for the build script along with methods to
@@ -218,6 +214,7 @@ public class BuildConfiguration {
     private static final Library[] LIBRARIES = {
         new Library("Gson", "gson-2.8.0", Licences.APACHE),
         new Library("Log4j", new String[]{"log4j-api-2.8.2", "log4j-core-2.8.2"}, Licences.APACHE),
+            new Library("Guava", "guava-19.0", Licences.APACHE),
         new Library("I-Series-Common", "I-Series-Common", Licences.GNU)
     };
 

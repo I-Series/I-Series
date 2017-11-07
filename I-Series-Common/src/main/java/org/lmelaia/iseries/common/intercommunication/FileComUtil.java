@@ -34,7 +34,7 @@ public class FileComUtil {
      * application was opened on or an application
      * closed flag.
      */
-    private static final File PORT_FILE = new File(".port.cfg");
+    private static final File PORT_FILE = new File("savedata/port.int");
 
     //Logging instance
     static Logger LOG = AppLogger.getLogger();

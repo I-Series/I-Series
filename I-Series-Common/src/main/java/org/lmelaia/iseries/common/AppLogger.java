@@ -83,7 +83,7 @@ public final class AppLogger {
     /**
      * Configures the logger with a configuration file.
      *
-     * Calling this method will initialize the logger.
+     * Calling this method will startFX the logger.
      * Once initialized, the logger cannot be initialized again.
      *
      * @throws IllegalStateException if the logger is already
@@ -107,11 +107,10 @@ public final class AppLogger {
         initialized = true;
     }
 
-
     /**
      * Returns a logger provided by the apache log manager.
      *
-     * Calling this method will initialize the app logger.
+     * Calling this method will startFX the app logger.
      */
     public static Logger getLogger(){
         if(!initialized){

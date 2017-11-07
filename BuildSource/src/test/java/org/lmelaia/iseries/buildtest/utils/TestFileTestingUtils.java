@@ -15,17 +15,19 @@
  */
 package org.lmelaia.iseries.buildtest.utils;
 
+import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.runners.MethodSorters;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+
 import static org.junit.Assert.fail;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.FixMethodOrder;
-import org.junit.runners.MethodSorters;
-import static org.lmelaia.iseries.buildtest.utils.FileTestingUtils.TestFile;
 import static org.lmelaia.iseries.buildtest.utils.FileTestingUtils.PATH_BUILD_TEST_FILES;
+import static org.lmelaia.iseries.buildtest.utils.FileTestingUtils.TestFile;
 
 /**
  * Tests the {@link FileTestingUtils} class.
@@ -91,7 +93,7 @@ public class TestFileTestingUtils {
         }
         
         if(fileUtilsA.getFileByID("tfa3") == null){
-            fail("Setting an id doesn't work");
+            fail("SettingsStore an id doesn't work");
         }
         
         if(fileUtilsA.getFileByID("TFA3") == null){
@@ -107,7 +109,7 @@ public class TestFileTestingUtils {
         }
         
         if(fileUtilsB.getFileByID("tfb3") == null){
-            fail("Setting an id doesn't work");
+            fail("SettingsStore an id doesn't work");
         }
         
         if(fileUtilsB.getFileByID("TFB3") == null){

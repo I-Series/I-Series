@@ -37,7 +37,7 @@ public class Client {
      * The timeout in milliseconds when pinging
      * a server.
      */
-    private static final int PING_TIMEOUT = 2000;
+    private int pingTimeout = 2000;
 
     /**
      * Communication object used to talk to
@@ -56,6 +56,17 @@ public class Client {
     }
 
     /**
+     * Constructs a new client instance
+     *
+     * @throws IOException if a communication
+     *                     object cannot be created.
+     */
+    public Client(int pingTimeout) throws IOException {
+        this.pingTimeout = pingTimeout;
+        comObj = new CommunicationObject();
+    }
+
+    /**
      * Pings a server to see if it is online.
      *
      * @param serverPort port number the server was opened on.
@@ -64,11 +75,10 @@ public class Client {
      */
     public boolean pingServer(int serverPort) throws IOException {
         comObj.send(new Message(MessageType.IS_ALIVE, serverPort, ""));
-        LOG.debug("Pinging server");
 
         final boolean[] timeout = new boolean[1];
-        Message received = comObj.waitToReceive(PING_TIMEOUT, () -> {
-            LOG.info("No response in " + PING_TIMEOUT + " ms after pinging server(" + serverPort + ").");
+        Message received = comObj.waitToReceive(pingTimeout, () -> {
+            LOG.info("No response in " + pingTimeout + " ms after pinging server(" + serverPort + ").");
             timeout[0] = true;
         });
 
@@ -76,7 +86,6 @@ public class Client {
             return false;
 
         if (received.getMsgType().equals(MessageType.ALIVE)) {
-            LOG.debug("Response received");
             return true;
         } else {
             LOG.warn("Unknown response received.");

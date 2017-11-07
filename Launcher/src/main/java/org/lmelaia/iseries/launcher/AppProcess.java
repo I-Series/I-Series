@@ -19,6 +19,7 @@ package org.lmelaia.iseries.launcher;
 
 import org.apache.logging.log4j.Logger;
 import org.lmelaia.iseries.common.AppLogger;
+import org.lmelaia.iseries.common.system.ExitCode;
 
 import javax.swing.*;
 import java.io.BufferedReader;
@@ -65,7 +66,7 @@ public class AppProcess {
     }
 
     /**
-     * Internal start method.
+     * Internal startInstance method.
      *
      * @throws IOException
      */
@@ -103,7 +104,7 @@ public class AppProcess {
         try {
             int code = appProcess.waitFor();
             LOG.info("Process finished with exit code: " + code);
-            System.exit(0);
+            App.getInstance().exit(ExitCode.getFromCode(code));
         } catch (InterruptedException e) {
             LOG.warn("waitFor() failed", e);
         }

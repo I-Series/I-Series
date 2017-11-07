@@ -131,7 +131,6 @@ public class Server {
             while (true) {
                 try {
                     Message m = comObj.waitToReceive();
-                    LOG.debug("Message received: " + m);
 
                     if (m.getMsgType().equals(MessageType.IS_ALIVE)) {
                         comObj.send(new Message(MessageType.ALIVE, m.getPort(), ""));
