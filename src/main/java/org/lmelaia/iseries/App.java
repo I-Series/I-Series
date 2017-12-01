@@ -105,11 +105,11 @@ public class App extends AppBase {
      * @param args given program arguments.
      */
     void start(String[] args) {
-        LOG.info("New ISeries instance starting");
-        LOG.info("Starting with arguments: " + Arrays.toString(args));
+        LOG.info("New ISeries instance starting with arguments: " + Arrays.toString(args));
 
         initLauncherCom(args[0]);
         openDebugWindow();
+        exit(ExitCode.TEST_EXIT);
     }
 
     /**
@@ -124,7 +124,7 @@ public class App extends AppBase {
         server.start("I-Series");
         server.writePortNumber();
 
-        LOG.info("Client pinger started");
+        LOG.trace("Client pinger started");
         pingClientTask.schedule(new App.PingClientTask(), 0,
                 Settings.LAUNCHER_PING_FREQUENCY.getValueAsInt());
     }

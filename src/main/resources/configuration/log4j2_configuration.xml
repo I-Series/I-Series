@@ -16,18 +16,19 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
+
 <Configuration status="INFO">
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%-5level| %d{HH:mm:ss(SSS)} | %t | %F:%L\n\t %msg\n"/>
         </Console>
-        <File name="LatestLog" fileName="logs/Launcher.log" immediateFlush="true" append="false">
+        <File name="LatestLog" fileName="logs/I-Series.log" immediateFlush="true" append="false">
             <PatternLayout pattern="%-5level| %d{HH:mm:ss(SSS)} | %t\n\t %msg\n"/>
         </File>
     </Appenders>
     <Loggers>
         <Root level="TRACE">
-            <AppenderRef ref="Console" />
+            <AppenderRef ref="Console"/>
             <AppenderRef ref="LatestLog"/>
         </Root>
     </Loggers>

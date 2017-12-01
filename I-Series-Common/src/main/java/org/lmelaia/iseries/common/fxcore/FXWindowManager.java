@@ -91,7 +91,7 @@ public class FXWindowManager extends Application {
         if (INSTANCE != null)
             throw new IllegalStateException("FX thread already started");
 
-        LOG.info("Starting FX thread...");
+        LOG.trace("Starting FX thread...");
         name = threadName;
         FXWindowManager.windowsPath = windowsPath;
         FXWindowManager.app = app;
@@ -135,7 +135,7 @@ public class FXWindowManager extends Application {
         try {
             Thread.currentThread().setName(name + " FX Thread");
             app.manageThread(Thread.currentThread());
-            LOG.info("FX thread started: " + Thread.currentThread().toString());
+            LOG.trace("FX thread started: " + Thread.currentThread().toString());
 
             initWindows();
             postInitWindows();
@@ -154,7 +154,7 @@ public class FXWindowManager extends Application {
     private void initWindows() {
         try {
             for (Class c : getWindowClasses()) {
-                LOG.info("Initializing window: " + c.getCanonicalName());
+                LOG.debug("Initializing window: " + c.getCanonicalName());
                 FXWindow window = (FXWindow) c.newInstance();
                 windows.add(window);
                 window.initialize();

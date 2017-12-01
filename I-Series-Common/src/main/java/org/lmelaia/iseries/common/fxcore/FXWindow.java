@@ -81,7 +81,6 @@ public abstract class FXWindow extends Stage {
                 this.loader = new FXMLLoader(getClass().getClassLoader().getResource(properties.getFxml()));
 
                 if (this.properties.getController() != null) {
-                    LOG.info("Setting controller");
                     this.loader.setController(this.properties.getController());
                     this.controller = this.properties.getController();
                 }

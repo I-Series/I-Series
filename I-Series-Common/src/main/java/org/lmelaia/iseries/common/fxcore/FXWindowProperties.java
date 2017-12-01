@@ -22,6 +22,7 @@ package org.lmelaia.iseries.common.fxcore;
  */
 public class FXWindowProperties {
 
+
     /**
      * The window title.
      */

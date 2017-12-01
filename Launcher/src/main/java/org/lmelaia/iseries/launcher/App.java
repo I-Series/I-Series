@@ -35,7 +35,9 @@ public class App extends AppBase {
      * Logging framework instance.
      */
     private static final Logger LOG = AppLogger.getLogger();
+
     static App INSTANCE;
+
     /**
      * Client communication instance.
      */
@@ -70,8 +72,7 @@ public class App extends AppBase {
      * @throws IOException
      */
     public void start(String[] args) throws IOException {
-        LOG.info("New launcher instance starting.");
-        LOG.info("New launcher being run with args: " + Arrays.toString(args));
+        LOG.info("New launcher instance starting with args: " + Arrays.toString(args));
 
         FXWindowManager.startFX("Launcher", args,
                 "org.lmelaia.iseries.launcher.fx.", this);

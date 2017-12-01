@@ -45,6 +45,11 @@ import java.util.Properties;
 @SuppressWarnings({"SpellCheckingInspection", "WeakerAccess"})
 public class BuildConfiguration {
 
+    static {
+        Thread.currentThread().setName("I-Series Builder");
+        AppLogger.silentConfigure("/configuration/log4j2_configuration.xml");
+    }
+
     /**
      * The I-Series project folder.
      */
@@ -270,11 +275,6 @@ public class BuildConfiguration {
             SOUTPUT_FOLDER.forward("legal").getFile()
     );
 
-    static {
-        Thread.currentThread().setName("I-Series Builder");
-        AppLogger.silentConfigure("/configuration/log4j2_configuration.xml");
-    }
-
     //Reads the properties from file and puts them in the properties object.
     static {
         readBuildProperties();
@@ -285,7 +285,7 @@ public class BuildConfiguration {
             forceCleanMake(f);
         }
     }
-    
+
     //*******************
     //      METHODS
     //*******************

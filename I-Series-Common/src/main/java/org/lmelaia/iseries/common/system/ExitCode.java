@@ -40,20 +40,25 @@ public enum ExitCode {
     FORCED_EXIT(1, "An instance was forcibly closed or crashed.", false),
 
     /**
+     * Exit code used for testing.
+     */
+    TEST_EXIT(10, "Test exit.", true),
+
+    /**
      * An exception went uncaught and propagated to
      * the uncaught exception handler.
      */
-    UNHANDLED_EXCEPTION(10, "An unhandled error occurred preventing the application from continuing.", true),
+    UNHANDLED_EXCEPTION(11, "An unhandled error occurred preventing the application from continuing.", true),
 
     /**
      * The launcher is not responding to messages and/or pings.
      */
-    UNRESPONSIVE_LAUNCHER(11, "The launcher has closed or become unresponsive.", true),
+    UNRESPONSIVE_LAUNCHER(12, "The launcher has closed or become unresponsive.", true),
 
     /**
      * Failed to communication with the launcher due to an exception.
      */
-    LAUNCHER_COM_FAILED(12, "Failed to communicate with the launcher.", true);
+    LAUNCHER_COM_FAILED(13, "Failed to communicate with the launcher.", true);
 
     /**
      * The exit code for use in {@link System#exit(int)}.

@@ -25,11 +25,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
- * A utility wrapper for the apache logger.
- *
- * <p>
- *     Provides the ability to easily specify a configuration file.
- * </p>
+ * Utilities for use with the apache logger.
  *
  * @author Luke
  */
@@ -81,43 +77,39 @@ public final class AppLogger {
     }
 
     /**
-     * Configures the logger with a configuration file.
+     * Configures the logger with a specified configuration file.
      *
-     * Calling this method will startFX the logger.
-     * Once initialized, the logger cannot be initialized again.
+     * This must be called before getting a logger through
+     * {@link #getLogger()}.
      *
      * @throws IllegalStateException if the logger is already
-     * initialized.
+     * configured.
      * @param config the log4j2 configuration file.
      */
     public static void configure(URI config){
         if(initialized)
             throw new IllegalStateException("App Logger is already configured");
 
-        LoggerContext context
-                = (LoggerContext) LogManager.getContext(false);
+        LoggerContext context = (LoggerContext) LogManager.getContext(false);
 
         context.setConfigLocation(config);
+        initialized = true;
 
         LOG = getLogger();
         LOG.info("Logger initialized with configuration file: "
                 + config.toString());
-        LOG.info("Ignore configuration file not found warning.");
-
-        initialized = true;
     }
 
     /**
      * Returns a logger provided by the apache log manager.
      *
-     * Calling this method will startFX the app logger.
+     * Calling this method will start the app logger.
      */
     public static Logger getLogger(){
         if(!initialized){
-            LOG = LogManager.getLogger(ReflectionUtil.getCallerClass(2));
-            initialized = true;
+            throw new IllegalStateException("Logger not yet configured.");
         }
 
-        return LOG;
+        return LogManager.getLogger(ReflectionUtil.getCallerClass(2));
     }
 }

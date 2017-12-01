@@ -69,7 +69,6 @@ public class CrashWindow extends FXWindow {
         App.getInstance().addShutdownListener(code -> {
             if (code.error)
                 Platform.runLater(() -> {
-                    LOG.info("Showing crash window");
                     this.show(code);
                 });
 

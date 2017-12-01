@@ -98,7 +98,7 @@ public class AppController {
         LOG.info("Running new I-Series instance with command: " + cmd);
         applicationProcess = Runtime.getRuntime().exec(cmd);
         startNewCaptureThread();
-        LOG.info("Process started");
+        LOG.trace("Process started");
         startTerminationHandlerThread();
     }
 
