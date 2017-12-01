@@ -19,14 +19,16 @@ package org.lmelaia.iseries.launcher.fx.crash;
 
 import javafx.application.Platform;
 import org.apache.logging.log4j.Logger;
-import org.lmelaia.iseries.common.AppLogger;
 import org.lmelaia.iseries.common.fxcore.FXWindow;
+import org.lmelaia.iseries.common.fxcore.FXWindowProperties;
 import org.lmelaia.iseries.common.fxcore.LoadFXWindow;
+import org.lmelaia.iseries.common.system.AppLogger;
+import org.lmelaia.iseries.common.system.ExitCode;
 import org.lmelaia.iseries.common.util.ThreadUtil;
 import org.lmelaia.iseries.launcher.App;
 
 /**
- * Created by Luke on 11/3/2017.
+ * The window class for the crash window.
  */
 @LoadFXWindow
 public class CrashWindow extends FXWindow {
@@ -36,28 +38,64 @@ public class CrashWindow extends FXWindow {
      */
     private static final Logger LOG = AppLogger.getLogger();
 
+    /**
+     * Default constructor.
+     */
     public CrashWindow() {
-        super("Crash Prompt");
+        super(
+                new FXWindowProperties("Crash Prompt")
+                        .setFxml("windows/crash_window.fxml")
+                        .setController(new CrashWindowController())
+                        .setWidth(480).setHeight(178)
+        );
+        this.setResizable(false);
     }
 
+    /**
+     * NO-OP
+     */
     @Override
     public void onInitialization() {
-
+        //NO-OP
     }
 
+    /**
+     * Sets the window up to show when the
+     * application is requested to shutdown
+     * due to an error.
+     */
     @Override
     public void onPostInitialization() {
         App.getInstance().addShutdownListener(code -> {
             if (code.error)
                 Platform.runLater(() -> {
                     LOG.info("Showing crash window");
-                    this.show();
+                    this.show(code);
                 });
 
             ThreadUtil.silentSleep(100);
             while (this.isShowing()) {
                 ThreadUtil.silentSleep(500);
             }
+
+            return !getController().wasRestarted();
         });
+    }
+
+    /**
+     * Shows the window displaying the given exit code.
+     *
+     * @param code the exit code to display.
+     */
+    public void show(ExitCode code) {
+        getController().display(code);
+        this.show();
+    }
+
+    /**
+     * @return this windows controller.
+     */
+    public CrashWindowController getController() {
+        return (CrashWindowController) this.controller;
     }
 }

@@ -1,30 +1,33 @@
-/*   Copyright (C) 2016  Luke Melaia
+/*
+ * Copyright (C) 2016  Luke Melaia
  *
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package org.lmelaia.iseries.build.launch4j;
 
-import java.io.StringWriter;
+import org.apache.logging.log4j.Logger;
+import org.lmelaia.iseries.build.utils.XmlDocumentHelper;
+import org.lmelaia.iseries.common.system.AppLogger;
+
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import org.apache.logging.log4j.Logger;
-import org.lmelaia.iseries.build.utils.XmlDocumentHelper;
-import org.lmelaia.iseries.common.AppLogger;
+import java.io.StringWriter;
+
 import static org.lmelaia.iseries.build.utils.XmlDocumentHelper.ElementHelper;
 
 /**

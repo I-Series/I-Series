@@ -77,6 +77,8 @@ public enum ExitCode {
      */
     public final boolean normal;
 
+    private boolean fromLauncher = true;
+
     /**
      * Constructor.
      *
@@ -92,6 +94,18 @@ public enum ExitCode {
     }
 
     /**
+     * @param code the given exit code.
+     * @return the ExitCode with the given code.
+     */
+    public static ExitCode getFromCode(int code) {
+        for (ExitCode ec : values())
+            if (ec.code == code)
+                return ec;
+
+        return null;
+    }
+
+    /**
      * {@inheritDoc}
      *
      * @return {@inheritDoc}
@@ -103,15 +117,12 @@ public enum ExitCode {
                 code, this.name(), description, error);
     }
 
-    /**
-     * @param code the given exit code.
-     * @return the ExitCode with the given code.
-     */
-    public static ExitCode getFromCode(int code) {
-        for (ExitCode ec : values())
-            if (ec.code == code)
-                return ec;
+    public boolean isFromLauncher() {
+        return fromLauncher;
+    }
 
-        return null;
+    public ExitCode setFromLauncher(boolean fromLauncher) {
+        this.fromLauncher = fromLauncher;
+        return this;
     }
 }

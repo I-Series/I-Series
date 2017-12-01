@@ -17,7 +17,15 @@
 
 package org.lmelaia.iseries.common.fxcore;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.Logger;
+import org.lmelaia.iseries.common.system.AppLogger;
+
+import java.io.IOException;
 
 /**
  * Base class for all FX windows managed by the {@link FXWindowManager}.
@@ -25,28 +33,99 @@ import javafx.stage.Stage;
 public abstract class FXWindow extends Stage {
 
     /**
+     * Logging framework instance.
+     */
+    private static final Logger LOG = AppLogger.getLogger();
+
+    /**
+     * Properties for build the window
+     * and scene.
+     */
+    private final FXWindowProperties properties;
+    /**
+     * Root node for the scene.
+     */
+    protected Parent root;
+    /**
+     * Window scene object.
+     */
+    protected Scene scene;
+    /**
+     * This windows controller. Might be null.
+     */
+    protected ControllerBase controller = null;
+    /**
+     * Loader used to load the window.fxml file. Might be null.
+     */
+    private FXMLLoader loader;
+
+    /**
      * Default constructor.
      *
-     * @param title window title.
+     * @param properties the window properties.
      */
-    public FXWindow(String title) {
-        super();
-        this.setTitle(title);
+    public FXWindow(FXWindowProperties properties) {
+        this.properties = properties.getUnboundInstance();
+    }
+
+    /**
+     * Sets the root object and scene for the window.
+     * <p>
+     * If the window has a window.fxml file set, the scene
+     * will be loaded from the window.fxml file,
+     * otherwise the root object is set to {@link StackPane}.
+     */
+    private void setScene() {
+        if (properties.getFxml() != null) {
+            try {
+                this.loader = new FXMLLoader(getClass().getClassLoader().getResource(properties.getFxml()));
+
+                if (this.properties.getController() != null) {
+                    LOG.info("Setting controller");
+                    this.loader.setController(this.properties.getController());
+                    this.controller = this.properties.getController();
+                }
+
+                this.root = this.loader.load();
+
+                if (this.controller == null)
+                    this.controller = loader.getController();
+
+                this.scene = new Scene(root, properties.getWidth(), properties.getHeight());
+            } catch (IOException e) {
+                throw new IllegalStateException("Failed to load window.fxml file", e);
+            }
+        } else {
+            this.root = new StackPane();
+            this.scene = new Scene(root, properties.getWidth(), properties.getHeight());
+        }
+
+        if (properties.getCssFile() != null)
+            this.scene.getStylesheets().add(
+                    getClass().getClassLoader().getResource(
+                            properties.getCssFile()).toExternalForm());
+
+        this.setScene(scene);
+    }
+
+    private void initController() {
+        this.controller.setWindow(this);
+        this.controller.init();
     }
 
     /**
      * The first of the two initialization stages.
      */
     void initialize() {
-
+        setScene();
         onInitialization();
+        initController();
     }
 
     /**
      * The second of the two initialization stages.
      */
     void postInitialize() {
-
         onPostInitialization();
     }
 
@@ -84,4 +163,8 @@ public abstract class FXWindow extends Stage {
      * </p>
      */
     public abstract void onPostInitialization();
+
+    public ControllerBase getController() {
+        return this.controller;
+    }
 }

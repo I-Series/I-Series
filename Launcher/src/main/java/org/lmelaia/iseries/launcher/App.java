@@ -18,12 +18,10 @@
 package org.lmelaia.iseries.launcher;
 
 import org.apache.logging.log4j.Logger;
-import org.lmelaia.iseries.common.AppLogger;
 import org.lmelaia.iseries.common.fxcore.FXWindowManager;
 import org.lmelaia.iseries.common.intercommunication.*;
 import org.lmelaia.iseries.common.system.AppBase;
-import org.lmelaia.iseries.common.system.ExitCode;
-import org.lmelaia.iseries.common.system.ShutdownListener;
+import org.lmelaia.iseries.common.system.AppLogger;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -31,15 +29,13 @@ import java.util.Arrays;
 /**
  * Main launcher application instance.
  */
-public class App extends AppBase implements ShutdownListener {
-
-    static App INSTANCE;
+public class App extends AppBase {
 
     /**
      * Logging framework instance.
      */
     private static final Logger LOG = AppLogger.getLogger();
-
+    static App INSTANCE;
     /**
      * Client communication instance.
      */
@@ -58,7 +54,13 @@ public class App extends AppBase implements ShutdownListener {
      */
     App() {
         this.manageThread(Thread.currentThread());
-        this.addShutdownListener(this);
+    }
+
+    /**
+     * @return the launcher application instance.
+     */
+    public static App getInstance() {
+        return INSTANCE;
     }
 
     /**
@@ -73,24 +75,37 @@ public class App extends AppBase implements ShutdownListener {
 
         FXWindowManager.startFX("Launcher", args,
                 "org.lmelaia.iseries.launcher.fx.", this);
-        initCommunication(args);
+        int port = initCommunication();
+
+        if (port == -1)
+            startInstance(args);
+        else {
+            LOG.info("Arguments sent: " + Arrays.toString(args));
+            Message m = client.sendToServer(new Message(MessageType.ARGS, port, Arrays.toString(args)));
+            if (m.getMsgType().equals(MessageType.RECEIVED)) {
+                LOG.info("Message received");
+            }
+        }
+
+        while (true) ;
     }
 
     /**
      * Initializes communication with the main application
      * process and sets up the server to receive requests.
      *
-     * @param args the arguments given to the application.
      * @throws IOException
      */
-    private void initCommunication(String[] args) throws IOException {
+    private int initCommunication() throws IOException {
         LOG.info("Attempting to get port number");
 
         int port = FileComUtil.getLastKnownPort();
 
         if (port == -1) {
             LOG.info("No port number could be obtained. Starting new instance.");
-            startInstance(args);
+            server = new Server();
+            server.start("Launcher");
+            return -1;
         } else {
             LOG.info("Found server port number: " + port);
             LOG.info("Attempting connection...");
@@ -99,13 +114,11 @@ public class App extends AppBase implements ShutdownListener {
             if (!client.pingServer(port)) {
                 client.close();
                 LOG.info("Server not responding, assuming no server exists. Starting new instance.");
-                startInstance(args);
+                server = new Server();
+                server.start("Launcher");
+                return -1;
             } else {
-                LOG.info("Arguments sent: " + Arrays.toString(args));
-                Message m = client.sendToServer(new Message(MessageType.ARGS, port, Arrays.toString(args)));
-                if (m.getMsgType().equals(MessageType.RECEIVED)) {
-                    LOG.info("Message received");
-                }
+                return port;
             }
         }
     }
@@ -113,35 +126,11 @@ public class App extends AppBase implements ShutdownListener {
     /**
      * Starts the main application process.
      */
-    private void startInstance(String[] args) {
-        try {
-            AppProcess process = new AppProcess();
-            LOG.info("Host server started");
-            server = new Server();
-            server.start("Launcher");
-            LOG.info("I-Series instance starting");
-            process.start("I-Series-Base.jar", server.getPort());
-        } catch (Exception e) {
-            LOG.error("Exception on startInstance", e);
-        }
+    private void startInstance(String[] args) throws IOException {
+        AppController.start(args);
     }
 
-    /**
-     * Called when the application is requested to close.
-     *
-     * @param code the code given as the reason for the application to close.
-     */
-    @Override
-    public void onShutdown(ExitCode code) {
-        if (code.error) {
-            LOG.fatal("Either the launcher or main application crashed.");
-        }
-    }
-
-    /**
-     * @return the launcher application instance.
-     */
-    public static App getInstance() {
-        return INSTANCE;
+    public int getServerPort() {
+        return this.server.getPort();
     }
 }

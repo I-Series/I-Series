@@ -19,10 +19,11 @@ package org.lmelaia.iseries.common.fxcore;
 
 import com.google.common.reflect.ClassPath;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.Logger;
-import org.lmelaia.iseries.common.AppLogger;
 import org.lmelaia.iseries.common.system.AppBase;
+import org.lmelaia.iseries.common.system.AppLogger;
 import org.lmelaia.iseries.common.system.ExitCode;
 
 import java.io.IOException;
@@ -101,6 +102,8 @@ public class FXWindowManager extends Application {
                 Application.launch(FXWindowManager.class, args);
             }
         }.start();
+
+        Platform.setImplicitExit(false);
     }
 
     /**

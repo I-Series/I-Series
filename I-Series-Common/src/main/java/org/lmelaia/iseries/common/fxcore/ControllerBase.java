@@ -15,18 +15,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lmelaia.iseries.common.system;
+package org.lmelaia.iseries.common.fxcore;
 
 /**
- * Callback for application shutdown requests.
+ * Created by Luke on 11/23/2017.
  */
-public interface ShutdownListener {
+public abstract class ControllerBase {
 
-    /**
-     * Called when the application is requested to close,
-     * either through the user or a crash.
-     *
-     * @param code the code given as the reason for the application to close.
-     */
-    boolean onShutdown(ExitCode code);
+    private FXWindow window;
+
+    public ControllerBase() {
+
+    }
+
+    public abstract void init();
+
+    public FXWindow getWindow() {
+        return this.window;
+    }
+
+    void setWindow(FXWindow window) {
+        this.window = window;
+    }
 }

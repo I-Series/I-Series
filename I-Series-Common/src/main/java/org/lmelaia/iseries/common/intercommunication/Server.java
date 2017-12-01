@@ -18,7 +18,7 @@
 package org.lmelaia.iseries.common.intercommunication;
 
 import org.apache.logging.log4j.Logger;
-import org.lmelaia.iseries.common.AppLogger;
+import org.lmelaia.iseries.common.system.AppLogger;
 
 import java.io.IOException;
 
@@ -37,16 +37,14 @@ public class Server {
      * Provides the communication abilities.
      */
     private final CommunicationObject comObj;
-
-    /**
-     * Responds to a message received from a client.
-     */
-    private MessageReceivedListener messageReceivedListener;
-
     /**
      * Waits from messages from clients in a infinite loop.
      */
     private final Thread responseThread = new ResponseThread();
+    /**
+     * Responds to a message received from a client.
+     */
+    private MessageReceivedListener messageReceivedListener;
 
     /**
      * Default constructor.

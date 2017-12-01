@@ -18,7 +18,7 @@
 package org.lmelaia.iseries;
 
 import org.apache.logging.log4j.Logger;
-import org.lmelaia.iseries.common.AppLogger;
+import org.lmelaia.iseries.common.system.AppLogger;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -40,9 +40,12 @@ public enum Settings {
             "The frequency in milliseconds between pings to the launcher.");
 
     /**
-     * List of registered callbacks.
+     * Initializes the {@link SettingsStore}
+     * and read the settings from file.
      */
-    private final List<SettingChangeListener> listeners = new ArrayList<>();
+    static {
+        SettingsStore.read();
+    }
 
     /**
      * Identifying name of the setting.
@@ -53,19 +56,14 @@ public enum Settings {
      * Description of the setting.
      */
     public final String description;
-
+    /**
+     * List of registered callbacks.
+     */
+    private final List<SettingChangeListener> listeners = new ArrayList<>();
     /**
      * The value of the setting.
      */
     private String value;
-
-    /**
-     * Initializes the {@link SettingsStore}
-     * and read the settings from file.
-     */
-    static {
-        SettingsStore.read();
-    }
 
     /**
      * Constructor.
@@ -144,6 +142,20 @@ public enum Settings {
     }
 
     /**
+     * Callback for changes to the value of a {@link Settings}.
+     */
+    public interface SettingChangeListener {
+
+        /**
+         * Called when the value of a setting is changed.
+         *
+         * @param setting  the changed setting.
+         * @param newValue the settings new value.
+         */
+        void onValueChanged(Settings setting, Object newValue);
+    }
+
+    /**
      * Handles the loading and saving of application settings.
      */
     private static class SettingsStore {
@@ -208,19 +220,5 @@ public enum Settings {
                     setting.changeValue(val);
             }
         }
-    }
-
-    /**
-     * Callback for changes to the value of a {@link Settings}.
-     */
-    public interface SettingChangeListener {
-
-        /**
-         * Called when the value of a setting is changed.
-         *
-         * @param setting  the changed setting.
-         * @param newValue the settings new value.
-         */
-        void onValueChanged(Settings setting, Object newValue);
     }
 }

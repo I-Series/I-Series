@@ -17,16 +17,17 @@
 
 package org.lmelaia.iseries.common.system;
 
-/**
- * Callback for application shutdown requests.
- */
-public interface ShutdownListener {
+import java.io.File;
 
-    /**
-     * Called when the application is requested to close,
-     * either through the user or a crash.
-     *
-     * @param code the code given as the reason for the application to close.
-     */
-    boolean onShutdown(ExitCode code);
+/**
+ * Created by Luke on 11/30/2017.
+ */
+public class ApplicationConstants {
+
+    public static final File APPLICATION_PATH = new File(System.getProperty("user.dir"));
+    public static final File APPLICATION_LOGS_PATH = new File(APPLICATION_PATH.getAbsolutePath() + "/logs/");
+
+    private ApplicationConstants() {
+    }
+
 }

@@ -18,7 +18,7 @@
 package org.lmelaia.iseries.common.intercommunication;
 
 import org.apache.logging.log4j.Logger;
-import org.lmelaia.iseries.common.AppLogger;
+import org.lmelaia.iseries.common.system.AppLogger;
 
 import java.io.*;
 

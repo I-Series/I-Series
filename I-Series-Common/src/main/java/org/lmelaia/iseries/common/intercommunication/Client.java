@@ -18,7 +18,7 @@
 package org.lmelaia.iseries.common.intercommunication;
 
 import org.apache.logging.log4j.Logger;
-import org.lmelaia.iseries.common.AppLogger;
+import org.lmelaia.iseries.common.system.AppLogger;
 
 import java.io.IOException;
 
@@ -32,18 +32,16 @@ public class Client {
      * Logging instance.
      */
     private static final Logger LOG = AppLogger.getLogger();
-
-    /**
-     * The timeout in milliseconds when pinging
-     * a server.
-     */
-    private int pingTimeout = 2000;
-
     /**
      * Communication object used to talk to
      * the server.
      */
     private final CommunicationObject comObj;
+    /**
+     * The timeout in milliseconds when pinging
+     * a server.
+     */
+    private int pingTimeout = 2000;
 
     /**
      * Constructs a new client instance

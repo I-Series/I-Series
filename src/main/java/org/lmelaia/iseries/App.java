@@ -18,12 +18,12 @@
 package org.lmelaia.iseries;
 
 import org.apache.logging.log4j.Logger;
-import org.lmelaia.iseries.common.AppLogger;
 import org.lmelaia.iseries.common.intercommunication.Client;
 import org.lmelaia.iseries.common.intercommunication.Message;
 import org.lmelaia.iseries.common.intercommunication.MessageType;
 import org.lmelaia.iseries.common.intercommunication.Server;
 import org.lmelaia.iseries.common.system.AppBase;
+import org.lmelaia.iseries.common.system.AppLogger;
 import org.lmelaia.iseries.common.system.ExitCode;
 
 import javax.swing.*;
@@ -42,15 +42,13 @@ import java.util.TimerTask;
 public class App extends AppBase {
 
     /**
-     * Instance of this application.
-     */
-    static App INSTANCE;
-
-    /**
      * Logger instance.
      */
     private static final Logger LOG = AppLogger.getLogger();
-
+    /**
+     * Instance of this application.
+     */
+    static App INSTANCE;
     /**
      * The timer responsible for running the {@link App.PingClientTask}.
      */

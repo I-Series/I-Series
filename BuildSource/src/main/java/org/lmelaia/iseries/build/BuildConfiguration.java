@@ -1,17 +1,18 @@
-/*   Copyright (C) 2016  Luke Melaia
+/*
+ * Copyright (C) 2016  Luke Melaia
  *
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package org.lmelaia.iseries.build;
 
@@ -28,7 +29,7 @@ import org.lmelaia.iseries.build.packaging.ZipPackager;
 import org.lmelaia.iseries.build.utils.CopyFile;
 import org.lmelaia.iseries.build.utils.OutputCopyFile;
 import org.lmelaia.iseries.build.utils.SmartFile;
-import org.lmelaia.iseries.common.AppLogger;
+import org.lmelaia.iseries.common.system.AppLogger;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -44,28 +45,12 @@ import java.util.Properties;
 @SuppressWarnings({"SpellCheckingInspection", "WeakerAccess"})
 public class BuildConfiguration {
 
-    static{
-        Thread.currentThread().setName("I-Series Builder");
-        AppLogger.silentConfigure("/configuration/log4j2_configuration.xml");
-    }
-
-    private static final Logger LOG = AppLogger.getLogger();
-
-    //******************************
-    //    CONFIGURATION SETTINGS
-    //******************************
-    
-    //******************************
-    //   NB FILES AND FOLDERS
-    //******************************
-    
     /**
      * The I-Series project folder.
      */
     public static final SmartFile SPROJECT_FOLDER = SmartFile.getSmartFile(
             SmartFile.getSmartFile(System.getProperty("user.dir"))
                     .goBack().getFile().getAbsolutePath());
-    
     /**
      * The launch4j folder which contains the launch4j binaries and executables.
      */
@@ -74,49 +59,78 @@ public class BuildConfiguration {
             "C:/Program Files (x86)/Launch4j");
 
     //******************************
-    //       BUILD PROPERTIES
+    //    CONFIGURATION SETTINGS
     //******************************
     
+    //******************************
+    //   NB FILES AND FOLDERS
+    //******************************
+    /**
+     * The final build output folder.
+     */
+    public static final SmartFile SOUTPUT_FOLDER = SPROJECT_FOLDER
+            .forward("buildOutput");
+    /**
+     * The launcher project directory.
+     */
+    public static final SmartFile SLAUNCHER_FOLDER = SPROJECT_FOLDER
+            .forward("Launcher");
+
+    //******************************
+    //       BUILD PROPERTIES
+    //******************************
+    /**
+     * The folder containing the licences files.
+     */
+    public static final SmartFile SLICENCES_FOLDER = SPROJECT_FOLDER
+            .forward("licences");
+    /**
+     * The folder containing the library jar files.
+     */
+    public static final SmartFile SLIBRARIES_FOLDER = SPROJECT_FOLDER
+            .forward("build").forward("libs").forward("libs");
+    /**
+     * The folder containing the licences for the libraries.
+     */
+    public static final SmartFile SLEGAL_FOLDER = SOUTPUT_FOLDER
+            .forward("legal");
+    /**
+     * The distribution folder. Contains the files which will be distributed to
+     * the user.
+     */
+    public static final SmartFile SDISTRIBUTION_FOLDER = SPROJECT_FOLDER
+            .forward("distribution");
+
+    //******************************
+    //             NAMES
+    //******************************
+    /**
+     * The folder containing the copied libraries.
+     */
+    public static final SmartFile SOUT_LIBRARIES_FOLDER = SOUTPUT_FOLDER
+            .forward("libs");
+    private static final Logger LOG = AppLogger.getLogger();
+
+    //******************************
+    //     FILES AND FILE PATHS
+    //******************************
     /**
      * The build properties file.
      */
     private static final SmartFile SBUILD_PROPERTIES_FILE
             = SPROJECT_FOLDER.forward("build.cfg");
-
     /**
      * Build properties object. Holds the properties.
      */
     private static final Properties BUILD_PROPERTIES = new Properties();
-
     /**
      * The build version property name.
      */
     private static final String BUILD_VERSION_CID = "build.version";
-
-    //Reads the properties from file and puts them in the properties object.
-    static {
-        readBuildProperties();
-    }
-
-    //******************************
-    //             NAMES
-    //******************************
-    
     /**
      * The name of the application.
      */
     private static final String APPLICATION_NAME = "I-Series";
-
-    /**
-     * The name of the application with a '.exe' extension. Used as the launch4j
-     * executable file name.
-     */
-    private static final String EXECUTABLE_NAME = APPLICATION_NAME + ".exe";
-
-    //******************************
-    //     FILES AND FILE PATHS
-    //******************************
-    
     /**
      * The I-Series jar file.
      */
@@ -125,50 +139,6 @@ public class BuildConfiguration {
             .forward("build")
             .forward("libs")
             .forward(APPLICATION_NAME + ".jar");
-
-    /**
-     * The final build output folder.
-     */
-    public static final SmartFile SOUTPUT_FOLDER = SPROJECT_FOLDER
-            .forward("buildOutput");
-
-    /**
-     * The launcher project directory.
-     */
-    public static final SmartFile SLAUNCHER_FOLDER = SPROJECT_FOLDER
-            .forward("Launcher");
-
-    /**
-     * The folder containing the licences files.
-     */
-    public static final SmartFile SLICENCES_FOLDER = SPROJECT_FOLDER
-            .forward("licences");
-
-    /**
-     * The folder containing the library jar files.
-     */
-    public static final SmartFile SLIBRARIES_FOLDER = SPROJECT_FOLDER
-            .forward("build").forward("libs").forward("libs");
-
-    /**
-     * The folder containing the licences for the libraries.
-     */
-    public static final SmartFile SLEGAL_FOLDER = SOUTPUT_FOLDER
-            .forward("legal");
-
-    /**
-     * The distribution folder. Contains the files which will be distributed to
-     * the user.
-     */
-    public static final SmartFile SDISTRIBUTION_FOLDER = SPROJECT_FOLDER
-            .forward("distribution");
-
-    /**
-     * The folder containing the copied libraries.
-     */
-    public static final SmartFile SOUT_LIBRARIES_FOLDER = SOUTPUT_FOLDER
-            .forward("libs");
-
     /**
      * The windows distribution zip file.
      */
@@ -178,7 +148,6 @@ public class BuildConfiguration {
                     + " v"
                     + BUILD_PROPERTIES.getProperty(BUILD_VERSION_CID)
                     + " Windows.zip");
-
     /**
      * The cross-platform distribution zip file.
      */
@@ -186,12 +155,11 @@ public class BuildConfiguration {
             .forward(APPLICATION_NAME
                     + " v" + BUILD_PROPERTIES.getProperty(BUILD_VERSION_CID)
                     + " Cross-platform.zip");
-    
-
-    //******************************
-    //             LISTS
-    //******************************
-    
+    /**
+     * The name of the application with a '.exe' extension. Used as the launch4j
+     * executable file name.
+     */
+    private static final String EXECUTABLE_NAME = APPLICATION_NAME + ".exe";
     /**
      * A list of files which need to be copied over to the output folder
      * ({@link #SOUTPUT_FOLDER}).
@@ -207,7 +175,6 @@ public class BuildConfiguration {
         new OutputCopyFile(SLAUNCHER_FOLDER.forward("build").forward("libs")
                         .forward("launcher.jar").getFile(), "I-Series.jar")
     };
-
     /**
      * A list of the libraries for the root project.
      */
@@ -218,6 +185,10 @@ public class BuildConfiguration {
         new Library("I-Series-Common", "I-Series-Common", Licences.GNU)
     };
 
+
+    //******************************
+    //             LISTS
+    //******************************
     /**
      * A list of the libraries for the launcher project.
      */
@@ -225,7 +196,6 @@ public class BuildConfiguration {
     private static final Library[] LAUNCHER_LIBRARIES = {
 
     };
-
     /**
      * A list of directories required to exist before beginning a full build.
      */
@@ -233,13 +203,6 @@ public class BuildConfiguration {
         SOUTPUT_FOLDER.getFile(), SLEGAL_FOLDER.getFile(),
         SOUT_LIBRARIES_FOLDER.getFile(), SDISTRIBUTION_FOLDER.getFile()
     };
-    
-    static{
-        for (File f : REQUIRED_DIRECTORIES) {
-            forceCleanMake(f);
-        }
-    }
-
     /**
      * List of files expected to be in the output directory.
      */
@@ -251,7 +214,6 @@ public class BuildConfiguration {
         new ExpectedFile(APPLICATION_NAME + ".jar"),
         new ExpectedFile(APPLICATION_NAME + "-Base.jar")
     };
-    
     /**
      * List of files expected to be in the distribution directory.
      */
@@ -259,27 +221,20 @@ public class BuildConfiguration {
         new ExpectedFile(SWINDOWS_ZIP_FILE.getFileName()),
         new ExpectedFile(SCROSSPLATFORM_ZIP_FILE.getFileName())
     };
-    
-    //******************************
-    //        CONFIGURATION
-    //******************************
-
     /**
      * The verifier for the output folder.
      */
-    private static final BuildOutputVerifier BUILD_DIR_VERIFIER 
+    private static final BuildOutputVerifier BUILD_DIR_VERIFIER
             = new BuildOutputVerifier(SOUTPUT_FOLDER.getFile(),
                     OUTPUT_DIR_FILES)
             .setLogExtraFiles(true);
-    
     /**
      * The verifier for the output folder.
      */
-    private static final BuildOutputVerifier DIST_DIR_VERIFIER 
+    private static final BuildOutputVerifier DIST_DIR_VERIFIER
             = new BuildOutputVerifier(SDISTRIBUTION_FOLDER.getFile(),
                     DIST_DIR_FILES)
             .setLogExtraFiles(true);
-    
     /**
      * The configuration settings to build the I-Series executable.
      */
@@ -292,6 +247,9 @@ public class BuildConfiguration {
                     .setMinimumJreVersion("1.8.0_111")
                     .create();
 
+    //******************************
+    //        CONFIGURATION
+    //******************************
     /**
      * Contains a list of the libraries for the application and handles the
      * copying of them and their licences.
@@ -301,7 +259,6 @@ public class BuildConfiguration {
                     .forward("libs").getFile(),
             SOUTPUT_FOLDER.forward("libs").getFile(),
             SOUTPUT_FOLDER.forward("legal").getFile());
-
     /**
      * Contains a list of the libraries for the launcher application and handles the
      * copying of them and their licences.
@@ -312,10 +269,27 @@ public class BuildConfiguration {
             SOUTPUT_FOLDER.forward("libs").getFile(),
             SOUTPUT_FOLDER.forward("legal").getFile()
     );
+
+    static {
+        Thread.currentThread().setName("I-Series Builder");
+        AppLogger.silentConfigure("/configuration/log4j2_configuration.xml");
+    }
+
+    //Reads the properties from file and puts them in the properties object.
+    static {
+        readBuildProperties();
+    }
+
+    static {
+        for (File f : REQUIRED_DIRECTORIES) {
+            forceCleanMake(f);
+        }
+    }
     
     //*******************
     //      METHODS
     //*******************
+
     /**
      * Builds the executable file for the I-Series jar file.
      */

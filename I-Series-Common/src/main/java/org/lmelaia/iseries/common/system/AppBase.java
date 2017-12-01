@@ -18,7 +18,6 @@
 package org.lmelaia.iseries.common.system;
 
 import org.apache.logging.log4j.Logger;
-import org.lmelaia.iseries.common.AppLogger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,17 +29,17 @@ import java.util.List;
 public class AppBase {
 
     /**
+     * Logging framework instance.
+     */
+    private static final Logger LOG = AppLogger.getLogger();
+
+    /**
      * Configures the logger before it's initialized
      * by a constructor call.
      */
     static {
         AppLogger.silentConfigure("/configuration/log4j2_configuration.xml");
     }
-
-    /**
-     * Logging framework instance.
-     */
-    private static final Logger LOG = AppLogger.getLogger();
 
     /**
      * List of shutdown listeners.
@@ -97,12 +96,22 @@ public class AppBase {
 
         LOG.info("Running exit callbacks...");
 
+        boolean aborted = false;
+
         for (ShutdownListener listener : listeners) {
-            listener.onShutdown(code);
+            if (!listener.onShutdown(code)) {
+                LOG.info("Aborting shutdown from: " + listener.toString());
+                aborted = true;
+                break;
+            }
         }
 
-        LOG.info("Shutdown complete: " + code.toString());
-        System.exit(code.code);
+        if (!aborted) {
+            LOG.info("Shutdown complete: " + code.toString());
+            System.exit(code.code);
+        } else {
+            LOG.info("Shutdown aborted");
+        }
     }
 
     /**
