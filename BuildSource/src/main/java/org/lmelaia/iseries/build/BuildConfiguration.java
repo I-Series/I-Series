@@ -74,12 +74,18 @@ public class BuildConfiguration {
      * The final build output folder.
      */
     public static final SmartFile SOUTPUT_FOLDER = SPROJECT_FOLDER
-            .forward("buildOutput");
+            .forward("buildoutput");
+
+    static {
+        SOUTPUT_FOLDER.getFile().mkdirs();
+    }
+
+
     /**
      * The launcher project directory.
      */
     public static final SmartFile SLAUNCHER_FOLDER = SPROJECT_FOLDER
-            .forward("Launcher");
+            .forward("launchersource");
 
     //******************************
     //       BUILD PROPERTIES
@@ -105,6 +111,10 @@ public class BuildConfiguration {
      */
     public static final SmartFile SDISTRIBUTION_FOLDER = SPROJECT_FOLDER
             .forward("distribution");
+
+    static {
+        SDISTRIBUTION_FOLDER.getFile().mkdirs();
+    }
 
     //******************************
     //             NAMES
@@ -160,11 +170,13 @@ public class BuildConfiguration {
             .forward(APPLICATION_NAME
                     + " v" + BUILD_PROPERTIES.getProperty(BUILD_VERSION_CID)
                     + " Cross-platform.zip");
+
     /**
      * The name of the application with a '.exe' extension. Used as the launch4j
      * executable file name.
      */
     private static final String EXECUTABLE_NAME = APPLICATION_NAME + ".exe";
+
     /**
      * A list of files which need to be copied over to the output folder
      * ({@link #SOUTPUT_FOLDER}).
@@ -178,7 +190,7 @@ public class BuildConfiguration {
         APPLICATION_NAME + " Licence.txt"),
 
         new OutputCopyFile(SLAUNCHER_FOLDER.forward("build").forward("libs")
-                        .forward("launcher.jar").getFile(), "I-Series.jar")
+                .forward("launchersource.jar").getFile(), "I-Series.jar")
     };
     /**
      * A list of the libraries for the root project.
@@ -187,7 +199,7 @@ public class BuildConfiguration {
         new Library("Gson", "gson-2.8.0", Licences.APACHE),
         new Library("Log4j", new String[]{"log4j-api-2.8.2", "log4j-core-2.8.2"}, Licences.APACHE),
             new Library("Guava", "guava-19.0", Licences.APACHE),
-        new Library("I-Series-Common", "I-Series-Common", Licences.GNU)
+            new Library("CommonSource", "commonsource", Licences.GNU)
     };
 
 
@@ -264,6 +276,7 @@ public class BuildConfiguration {
                     .forward("libs").getFile(),
             SOUTPUT_FOLDER.forward("libs").getFile(),
             SOUTPUT_FOLDER.forward("legal").getFile());
+
     /**
      * Contains a list of the libraries for the launcher application and handles the
      * copying of them and their licences.
@@ -340,7 +353,7 @@ public class BuildConfiguration {
             if (f.exists()) {
                 FileUtils.cleanDirectory(f);
             } else {
-                FileUtils.forceMkdir(f);
+                FileUtils.forceMkdir(new File(f + "/"));
             }
         } catch (IOException ex) {
             LOG.warn("Failed to force a clean make of the directory: " + f,

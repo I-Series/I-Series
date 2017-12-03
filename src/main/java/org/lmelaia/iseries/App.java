@@ -109,7 +109,7 @@ public class App extends AppBase {
 
         initLauncherCom(args[0]);
         openDebugWindow();
-        exit(ExitCode.TEST_EXIT);
+        //exit(ExitCode.TEST_EXIT);
     }
 
     /**
