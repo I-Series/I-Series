@@ -23,18 +23,28 @@ apply plugin: 'application'
 sourceCompatibility = '1.8'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
+//Gradle run arguments.
 applicationDefaultJvmArgs = ["-Dprism.vsync=false"]
-
+//Main class definition.
 mainClassName = "org.lmelaia.iseries.Main"
 
+/**
+ * Declare main class.
+ */
 if (!hasProperty('mainClass')) {
     ext.mainClass = 'org.lmelaia.iseries.Main'
 }
 
+/**
+ * Maven repository declaration.
+ */
 repositories {
     mavenCentral()    
 }
 
+/**
+ * Build script dependencies and declaration.
+ */
 buildscript {
     repositories {
         mavenCentral();
@@ -45,26 +55,27 @@ buildscript {
     }
 }
 
+/**
+ * List of project dependencies.
+ */
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    
-    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+
     compile group: 'com.google.code.gson', name: 'gson', version: '2.8.0'
 
-    // https://mvnrepository.com/artifact/com.google.guava/guava
     compile group: 'com.google.guava', name: 'guava', version: '19.0'
 
-
-    // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.8.2'
 
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.8.2'
     
     compile project(path: ':commonsource')
-    //runtime project(path: ':Common')
-    //testCompile project(path: ':Common')
 }
 
+/**
+ * Edits the jar manifest to include
+ * the main class and project dependencies.
+ */
 jar {
     manifest {
         attributes(
@@ -76,55 +87,100 @@ jar {
     }
 }
 
+/**
+ * Tasks and settings for all sub projects.
+ */
 subprojects {
     apply plugin: 'java'
+
+    //Skip tests (due to bug).
+    test.onlyIf {false}
+
+    /**
+     * Copies the project dependencies to a
+     * newly created lib folder within the build/lib
+     * folder.
+     *
+     * This is done for the build sub project.
+     */
+    task copyDependencies(type: Copy){
+        into "$buildDir/libs/libs"
+        from configurations.runtime
+    }
+
+    /**
+     * Build task dependencies.
+     */
+    build.dependsOn(copyDependencies)
 }
 
-configurations.compile.each {
-    println "compile: $it"
-} 
+//Skip tests (due to bug).
+test.onlyIf {false}
 
 /**
- * Produces a full distributable version of the application.
+ * Copies the project dependencies to a
+ * newly created lib folder within the build/lib
+ * folder.
  *
- * A full build is considered a build of all the projects,
- * subprojects AND a build of the executables, installers
- * and what ever else needs doing. 
- * 
- * This task is NOT called from any other task, rather it
- * must be called from the command line(o.e). This task
- * is run when wanting to do a full build (defined above).
- * 
- * The build task is a dependency of this task to ensure:
- * all the sources have been build before this task is run.
- * Which ensures the build files (e.g. jar files) are
- * up-to-date before trying to use them (which is done
- * in a full build).
- * 
- * This task does NOTHING other than call the method
- * org.lmelaia.iseries.build.BuildConfiguration:fullBuild()
- * which does all the work.
- *
- * This is used to bypass the build source main method
- * as the build source main method is called when running
- * the project, rather than building it.
+ * This is done for the build sub project.
  */
-task fullBuild << {
-    println('Beginning full build...')
+task copyDependencies(type: Copy){
+    into "$buildDir/libs/libs"
+    from configurations.runtime
 }
 
 /**
- * Runs the application as though it was run
- * by the user from a full working envrionment.
+ * Gradle run task. Use instead of
+ * default run task.
  *
- * Basically does a full build, copies the build
- * to a run folder and runs the launcher. This
- * allows running the full application from a
- * dev environment.
+ * Creates a run directory
+ * containing a runnable distribution
+ * of the application and executing the
+ * launcher jar application and redirecting
+ * the output to the gradle console.
  */
-task trueRun << {
-    println("Beginning true run")
+task _run() {
+    doLast{
+        createRunDirectory()
+        runLauncher()
+    }
+}
 
+/**
+ * Gradle clean run task. Use instead of
+ * default clean and run tasks.
+ *
+ * Cleans the run directory before
+ * executing the _run task.
+ */
+task _cleanrun() {
+    doFirst{
+        FileUtils.deleteDirectory(new File(System.getProperty("user.dir") + "/run"));
+    }
+}
+
+/**
+ * Gradle build task. Use instead of
+ * default build task.
+ *
+ * Builds the project, each sub project and
+ * runs the build sub project.
+ *
+ * Running the build sub project
+ * will produce a runnable distribution
+ * of the entire application
+ * (launcher, application, dependencies, ect.).
+ */
+task _build(){
+    //Done by gradle task dependencies.
+}
+
+/**
+ * Creates a new run directory
+ * containing a runnable distribution
+ * of the application for test runs.
+ */
+void createRunDirectory(){
     File rundir = new File(System.getProperty("user.dir") + "/run");
     rundir.mkdir();
 
@@ -138,18 +194,18 @@ task trueRun << {
     }
 }
 
-task cleanTrueRun << {
-    FileUtils.deleteDirectory(new File(System.getProperty("user.dir") + "/run"));
-}
-
-task runLauncher << {
+/**
+ * Executes the launcher jar in the created
+ * run directory and redirects all the
+ * output to the console.
+ */
+void runLauncher(){
+    createRunDirectory()
 
     String command = "java -jar " +
             new File(System.getProperty("user.dir")).getAbsolutePath() +
             File.separator + "run" +
             File.separator + "I-Series.jar"
-
-    System.out.println("Executing launcher with arguments: " + command)
 
     Process appProcess = Runtime.getRuntime().exec(command, null, new File(new File(
             System.getProperty("user.dir")).getAbsolutePath() +
@@ -174,26 +230,25 @@ task runLauncher << {
     t.setDaemon(true)
     t.start()
 
-    System.out.println("Launcher exit code: " + appProcess.waitFor())
+    System.out.println("\nRESULT: " + appProcess.waitFor())
 }
 
-/**
- * Copies the root projects dependencies into build/lib/lib 
+/*
+    Build task dependencies.
  */
-task copyDependencies(type: Copy){
-    into "$buildDir/libs/libs"
-    from configurations.runtime
-}
+_build.dependsOn(":copyDependencies")
+_build.dependsOn("BuildSource:build")
+_build.dependsOn("commonsource:build")
+_build.dependsOn("launchersource:build")
+_build.dependsOn(":build")
+_build.finalizedBy("BuildSource:run")
 
-//Ensures all files (e.g. jar files) are up-to-date before
-//beginning a full build.
-build.finalizedBy(copyDependencies)
-fullBuild.dependsOn("commonsource:build")
-fullBuild.dependsOn("launchersource:build")
-fullBuild.dependsOn(build)
-fullBuild.finalizedBy("BuildSource:run")
+/*
+    Run task dependencies.
+ */
+_run.dependsOn(":_build")
 
-trueRun.dependsOn(fullBuild)
-trueRun.finalizedBy(runLauncher)
-
-cleanTrueRun.finalizedBy(trueRun)
+/*
+    Clean run task dependencies.
+ */
+_cleanrun.finalizedBy(":_run")

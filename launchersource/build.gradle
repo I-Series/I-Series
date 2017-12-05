@@ -32,15 +32,12 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    
-    // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
+
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.8.2'
 
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.8.2'
     
     compile project(path: ':commonsource')
-    //runtime project(path: ':Common')
-    //testCompile project(path: ':Common')
 }
 
 jar {
@@ -53,37 +50,3 @@ jar {
         )
     }
 }
-
-/**
- * Copies over the files in the buildOutput directory to the runtime directory
- * before running the launcher. This gives the launcher access to the complete
- * application(excluding the built launcher) in order to test it properly.
- *
- * These files are deleted after the run task is executed.
- */
-task copyOverBuild(type: Copy){
-    from('../buildOutput')
-    into('../Launcher')
-}
-
-/**
- * Deletes the buildOutput directory content from the runtime directory.
- */
-task deleteBuildFrom(type: Delete){
-    for(File f : new File(new File(System.getProperty("user.dir")).getAbsolutePath() + "/buildOutput").listFiles()){
-        delete f.getName()
-    }
-}
-
-/**
- * Copies the gradle dependencies to a lib folder
- * inside the project folder.
- */
-task copyDependencies(type: Copy){
-    into "$buildDir/libs/libs"
-    from configurations.runtime
-}
-
-build.dependsOn(copyOverBuild)
-build.dependsOn(copyDependencies)
-run.finalizedBy(deleteBuildFrom)

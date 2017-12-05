@@ -44,9 +44,9 @@ public class FileComUtil {
      */
     static {
         try {
-            PORT_FILE.createNewFile();
+            new File(PORT_FILE.getAbsolutePath()).createNewFile();
         } catch (IOException e) {
-            LOG.warn("Failed to create port file.", e);
+            LOG.warn("Failed to create port file: " + PORT_FILE.getAbsolutePath(), e);
         }
     }
 

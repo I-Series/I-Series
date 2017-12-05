@@ -30,6 +30,7 @@ import java.util.Properties;
 
 /**
  * Enum list of all application settings.
+ *
  * <p>
  * Settings are read from and saved to file
  * at the appropriate times without intervention.
