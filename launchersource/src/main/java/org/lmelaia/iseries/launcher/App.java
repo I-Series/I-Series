@@ -18,8 +18,10 @@
 package org.lmelaia.iseries.launcher;
 
 import org.apache.logging.log4j.Logger;
-import org.lmelaia.iseries.common.fxcore.FXWindowManager;
-import org.lmelaia.iseries.common.intercommunication.*;
+import org.lmelaia.iseries.common.fx.FXWindowsManager;
+import org.lmelaia.iseries.common.intercommunication.FileComUtil;
+import org.lmelaia.iseries.common.intercommunication.Message;
+import org.lmelaia.iseries.common.intercommunication.MessageType;
 import org.lmelaia.iseries.common.system.AppBase;
 import org.lmelaia.iseries.common.system.AppLogger;
 import org.lmelaia.iseries.common.system.ExitCode;
@@ -39,16 +41,6 @@ public class App extends AppBase {
     private static final Logger LOG = AppLogger.getLogger();
 
     static App INSTANCE;
-
-    /**
-     * Client communication instance.
-     */
-    private Client client;
-
-    /**
-     * Server communication instance.
-     */
-    private Server server;
 
     /**
      * Default constructor.
@@ -76,15 +68,16 @@ public class App extends AppBase {
     public void start(String[] args) throws IOException {
         LOG.info("New launcher instance starting with args: " + Arrays.toString(args));
 
-        FXWindowManager.startFX("Launcher", args,
+        FXWindowsManager.startFX("Launcher", args,
                 "org.lmelaia.iseries.launcher.fx.", this);
+
         int port = initCommunication();
 
         if (port == -1)
             startInstance(args);
         else {
             LOG.info("Arguments sent: " + Arrays.toString(args));
-            Message m = client.sendToServer(new Message(MessageType.ARGS, port, Arrays.toString(args)));
+            Message m = getClient().sendToServer(new Message(MessageType.ARGS, port, Arrays.toString(args)));
             if (m.getMsgType().equals(MessageType.RECEIVED)) {
                 LOG.info("Message received");
                 exit(ExitCode.NORMAL);
@@ -105,19 +98,16 @@ public class App extends AppBase {
 
         if (port == -1) {
             LOG.info("No port number could be obtained. Starting new instance.");
-            server = new Server();
-            server.start("Launcher");
+            getServer().start("Launcher");
             return -1;
         } else {
             LOG.info("Found server port number: " + port);
             LOG.info("Attempting connection...");
 
-            client = new Client(500);
-            if (!client.pingServer(port)) {
-                client.close();
+            if (!getClient().pingServer(port, 200)) {
+                getClient().close();
                 LOG.info("Server not responding, assuming no server exists. Starting new instance.");
-                server = new Server();
-                server.start("Launcher");
+                getServer().start("Launcher");
                 return -1;
             } else {
                 return port;
@@ -129,10 +119,10 @@ public class App extends AppBase {
      * Starts the main application process.
      */
     private void startInstance(String[] args) throws IOException {
-        AppController.start(args);
+        ISeriesAppController.start(args);
     }
 
     public int getServerPort() {
-        return this.server.getPort();
+        return this.getServer().getPort();
     }
 }

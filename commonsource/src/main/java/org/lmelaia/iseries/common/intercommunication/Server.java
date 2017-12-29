@@ -21,6 +21,8 @@ import org.apache.logging.log4j.Logger;
 import org.lmelaia.iseries.common.system.AppLogger;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Provides the ability to receive messages from connecting clients
@@ -37,14 +39,16 @@ public class Server {
      * Provides the communication abilities.
      */
     private final CommunicationObject comObj;
+
     /**
      * Waits from messages from clients in a infinite loop.
      */
     private final Thread responseThread = new ResponseThread();
+
     /**
-     * Responds to a message received from a client.
+     * The list of registered message listeners.
      */
-    private MessageReceivedListener messageReceivedListener;
+    private final List<MessageListener> listeners = new ArrayList<>();
 
     /**
      * Default constructor.
@@ -53,15 +57,6 @@ public class Server {
      */
     public Server() throws IOException {
         comObj = new CommunicationObject();
-    }
-
-    /**
-     * Sets the {@link #messageReceivedListener}.
-     *
-     * @param listener
-     */
-    public void setOnMessageReceived(MessageReceivedListener listener) {
-        this.messageReceivedListener = listener;
     }
 
     /**
@@ -91,6 +86,15 @@ public class Server {
     }
 
     /**
+     * Registers a message listener.
+     *
+     * @param listener the listener to register.
+     */
+    public void addMessageListener(MessageListener listener) {
+        this.listeners.add(listener);
+    }
+
+    /**
      * @return the port number of the communication object
      * in use by the thread.
      */
@@ -100,11 +104,14 @@ public class Server {
     }
 
     /**
-     * Provides the callback to response
-     * to messages from clients.
+     * Notifies all registered listeners of a new message.
+     *
+     * @param m the message.
      */
-    public interface MessageReceivedListener {
-        Message onMessageReceived(Message m);
+    private void notifyListeners(Message m) {
+        for (MessageListener listener : listeners) {
+            listener.onMessageReceived(m);
+        }
     }
 
     /**
@@ -133,7 +140,8 @@ public class Server {
                     if (m.getMsgType().equals(MessageType.IS_ALIVE)) {
                         comObj.send(new Message(MessageType.ALIVE, m.getPort(), ""));
                     } else {
-                        comObj.send(messageReceivedListener.onMessageReceived(m));
+                        notifyListeners(m);
+                        comObj.send(new Message(MessageType.RECEIVED, m.getPort(), ""));
                     }
                 } catch (Exception e) {
                     LOG.info("Error in response thread", e);

@@ -18,10 +18,6 @@
 package org.lmelaia.iseries;
 
 import org.apache.logging.log4j.Logger;
-import org.lmelaia.iseries.common.intercommunication.Client;
-import org.lmelaia.iseries.common.intercommunication.Message;
-import org.lmelaia.iseries.common.intercommunication.MessageType;
-import org.lmelaia.iseries.common.intercommunication.Server;
 import org.lmelaia.iseries.common.system.AppBase;
 import org.lmelaia.iseries.common.system.AppLogger;
 import org.lmelaia.iseries.common.system.ExitCode;
@@ -55,25 +51,6 @@ public class App extends AppBase {
     private final Timer pingClientTask = new Timer("Ping client", true);
 
     /**
-     * The implementations instance.
-     */
-    private final App.Implementations implementations = new App.Implementations();
-
-    /**
-     * Server instance responsible
-     * for receiving and responding
-     * to messages from new launchers.
-     */
-    private Server server;
-
-    /**
-     * Client instance responsible
-     * for communicating with the
-     * host launcher.
-     */
-    private Client client;
-
-    /**
      * The port on which the launchers
      * server was started on.
      */
@@ -84,12 +61,6 @@ public class App extends AppBase {
      */
     App() {
         this.manageThread(Thread.currentThread());
-        try {
-            client = new Client();
-            server = new Server();
-        } catch (IOException e) {
-            LOG.fatal("Failed to start client or server.", e);
-        }
     }
 
     /**
@@ -109,7 +80,6 @@ public class App extends AppBase {
 
         initLauncherCom(args[0]);
         openDebugWindow();
-        //exit(ExitCode.TEST_EXIT);
     }
 
     /**
@@ -120,11 +90,9 @@ public class App extends AppBase {
     private void initLauncherCom(String portArg) {
         hostPort = Integer.parseInt(portArg);
 
-        server.setOnMessageReceived(implementations);
-        server.start("I-Series");
-        server.writePortNumber();
+        getServer().start("I-Series");
+        getServer().writePortNumber();
 
-        LOG.trace("Client pinger started");
         pingClientTask.schedule(new App.PingClientTask(), 0,
                 Settings.LAUNCHER_PING_FREQUENCY.getValueAsInt());
     }
@@ -140,25 +108,6 @@ public class App extends AppBase {
     }
 
     /**
-     * Implements the various interfaces the {@link Main} class requires.
-     */
-    private class Implementations implements Server.MessageReceivedListener {
-
-        /**
-         * Called when a new launcher instance sends a request
-         * to the main application instance.
-         *
-         * @param m the request message.
-         * @return a response message.
-         */
-        @Override
-        public Message onMessageReceived(Message m) {
-            LOG.info("New message from client: " + m.toString());
-            return new Message(MessageType.RECEIVED, m.getPort(), "");
-        }
-    }
-
-    /**
      * Task responsible for pinging the launcher to
      * check if it's still online and operating.
      */
@@ -171,7 +120,7 @@ public class App extends AppBase {
         @Override
         public void run() {
             try {
-                if (client.pingServer(hostPort)) {
+                if (getClient().pingServer(hostPort, 2000)) {
                 } else {
                     LOG.fatal("Client not responding.");
                     App.INSTANCE.exit(ExitCode.UNRESPONSIVE_LAUNCHER);

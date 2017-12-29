@@ -22,11 +22,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import org.apache.logging.log4j.Logger;
-import org.lmelaia.iseries.common.fxcore.ControllerBase;
+import org.lmelaia.iseries.common.fx.ControllerBase;
 import org.lmelaia.iseries.common.system.AppLogger;
 import org.lmelaia.iseries.common.system.ApplicationConstants;
 import org.lmelaia.iseries.common.system.ExitCode;
-import org.lmelaia.iseries.launcher.AppController;
+import org.lmelaia.iseries.launcher.ISeriesAppController;
 
 import java.awt.*;
 import java.io.IOException;
@@ -85,7 +85,7 @@ public final class CrashWindowController extends ControllerBase {
         LOG.info("Restarting application.");
         this.wasRestarted = true;
         this.getWindow().close();
-        AppController.start(null);
+        ISeriesAppController.start(null);
     }
 
     /**

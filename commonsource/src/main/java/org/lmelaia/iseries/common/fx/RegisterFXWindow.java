@@ -15,26 +15,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lmelaia.iseries.common.fxcore;
+package org.lmelaia.iseries.common.fx;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Created by Luke on 11/23/2017.
+ * Marks a class to be initialized by
+ * {@link FXWindowsManager}. The class
+ * must extend {@link FXWindow} in order
+ * to be initialized.
  */
-public abstract class ControllerBase {
-
-    private FXWindow window;
-
-    public ControllerBase() {
-
-    }
-
-    public abstract void init();
-
-    public FXWindow getWindow() {
-        return this.window;
-    }
-
-    void setWindow(FXWindow window) {
-        this.window = window;
-    }
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface RegisterFXWindow {
 }

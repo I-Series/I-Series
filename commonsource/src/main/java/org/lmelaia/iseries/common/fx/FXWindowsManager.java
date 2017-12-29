@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lmelaia.iseries.common.fxcore;
+package org.lmelaia.iseries.common.fx;
 
 import com.google.common.reflect.ClassPath;
 import javafx.application.Application;
@@ -36,13 +36,13 @@ import java.util.List;
  * <p>
  * Provides a way to initialize
  * a window by annotating it with
- * {@link LoadFXWindow}, along
+ * {@link RegisterFXWindow}, along
  * with a few other utilities
  * to manipulate and use the declared
  * windows.
  * </p>
  */
-public class FXWindowManager extends Application {
+public class FXWindowsManager extends Application {
 
     /**
      * Logging framework instance.
@@ -52,7 +52,7 @@ public class FXWindowManager extends Application {
     /**
      * FX window manager instance.
      */
-    private static FXWindowManager INSTANCE;
+    private static FXWindowsManager INSTANCE;
 
     /**
      * The name of the fx thread.
@@ -93,13 +93,13 @@ public class FXWindowManager extends Application {
 
         LOG.trace("Starting FX thread...");
         name = threadName;
-        FXWindowManager.windowsPath = windowsPath;
-        FXWindowManager.app = app;
+        FXWindowsManager.windowsPath = windowsPath;
+        FXWindowsManager.app = app;
 
         new Thread("FX starter") {
             @Override
             public void run() {
-                Application.launch(FXWindowManager.class, args);
+                Application.launch(FXWindowsManager.class, args);
             }
         }.start();
 
@@ -112,7 +112,7 @@ public class FXWindowManager extends Application {
      * @throws IllegalStateException if the instance
      *                               has not been initialized by {@link #startFX(String, String[], String, AppBase)}.
      */
-    public static FXWindowManager getInstance() {
+    public static FXWindowsManager getInstance() {
         if (INSTANCE == null)
             throw new IllegalStateException("Instance not initialized");
 
@@ -189,7 +189,7 @@ public class FXWindowManager extends Application {
             if (info.getName().startsWith(windowsPath)) {
                 final Class<?> clazz = info.load();
                 if (clazz.getSuperclass().getCanonicalName().equals(FXWindow.class.getCanonicalName())) {
-                    if (clazz.getDeclaredAnnotation(LoadFXWindow.class) != null) {
+                    if (clazz.getDeclaredAnnotation(RegisterFXWindow.class) != null) {
                         classList.add(clazz);
                     }
                 }

@@ -19,9 +19,9 @@ package org.lmelaia.iseries.launcher.fx.crash;
 
 import javafx.application.Platform;
 import org.apache.logging.log4j.Logger;
-import org.lmelaia.iseries.common.fxcore.FXWindow;
-import org.lmelaia.iseries.common.fxcore.FXWindowProperties;
-import org.lmelaia.iseries.common.fxcore.LoadFXWindow;
+import org.lmelaia.iseries.common.fx.FXWindow;
+import org.lmelaia.iseries.common.fx.FXWindowProperties;
+import org.lmelaia.iseries.common.fx.RegisterFXWindow;
 import org.lmelaia.iseries.common.system.AppLogger;
 import org.lmelaia.iseries.common.system.ExitCode;
 import org.lmelaia.iseries.common.util.ThreadUtil;
@@ -30,7 +30,7 @@ import org.lmelaia.iseries.launcher.App;
 /**
  * The window class for the crash window.
  */
-@LoadFXWindow
+@RegisterFXWindow
 public class CrashWindow extends FXWindow {
 
     /**

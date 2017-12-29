@@ -18,7 +18,10 @@
 package org.lmelaia.iseries.common.system;
 
 import org.apache.logging.log4j.Logger;
+import org.lmelaia.iseries.common.intercommunication.Client;
+import org.lmelaia.iseries.common.intercommunication.Server;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,9 +45,19 @@ public class AppBase {
     private static final Logger LOG = AppLogger.getLogger();
 
     /**
-     * List of shutdown listeners.
+     * List of shutdown shutdownListeners.
      */
-    private final List<ShutdownListener> listeners = new ArrayList<>();
+    private final List<ShutdownListener> shutdownListeners = new ArrayList<>();
+
+    /**
+     * Client instance.
+     */
+    private Client client = null;
+
+    /**
+     * Server instance.
+     */
+    private Server server = null;
 
     /**
      * Adds an uncaught exception handler
@@ -68,7 +81,7 @@ public class AppBase {
      * @param listener the listener to add.
      */
     public void addShutdownListener(ShutdownListener listener) {
-        listeners.add(listener);
+        shutdownListeners.add(listener);
     }
 
     /**
@@ -77,13 +90,13 @@ public class AppBase {
      * @param listener the listener to remove.
      */
     public void removeShutdownListener(ShutdownListener listener) {
-        listeners.remove(listener);
+        shutdownListeners.remove(listener);
     }
 
     /**
      * Closes all application instances and supporting
      * applications (i.e. launcher), along with notifying
-     * all registered shutdown listeners.
+     * all registered shutdown shutdownListeners.
      *
      * @param code the exit code.
      */
@@ -96,7 +109,7 @@ public class AppBase {
 
         boolean aborted = false;
 
-        for (ShutdownListener listener : listeners) {
+        for (ShutdownListener listener : shutdownListeners) {
             if (!listener.onShutdown(code)) {
                 aborted = true;
                 break;
@@ -112,6 +125,36 @@ public class AppBase {
     }
 
     /**
+     * @return the server instance.
+     */
+    public Server getServer() {
+        if (server == null) {
+            try {
+                server = new Server();
+            } catch (IOException e) {
+                throw new RuntimeException("Could not get server instance", e);
+            }
+        }
+
+        return server;
+    }
+
+    /**
+     * @return the client instance.
+     */
+    public Client getClient() {
+        if (client == null) {
+            try {
+                client = new Client();
+            } catch (IOException e) {
+                throw new RuntimeException("Could not get client instance", e);
+            }
+        }
+
+        return client;
+    }
+
+    /**
      * @return a new uncaught exception handler which
      * crashes the application properly when an exception goes uncaught.
      */
@@ -122,4 +165,5 @@ public class AppBase {
             exit(ExitCode.UNHANDLED_EXCEPTION);
         };
     }
+
 }

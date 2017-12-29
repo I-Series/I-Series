@@ -37,11 +37,6 @@ public class Client {
      * the server.
      */
     private final CommunicationObject comObj;
-    /**
-     * The timeout in milliseconds when pinging
-     * a server.
-     */
-    private int pingTimeout = 2000;
 
     /**
      * Constructs a new client instance
@@ -54,24 +49,13 @@ public class Client {
     }
 
     /**
-     * Constructs a new client instance
-     *
-     * @throws IOException if a communication
-     *                     object cannot be created.
-     */
-    public Client(int pingTimeout) throws IOException {
-        this.pingTimeout = pingTimeout;
-        comObj = new CommunicationObject();
-    }
-
-    /**
      * Pings a server to see if it is online.
      *
      * @param serverPort port number the server was opened on.
      * @return {@code true} if the server is online, false otherwise.
      * @throws IOException
      */
-    public boolean pingServer(int serverPort) throws IOException {
+    public boolean pingServer(int serverPort, int pingTimeout) throws IOException {
         comObj.send(new Message(MessageType.IS_ALIVE, serverPort, ""));
 
         final boolean[] timeout = new boolean[1];

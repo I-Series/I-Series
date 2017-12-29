@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lmelaia.iseries.common.fxcore;
+package org.lmelaia.iseries.common.fx;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -28,7 +28,7 @@ import org.lmelaia.iseries.common.system.AppLogger;
 import java.io.IOException;
 
 /**
- * Base class for all FX windows managed by the {@link FXWindowManager}.
+ * Base class for all FX windows managed by the {@link FXWindowsManager}.
  */
 public abstract class FXWindow extends Stage {
 
@@ -42,18 +42,22 @@ public abstract class FXWindow extends Stage {
      * and scene.
      */
     private final FXWindowProperties properties;
+
     /**
      * Root node for the scene.
      */
     protected Parent root;
+
     /**
      * Window scene object.
      */
     protected Scene scene;
+
     /**
      * This windows controller. Might be null.
      */
     protected ControllerBase controller = null;
+
     /**
      * Loader used to load the window.fxml file. Might be null.
      */
@@ -107,6 +111,9 @@ public abstract class FXWindow extends Stage {
         this.setScene(scene);
     }
 
+    /**
+     * Initializes the window controller.
+     */
     private void initController() {
         this.controller.setWindow(this);
         this.controller.init();
@@ -163,6 +170,10 @@ public abstract class FXWindow extends Stage {
      */
     public abstract void onPostInitialization();
 
+    /**
+     * @return the controller instance linked to this
+     * window.
+     */
     public ControllerBase getController() {
         return this.controller;
     }

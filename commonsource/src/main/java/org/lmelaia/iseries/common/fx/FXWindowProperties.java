@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lmelaia.iseries.common.fxcore;
+package org.lmelaia.iseries.common.fx;
 
 /**
  * List of properties for a window.

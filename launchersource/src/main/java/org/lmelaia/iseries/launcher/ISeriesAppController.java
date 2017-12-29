@@ -44,7 +44,7 @@ import java.io.InputStreamReader;
  * </p>
  * </b></p>
  */
-public class AppController {
+public class ISeriesAppController {
 
     /**
      * Logging object.
@@ -79,7 +79,7 @@ public class AppController {
     /**
      * Private constructor.
      */
-    private AppController() {
+    private ISeriesAppController() {
     }
 
     /**
@@ -242,7 +242,7 @@ public class AppController {
             try {
                 int code = applicationProcess.waitFor();
                 LOG.info("Process finished with exit code: " + code);
-                AppController.stop(code);
+                ISeriesAppController.stop(code);
             } catch (InterruptedException e) {
                 LOG.warn("waitFor() failed", e);
             }
