@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lmelaia.iseries.common.intercommunication;
+package org.lmelaia.iseries.common.net.xcom;
 
 import org.apache.logging.log4j.Logger;
 import org.lmelaia.iseries.common.system.AppLogger;
@@ -36,7 +36,7 @@ public class Server {
     private static final Logger LOG = AppLogger.getLogger();
 
     /**
-     * Provides the communication abilities.
+     * Provides the xcom abilities.
      */
     private final CommunicationObject comObj;
 
@@ -53,7 +53,7 @@ public class Server {
     /**
      * Default constructor.
      *
-     * @throws IOException if communication could not established.
+     * @throws IOException if xcom could not established.
      */
     public Server() throws IOException {
         comObj = new CommunicationObject();
@@ -71,7 +71,7 @@ public class Server {
     }
 
     /**
-     * Writes the threads communication objects port number
+     * Writes the threads xcom objects port number
      * to file for client to read.
      */
     public void writePortNumber() {
@@ -95,7 +95,7 @@ public class Server {
     }
 
     /**
-     * @return the port number of the communication object
+     * @return the port number of the xcom object
      * in use by the thread.
      */
     public int getPort() {

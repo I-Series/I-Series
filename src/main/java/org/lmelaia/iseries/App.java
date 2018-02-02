@@ -18,13 +18,15 @@
 package org.lmelaia.iseries;
 
 import org.apache.logging.log4j.Logger;
+import org.lmelaia.iseries.common.net.xcom.Message;
+import org.lmelaia.iseries.common.net.xcom.MessageListener;
+import org.lmelaia.iseries.common.net.xcom.MessageType;
 import org.lmelaia.iseries.common.system.AppBase;
 import org.lmelaia.iseries.common.system.AppLogger;
 import org.lmelaia.iseries.common.system.ExitCode;
 
 import javax.swing.*;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -41,10 +43,12 @@ public class App extends AppBase {
      * Logger instance.
      */
     private static final Logger LOG = AppLogger.getLogger();
+
     /**
-     * Instance of this application.
+     * Global instance of this class.
      */
-    static App INSTANCE;
+    private static App INSTANCE;
+
     /**
      * The timer responsible for running the {@link App.PingClientTask}.
      */
@@ -57,10 +61,36 @@ public class App extends AppBase {
     private int hostPort;
 
     /**
+     * List of predefined named arguments.
+     */
+    public enum DefinedArguments {
+
+        /**
+         * The port argument.
+         */
+        PORT("port");
+
+        /**
+         * The name of the argument.
+         */
+        public final String key;
+
+        /**
+         * Constructor.
+         *
+         * @param key the name of the argunment.
+         */
+        DefinedArguments(String key) {
+            this.key = key;
+        }
+    }
+
+    /**
      * Constructor.
      */
     App() {
         this.manageThread(Thread.currentThread());
+        INSTANCE = this;
     }
 
     /**
@@ -68,18 +98,6 @@ public class App extends AppBase {
      */
     public static App getInstance() {
         return INSTANCE;
-    }
-
-    /**
-     * Initializes and starts the application.
-     *
-     * @param args given program arguments.
-     */
-    void start(String[] args) {
-        LOG.info("New ISeries instance starting with arguments: " + Arrays.toString(args));
-
-        initLauncherCom(args[0]);
-        openDebugWindow();
     }
 
     /**
@@ -105,6 +123,33 @@ public class App extends AppBase {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(100, 100);
         frame.setVisible(true);
+    }
+
+    /**
+     * Registers a message listener
+     * to receive new arguments from connecting
+     * clients and update this applications
+     * argument handler instance.
+     */
+    private void registerArgumentReceiver() {
+        getServer().addMessageListener(new MessageListener() {
+            @Override
+            public void onMessageReceived(Message m) {
+                if (m.getMsgType().equals(MessageType.ARGS)) {
+                    update(m.getArgs().substring(1, m.getArgs().length() - 1).split(", "));
+                }
+            }
+        });
+    }
+
+    /**
+     * Initializes and starts the application.
+     */
+    @Override
+    public void start() throws Exception {
+        initLauncherCom(getArgumentHandler().getNamedArgument(DefinedArguments.PORT.key));
+        registerArgumentReceiver();
+        openDebugWindow();
     }
 
     /**

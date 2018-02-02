@@ -93,7 +93,7 @@ public class ISeriesAppController {
         if (isRunning())
             throw new IllegalStateException("Process is already running");
 
-        String cmd = getCommandLineArg(args);
+        String cmd = formatCommandLineArgs(args);
 
         LOG.info("Running new I-Series instance with command: " + cmd);
         applicationProcess = Runtime.getRuntime().exec(cmd);
@@ -129,16 +129,16 @@ public class ISeriesAppController {
      * @param args the given arguments.
      * @return the command produced.
      */
-    private static String getCommandLineArg(String[] args) {
+    private static String formatCommandLineArgs(String[] args) {
         String command = "\"" + getJavaExecutablePath() + "\""
                 + " -jar "
                 + "\"" + System.getProperty("user.dir")
                 + File.separator
-                + JAR_FILENAME + "\" " + App.getInstance().getServerPort();
+                + JAR_FILENAME + "\" --port=" + App.getInstance().getServerPort();
 
         if (args != null)
             for (String arg : args) {
-                command += " " + arg;
+                command += " \"" + arg + "\"";
             }
 
         return command;

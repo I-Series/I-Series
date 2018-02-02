@@ -16,6 +16,8 @@
  */
 package org.lmelaia.iseries.launcher;
 
+import org.lmelaia.iseries.common.system.AppBase;
+
 import java.io.IOException;
 
 /**
@@ -32,7 +34,6 @@ public class Main {
      */
     public static void main(String[] args) throws IOException {
         Thread.currentThread().setName("Launcher Main");
-        App.INSTANCE = new App();
-        App.INSTANCE.start(args);
+        AppBase.startApp(new App(), args);
     }
 }

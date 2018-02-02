@@ -18,18 +18,20 @@
 package org.lmelaia.iseries.common.system;
 
 import org.apache.logging.log4j.Logger;
-import org.lmelaia.iseries.common.intercommunication.Client;
-import org.lmelaia.iseries.common.intercommunication.Server;
+import org.lmelaia.iseries.common.net.xcom.Client;
+import org.lmelaia.iseries.common.net.xcom.Server;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Base class for application instances (i.e.
  * launcher and main application).
  */
-public class AppBase {
+public abstract class AppBase {
 
     /**
      * Configures the logger before it's initialized
@@ -50,6 +52,12 @@ public class AppBase {
     private final List<ShutdownListener> shutdownListeners = new ArrayList<>();
 
     /**
+     * The argument handler object which will receive the arguments
+     * passed to this application.
+     */
+    private final ArgumentHandler argumentHandler = new ArgumentHandler();
+
+    /**
      * Client instance.
      */
     private Client client = null;
@@ -58,6 +66,20 @@ public class AppBase {
      * Server instance.
      */
     private Server server = null;
+
+    /**
+     * Constructs, initialises and initiates
+     * the start procedure of an app class
+     * extending this class.
+     *
+     * @param appClass the subclass to start.
+     * @param args     the command line arguments given
+     *                 when starting the application.
+     */
+    public static void startApp(AppBase appClass, String[] args) {
+        Objects.requireNonNull(appClass, "App class cannot be null")
+                .internalStart(Objects.requireNonNull(args, "Given argumets cannot be null"));
+    }
 
     /**
      * Adds an uncaught exception handler
@@ -107,16 +129,16 @@ public class AppBase {
             LOG.warn("Shutting down due to abnormal termination");
         }
 
-        boolean aborted = false;
+        boolean abort = false;
 
         for (ShutdownListener listener : shutdownListeners) {
             if (!listener.onShutdown(code)) {
-                aborted = true;
+                abort = true;
                 break;
             }
         }
 
-        if (!aborted) {
+        if (!abort) {
             LOG.info("Shutdown complete: " + code.toString());
             System.exit(code.code);
         } else {
@@ -155,6 +177,50 @@ public class AppBase {
     }
 
     /**
+     * @return the argument handler object
+     * containing the arguments passed to
+     * this application.
+     */
+    public ArgumentHandler getArgumentHandler() {
+        return this.argumentHandler;
+    }
+
+    /**
+     * Called when a main method tries to start
+     * the application. This is used in place of
+     * a main(String[] args) method.
+     *
+     * @throws Exception
+     */
+    public abstract void start() throws Exception;
+
+    /**
+     * @param args
+     * @see ArgumentHandler#update(String[]).
+     */
+    protected void update(String[] args) {
+        argumentHandler.update(args);
+    }
+
+    /**
+     * Internal method to start an app class.
+     *
+     * @param args
+     */
+    private void internalStart(String args[]) {
+        argumentHandler.update(args);
+        LOG.info("Starting with arguments: " + Arrays.toString(args));
+
+        try {
+            start();
+        } catch (Exception e) {
+            LOG.fatal("Start method of app class["
+                    + this.getClass().getCanonicalName() + "] threw an error.", e);
+            exit(ExitCode.UNHANDLED_EXCEPTION);
+        }
+    }
+
+    /**
      * @return a new uncaught exception handler which
      * crashes the application properly when an exception goes uncaught.
      */
@@ -165,5 +231,4 @@ public class AppBase {
             exit(ExitCode.UNHANDLED_EXCEPTION);
         };
     }
-
 }

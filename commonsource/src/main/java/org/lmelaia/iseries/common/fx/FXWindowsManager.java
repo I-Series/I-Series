@@ -160,8 +160,8 @@ public class FXWindowsManager extends Application {
                 window.initialize();
             }
         } catch (IOException | IllegalAccessException | InstantiationException e) {
-            //Should not happen as each class is assured
-            //to exist.
+            //Should not happen as each class is read from
+            //the list of classes in the package.
             throw new IllegalStateException(e);
         }
 

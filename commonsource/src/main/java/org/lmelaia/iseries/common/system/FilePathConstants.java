@@ -20,14 +20,25 @@ package org.lmelaia.iseries.common.system;
 import java.io.File;
 
 /**
- * Created by Luke on 11/30/2017.
+ * Static class holding references to files/folders
+ * used throughout the application.
  */
-public class ApplicationConstants {
+public class FilePathConstants {
 
+    /**
+     * The path to the application folder.
+     */
     public static final File APPLICATION_PATH = new File(System.getProperty("user.dir"));
+
+    /**
+     * The path to the folder containing application and launcher logs.
+     */
     public static final File APPLICATION_LOGS_PATH = new File(APPLICATION_PATH.getAbsolutePath() + "/logs/");
 
-    private ApplicationConstants() {
+    /**
+     * Private constructor.
+     */
+    private FilePathConstants() {
     }
 
 }

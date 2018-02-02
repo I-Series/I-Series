@@ -19,9 +19,9 @@ package org.lmelaia.iseries.launcher;
 
 import org.apache.logging.log4j.Logger;
 import org.lmelaia.iseries.common.fx.FXWindowsManager;
-import org.lmelaia.iseries.common.intercommunication.FileComUtil;
-import org.lmelaia.iseries.common.intercommunication.Message;
-import org.lmelaia.iseries.common.intercommunication.MessageType;
+import org.lmelaia.iseries.common.net.xcom.FileComUtil;
+import org.lmelaia.iseries.common.net.xcom.Message;
+import org.lmelaia.iseries.common.net.xcom.MessageType;
 import org.lmelaia.iseries.common.system.AppBase;
 import org.lmelaia.iseries.common.system.AppLogger;
 import org.lmelaia.iseries.common.system.ExitCode;
@@ -34,13 +34,15 @@ import java.util.Arrays;
  */
 public class App extends AppBase {
 
-
     /**
      * Logging framework instance.
      */
     private static final Logger LOG = AppLogger.getLogger();
 
-    static App INSTANCE;
+    /**
+     * Global instance of this class.
+     */
+    private static App INSTANCE;
 
     /**
      * Default constructor.
@@ -50,6 +52,7 @@ public class App extends AppBase {
      */
     App() {
         this.manageThread(Thread.currentThread());
+        INSTANCE = this;
     }
 
     /**
@@ -60,33 +63,7 @@ public class App extends AppBase {
     }
 
     /**
-     * Starts the launcher application process.
-     *
-     * @param args arguments given to the application.
-     * @throws IOException
-     */
-    public void start(String[] args) throws IOException {
-        LOG.info("New launcher instance starting with args: " + Arrays.toString(args));
-
-        FXWindowsManager.startFX("Launcher", args,
-                "org.lmelaia.iseries.launcher.fx.", this);
-
-        int port = initCommunication();
-
-        if (port == -1)
-            startInstance(args);
-        else {
-            LOG.info("Arguments sent: " + Arrays.toString(args));
-            Message m = getClient().sendToServer(new Message(MessageType.ARGS, port, Arrays.toString(args)));
-            if (m.getMsgType().equals(MessageType.RECEIVED)) {
-                LOG.info("Message received");
-                exit(ExitCode.NORMAL);
-            }
-        }
-    }
-
-    /**
-     * Initializes communication with the main application
+     * Initializes xcom with the main application
      * process and sets up the server to receive requests.
      *
      * @throws IOException
@@ -118,11 +95,40 @@ public class App extends AppBase {
     /**
      * Starts the main application process.
      */
-    private void startInstance(String[] args) throws IOException {
-        ISeriesAppController.start(args);
+    private void startInstance() throws IOException {
+        ISeriesAppController.start(getArgumentHandler().reconstruct());
     }
 
+    /**
+     * @return the port number the server is running on.
+     */
     public int getServerPort() {
         return this.getServer().getPort();
+    }
+
+    /**
+     * Starts the launcher application process.
+     *
+     * @throws IOException
+     */
+    @Override
+    public void start() throws Exception {
+        FXWindowsManager.startFX("Launcher", new String[0],
+                "org.lmelaia.iseries.launcher.fx.", this);
+
+        int port = initCommunication();
+
+        if (port == -1)
+            startInstance();
+        else {
+            LOG.info("Arguments sent: " + Arrays.toString(getArgumentHandler().reconstruct()));
+            Message m = getClient().sendToServer(new Message(MessageType.ARGS, port, Arrays.toString(
+                    getArgumentHandler().reconstruct()
+            )));
+            if (m.getMsgType().equals(MessageType.RECEIVED)) {
+                LOG.info("Message received");
+                exit(ExitCode.NORMAL);
+            }
+        }
     }
 }

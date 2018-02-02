@@ -24,8 +24,8 @@ import javafx.scene.control.Label;
 import org.apache.logging.log4j.Logger;
 import org.lmelaia.iseries.common.fx.ControllerBase;
 import org.lmelaia.iseries.common.system.AppLogger;
-import org.lmelaia.iseries.common.system.ApplicationConstants;
 import org.lmelaia.iseries.common.system.ExitCode;
+import org.lmelaia.iseries.common.system.FilePathConstants;
 import org.lmelaia.iseries.launcher.ISeriesAppController;
 
 import java.awt.*;
@@ -107,7 +107,7 @@ public final class CrashWindowController extends ControllerBase {
     @FXML
     protected void onOpenLogsAction(ActionEvent event) {
         try {
-            Desktop.getDesktop().open(ApplicationConstants.APPLICATION_LOGS_PATH);
+            Desktop.getDesktop().open(FilePathConstants.APPLICATION_LOGS_PATH);
         } catch (IOException e) {
             LOG.error("Failed to open logs", e);
         }

@@ -35,9 +35,10 @@ public enum ExitCode {
     /**
      * Termination caused by the user forcibly terminating
      * the application through the os (e.g. through task
-     * managers 'end task' on windows).
+     * managers 'end task' on windows), a crash in the jvm
+     * or an instance not being able to start (eg. jar not found).
      */
-    FORCED_EXIT(1, "An instance was forcibly closed or crashed.", false),
+    FORCED_EXIT(1, "An instance was forcibly closed, crashed or could not be started.", true),
 
     /**
      * Exit code used for testing.
@@ -56,7 +57,7 @@ public enum ExitCode {
     UNRESPONSIVE_LAUNCHER(12, "The launcher has closed or become unresponsive.", true),
 
     /**
-     * Failed to communication with the launcher due to an exception.
+     * Failed to xcom with the launcher due to an exception.
      */
     LAUNCHER_COM_FAILED(13, "Failed to communicate with the launcher.", true);
 
@@ -82,6 +83,11 @@ public enum ExitCode {
      */
     public final boolean normal;
 
+    /**
+     * The the request come from the
+     * launcher application or I-Series
+     * application.
+     */
     private boolean fromLauncher = true;
 
     /**
@@ -122,10 +128,21 @@ public enum ExitCode {
                 code, this.name(), description, error);
     }
 
+    /**
+     * @return {@code true} if the exit was requested
+     * from the launcher jar.
+     */
     public boolean isFromLauncher() {
         return fromLauncher;
     }
 
+    /**
+     * Flags the exit request as originating
+     * from the launcher jar.
+     *
+     * @param fromLauncher true if requested by the launcher jar.
+     * @return the exit request.
+     */
     public ExitCode setFromLauncher(boolean fromLauncher) {
         this.fromLauncher = fromLauncher;
         return this;

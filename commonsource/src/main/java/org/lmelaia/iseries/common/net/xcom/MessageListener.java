@@ -1,4 +1,4 @@
-package org.lmelaia.iseries.common.intercommunication;
+package org.lmelaia.iseries.common.net.xcom;
 
 /**
  * Used to receive messages from clients.

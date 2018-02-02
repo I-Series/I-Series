@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lmelaia.iseries.common.intercommunication;
+package org.lmelaia.iseries.common.net.xcom;
 
 import java.net.DatagramPacket;
 import java.net.UnknownHostException;

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lmelaia.iseries.common.intercommunication;
+package org.lmelaia.iseries.common.net.xcom;
 
 import org.apache.logging.log4j.Logger;
 import org.lmelaia.iseries.common.system.AppLogger;
@@ -41,7 +41,7 @@ public class Client {
     /**
      * Constructs a new client instance
      *
-     * @throws IOException if a communication
+     * @throws IOException if a xcom
      *                     object cannot be created.
      */
     public Client() throws IOException {
@@ -89,7 +89,7 @@ public class Client {
     }
 
     /**
-     * Closes this client instance and communication
+     * Closes this client instance and xcom
      * object in use.
      */
     public void close() {

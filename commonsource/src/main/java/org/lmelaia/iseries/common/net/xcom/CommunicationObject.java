@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.lmelaia.iseries.common.intercommunication;
+package org.lmelaia.iseries.common.net.xcom;
 
 import java.io.IOException;
 import java.net.*;
@@ -47,7 +47,7 @@ class CommunicationObject {
     private final int port;
 
     /**
-     * Creates a new communication object
+     * Creates a new xcom object
      * opened on a random unused port.
      *
      * @throws IOException
@@ -57,7 +57,7 @@ class CommunicationObject {
     }
 
     /**
-     * Creates a new communication object on
+     * Creates a new xcom object on
      * the given port.
      *
      * @param port the port number the socket
