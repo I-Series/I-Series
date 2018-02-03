@@ -33,18 +33,20 @@ import java.io.IOException;
 public abstract class FXWindow extends Stage {
 
     /**
-     * Logging framework instance.
+     * Logging object.
      */
     private static final Logger LOG = AppLogger.getLogger();
 
     /**
      * Root node for the scene.
      */
+    @SuppressWarnings("WeakerAccess")
     protected Parent root;
 
     /**
      * Window scene object.
      */
+    @SuppressWarnings("WeakerAccess")
     protected Scene scene;
 
     /**
@@ -53,27 +55,22 @@ public abstract class FXWindow extends Stage {
     protected ControllerBase controller = null;
 
     /**
-     * Loader used to load the window.fxml file. Might be null.
-     */
-    private FXMLLoader loader;
-
-    /**
      * Sets the root object and scene for the window.
      * <p>
      * If the window has a window.fxml file set, the scene
      * will be loaded from the window.fxml file,
      * otherwise the root object is set to {@link StackPane}.
      */
+    @SuppressWarnings("ConstantConditions")
     private void setScene(String fxmlFileName, String cssFileName,
                           ControllerBase controller) {
         if (fxmlFileName != null) {
             try {
-                this.loader = new FXMLLoader(getClass().getClassLoader().getResource(fxmlFileName));
-
-                this.loader.setController(controller);
+                FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(fxmlFileName));
+                loader.setController(controller);
                 this.controller = controller;
 
-                this.root = this.loader.load();
+                this.root = loader.load();
 
                 if (this.controller == null)
                     this.controller = loader.getController();
@@ -89,9 +86,14 @@ public abstract class FXWindow extends Stage {
         }
 
         if (cssFileName != null)
-            this.scene.getStylesheets().add(
-                    getClass().getClassLoader().getResource(
-                            cssFileName).toExternalForm());
+            try {
+                this.scene.getStylesheets().add(
+                        getClass().getClassLoader().getResource(
+                                cssFileName).toExternalForm());
+            } catch (NullPointerException ex) {
+                LOG.error("Could not set css file.", ex);
+            }
+
 
         this.setScene(scene);
     }
@@ -138,7 +140,8 @@ public abstract class FXWindow extends Stage {
      * components and structure the window.
      * </p>
      */
-    public abstract void onInitialization();
+    @SuppressWarnings("EmptyMethod")
+    protected abstract void onInitialization();
 
     /**
      * Called after all declared windows have been
@@ -157,12 +160,13 @@ public abstract class FXWindow extends Stage {
      * operating the program.
      * </p>
      */
-    public abstract void onPostInitialization();
+    protected abstract void onPostInitialization();
 
     /**
      * @return the controller instance linked to this
      * window.
      */
+    @SuppressWarnings("unused")
     public ControllerBase getController() {
         return this.controller;
     }

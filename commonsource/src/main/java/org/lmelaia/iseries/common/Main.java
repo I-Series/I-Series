@@ -17,9 +17,11 @@
 
 package org.lmelaia.iseries.common;
 
+@SuppressWarnings("WeakerAccess")
 public class Main {
 
-    public static void Main(String[] args) {
+    @SuppressWarnings({"EmptyMethod", "unused"})
+    public static void main(String[] args) {
         //NO-OP
     }
 }

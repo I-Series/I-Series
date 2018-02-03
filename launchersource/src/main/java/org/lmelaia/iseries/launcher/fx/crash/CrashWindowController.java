@@ -40,21 +40,28 @@ public final class CrashWindowController extends ControllerBase {
      * Logging framework instance.
      */
     private static final Logger LOG = AppLogger.getLogger();
+
     /**
      * The label displaying the exit codes description.
      */
     @FXML
+    @SuppressWarnings({"WeakerAccess", "unused"})
     protected Label labelDescription;
+
     /**
      * The label displaying the exit code.
      */
     @FXML
+    @SuppressWarnings({"WeakerAccess", "unused"})
     protected Label labelCode;
+
     /**
      * Restart button.
      */
     @FXML
+    @SuppressWarnings({"WeakerAccess", "unused"})
     protected Button buttonRestart;
+
     /**
      * True if the user requested a restart.
      */
@@ -70,6 +77,7 @@ public final class CrashWindowController extends ControllerBase {
     /**
      * @return true if the user requested a restart.
      */
+    @SuppressWarnings("WeakerAccess")
     public boolean wasRestarted() {
         return wasRestarted;
     }
@@ -77,9 +85,11 @@ public final class CrashWindowController extends ControllerBase {
     /**
      * Restarts the application on request by the user.
      *
-     * @param event
-     * @throws IOException
+     * @param event the event object.
+     * @throws IOException if the application could
+     * not be started again.
      */
+    @SuppressWarnings("unused")
     @FXML
     protected void onRestartAction(ActionEvent event) throws IOException {
         LOG.info("Restarting application.");
@@ -92,8 +102,9 @@ public final class CrashWindowController extends ControllerBase {
      * Closes the window causing the whole application (launcher as well)
      * to close.
      *
-     * @param event
+     * @param event the event object.
      */
+    @SuppressWarnings("unused")
     @FXML
     protected void onCloseAction(ActionEvent event) {
         this.getWindow().close();
@@ -102,8 +113,9 @@ public final class CrashWindowController extends ControllerBase {
     /**
      * Opens the folder containing the logs on request by the user.
      *
-     * @param event
+     * @param event the event object.
      */
+    @SuppressWarnings("unused")
     @FXML
     protected void onOpenLogsAction(ActionEvent event) {
         try {

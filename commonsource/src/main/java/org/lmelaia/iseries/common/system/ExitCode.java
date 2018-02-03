@@ -57,9 +57,15 @@ public enum ExitCode {
     UNRESPONSIVE_LAUNCHER(12, "The launcher has closed or become unresponsive.", true),
 
     /**
-     * Failed to xcom with the launcher due to an exception.
+     * Failed to communicate with the launcher due to an exception.
      */
-    LAUNCHER_COM_FAILED(13, "Failed to communicate with the launcher.", true);
+    LAUNCHER_COM_FAILED(13, "Failed to communicate with the launcher.", true),
+
+    /**
+     * Used in place where the exit code wasn't specified in any
+     * of the other enums.
+     */
+    UNKNOWN_ERROR(-500, "Unknown exit code.", true);
 
     /**
      * The exit code for use in {@link System#exit(int)}.
@@ -112,7 +118,7 @@ public enum ExitCode {
             if (ec.code == code)
                 return ec;
 
-        return null;
+        return UNKNOWN_ERROR;
     }
 
     /**
@@ -150,6 +156,7 @@ public enum ExitCode {
      * @param recoverable true if requested by the i-series jar.
      * @return the exit request.
      */
+    @SuppressWarnings("SameParameterValue")
     public ExitCode setRecoverable(boolean recoverable) {
         this.recoverable = recoverable;
         return this;

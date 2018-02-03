@@ -37,13 +37,14 @@ public class FileComUtil {
     private static final File PORT_FILE = new File("savedata/port.int");
 
     //Logging instance
-    static Logger LOG = AppLogger.getLogger();
+    private static final Logger LOG = AppLogger.getLogger();
 
-    /**
+    /*
      * Attempt to create file.
      */
     static {
         try {
+            //noinspection ResultOfMethodCallIgnored
             new File(PORT_FILE.getAbsolutePath()).createNewFile();
         } catch (IOException e) {
             LOG.warn("Failed to create port file: " + PORT_FILE.getAbsolutePath(), e);
@@ -57,6 +58,7 @@ public class FileComUtil {
      * @return false if the process failed.
      * <b>True does not always mean the process succeeded<b/>
      */
+    @SuppressWarnings({"UnusedReturnValue", "WeakerAccess"})
     public static boolean writePortNumber(int number) {
         try {
             FileWriter writer = new FileWriter(PORT_FILE);

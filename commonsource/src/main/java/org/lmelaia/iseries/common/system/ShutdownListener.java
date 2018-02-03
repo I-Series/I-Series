@@ -28,5 +28,6 @@ public interface ShutdownListener {
      *
      * @param code the code given as the reason for the application to close.
      */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     boolean onShutdown(ExitCode code);
 }

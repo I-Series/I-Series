@@ -24,6 +24,7 @@ import java.io.IOException;
  *
  * @author Luke
  */
+@SuppressWarnings("WeakerAccess")
 public class Main {
 
     /**

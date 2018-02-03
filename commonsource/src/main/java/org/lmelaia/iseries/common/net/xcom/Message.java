@@ -24,6 +24,7 @@ import java.net.UnknownHostException;
  * A message which can be sent or received
  * from or to a client or server.
  */
+@SuppressWarnings("WeakerAccess")
 public class Message {
 
     /**
@@ -60,7 +61,8 @@ public class Message {
      * Turns this message into a datagram packet.
      *
      * @return the datagram packet created from this message.
-     * @throws UnknownHostException
+     * @throws UnknownHostException if the host could
+     * not be determined.
      */
     public DatagramPacket toDatagram() throws UnknownHostException {
         DatagramPacket p = CommunicationObject.getNewPacket(getPort());

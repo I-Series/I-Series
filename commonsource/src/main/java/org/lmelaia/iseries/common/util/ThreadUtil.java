@@ -28,10 +28,11 @@ public class ThreadUtil {
     /**
      * Non exception throwing {@link Thread#sleep(long)}.
      *
-     * @param mills
+     * @param mills the number of milliseconds to sleep for.
      * @return true if no {@link InterruptedException} was thrown,
      * false otherwise.
      */
+    @SuppressWarnings("UnusedReturnValue")
     public static boolean silentSleep(long mills) {
         try {
             Thread.sleep(mills);

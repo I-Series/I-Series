@@ -62,10 +62,11 @@ public class App extends AppBase {
     }
 
     /**
-     * Initializes xcom with the main application
+     * Initializes communication with the main application
      * process and sets up the server to receive requests.
      *
-     * @throws IOException
+     * @throws IOException if the last port number couldn't
+     * be read
      */
     private int initCommunication() throws IOException {
         LOG.info("Attempting to get port number");
@@ -101,6 +102,7 @@ public class App extends AppBase {
     /**
      * @return the port number the server is running on.
      */
+    @SuppressWarnings("WeakerAccess")
     public int getServerPort() {
         return this.getServer().getPort();
     }
@@ -108,7 +110,8 @@ public class App extends AppBase {
     /**
      * Starts the launcher application process.
      *
-     * @throws IOException
+     * @throws IOException if communication
+     * could not be initialized.
      */
     @Override
     protected void start() throws Exception {

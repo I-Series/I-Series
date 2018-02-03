@@ -28,6 +28,7 @@ public class FilePathConstants {
     /**
      * The path to the application folder.
      */
+    @SuppressWarnings("WeakerAccess")
     public static final File APPLICATION_PATH = new File(System.getProperty("user.dir"));
 
     /**

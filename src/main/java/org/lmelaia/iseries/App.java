@@ -66,7 +66,13 @@ public class App extends AppBase {
         /**
          * The port argument.
          */
-        PORT("port");
+        PORT("port"),
+
+        /**
+         * Test argument.
+         */
+        @SuppressWarnings("unused")
+        TEST("test");
 
         /**
          * The name of the argument.
@@ -76,7 +82,7 @@ public class App extends AppBase {
         /**
          * Constructor.
          *
-         * @param key the name of the argunment.
+         * @param key the name of the argument.
          */
         DefinedArguments(String key) {
             this.key = key;
@@ -94,6 +100,7 @@ public class App extends AppBase {
     /**
      * @return the instance of this application.
      */
+    @SuppressWarnings("unused")
     public static App getInstance() {
         return INSTANCE;
     }
@@ -101,7 +108,8 @@ public class App extends AppBase {
     /**
      * Initializes communication with the launcher.
      *
-     * @param portArg
+     * @param portArg the port number given through the
+     *                application arguments.
      */
     private void initLauncherCom(String portArg) {
         hostPort = Integer.parseInt(portArg);
@@ -118,11 +126,9 @@ public class App extends AppBase {
      */
     private void openDebugWindow() {
         JFrame frame = new JFrame("Debug window");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(100, 100);
         frame.setVisible(true);
-
-        exit(ExitCode.TEST_EXIT);
     }
 
     /**
@@ -149,6 +155,11 @@ public class App extends AppBase {
         openDebugWindow();
     }
 
+    @Override
+    protected boolean initializeFX() {
+        return false;
+    }
+
     /**
      * Task responsible for pinging the launcher to
      * check if it's still online and operating.
@@ -162,8 +173,7 @@ public class App extends AppBase {
         @Override
         public void run() {
             try {
-                if (getClient().pingServer(hostPort, 2000)) {
-                } else {
+                if (!getClient().pingServer(hostPort, 2000)) {
                     LOG.fatal("Client not responding.");
                     App.INSTANCE.exit(ExitCode.UNRESPONSIVE_LAUNCHER);
                 }

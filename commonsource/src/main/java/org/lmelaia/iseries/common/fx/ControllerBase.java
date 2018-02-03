@@ -36,11 +36,13 @@ public abstract class ControllerBase {
     /**
      * Called on initialization of window controllers.
      */
+    @SuppressWarnings("EmptyMethod")
     public abstract void init();
 
     /**
      * @return the window instance this controller belongs to.
      */
+    @SuppressWarnings("WeakerAccess")
     public FXWindow getWindow() {
         return this.window;
     }
@@ -48,7 +50,7 @@ public abstract class ControllerBase {
     /**
      * Sets the window instance this controller belongs to.
      *
-     * @param window
+     * @param window the window instance.
      */
     void setWindow(FXWindow window) {
         this.window = window;

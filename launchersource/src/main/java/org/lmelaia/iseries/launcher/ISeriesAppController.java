@@ -87,7 +87,8 @@ public class ISeriesAppController {
      *
      * @param args arguments to pass to the main application
      *             (port is passed automatically).
-     * @throws IOException
+     * @throws IOException if the application could not
+     * be started.
      */
     public static void start(String[] args) throws IOException {
         if (isRunning())
@@ -105,11 +106,9 @@ public class ISeriesAppController {
     /**
      * @return if the main application process is running.
      */
+    @SuppressWarnings("WeakerAccess")
     public static boolean isRunning() {
-        if (applicationProcess == null)
-            return false;
-
-        return applicationProcess.isAlive();
+        return applicationProcess != null && applicationProcess.isAlive();
     }
 
     /**
@@ -117,6 +116,7 @@ public class ISeriesAppController {
      *
      * @param code the exit code to terminate with.
      */
+    @SuppressWarnings("deprecation")
     private static void stop(int code) {
         captureThread.stop();
         App.getInstance().exit(ExitCode.getFromCode(code).setRecoverable(true));
@@ -130,18 +130,20 @@ public class ISeriesAppController {
      * @return the command produced.
      */
     private static String formatCommandLineArgs(String[] args) {
-        String command = "\"" + getJavaExecutablePath() + "\""
+        StringBuilder command = new StringBuilder("\"" + getJavaExecutablePath() + "\""
                 + " -jar "
                 + "\"" + System.getProperty("user.dir")
                 + File.separator
-                + JAR_FILENAME + "\" --port=" + App.getInstance().getServerPort();
+                + JAR_FILENAME + "\" --port=" + App.getInstance().getServerPort());
 
-        if (args != null)
+
+        if (args != null) {
             for (String arg : args) {
-                command += " \"" + arg + "\"";
+                command.append(" \"").append(arg).append("\"");
             }
+        }
 
-        return command;
+        return command.toString();
     }
 
     /**
@@ -160,6 +162,7 @@ public class ISeriesAppController {
      * Creates a new instances of the capture thread
      * and starts it.
      */
+    @SuppressWarnings("deprecation")
     private static void startNewCaptureThread() {
         if (captureThread != null)
             if (captureThread.isAlive())
@@ -173,6 +176,7 @@ public class ISeriesAppController {
      * Creates a new instances of the termination thread
      * and starts it.
      */
+    @SuppressWarnings("deprecation")
     private static void startTerminationHandlerThread() {
         if (waitThread != null)
             if (waitThread.isAlive())
@@ -193,6 +197,7 @@ public class ISeriesAppController {
          * Sets the name of the thread and ensures it is a deamon
          * thread.
          */
+        @SuppressWarnings("WeakerAccess")
         public ProcessOutputCaptureThread() {
             this.setName("Process output capture thread");
             this.setDaemon(true);
@@ -227,6 +232,7 @@ public class ISeriesAppController {
          * Sets the name of the thread and ensures it is a deamon
          * thread.
          */
+        @SuppressWarnings("WeakerAccess")
         public ProcessTerminationHandler() {
             this.setName("Process wait thread");
             this.setDaemon(true);

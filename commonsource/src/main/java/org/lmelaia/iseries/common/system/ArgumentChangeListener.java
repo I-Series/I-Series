@@ -6,6 +6,7 @@ package org.lmelaia.iseries.common.system;
  *
  * @see ArgumentHandler
  */
+@SuppressWarnings("WeakerAccess")
 public interface ArgumentChangeListener {
 
     /**

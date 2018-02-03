@@ -18,10 +18,8 @@
 package org.lmelaia.iseries.launcher.fx.crash;
 
 import javafx.application.Platform;
-import org.apache.logging.log4j.Logger;
 import org.lmelaia.iseries.common.fx.FXWindow;
 import org.lmelaia.iseries.common.fx.RegisterFXWindow;
-import org.lmelaia.iseries.common.system.AppLogger;
 import org.lmelaia.iseries.common.system.ExitCode;
 import org.lmelaia.iseries.common.util.ThreadUtil;
 import org.lmelaia.iseries.launcher.App;
@@ -34,11 +32,6 @@ import org.lmelaia.iseries.launcher.App;
         controllerClass = CrashWindowController.class
 )
 public class CrashWindow extends FXWindow {
-
-    /**
-     * Logging framework instance.
-     */
-    private static final Logger LOG = AppLogger.getLogger();
 
     /**
      * Default constructor.
@@ -54,7 +47,7 @@ public class CrashWindow extends FXWindow {
      * NO-OP
      */
     @Override
-    public void onInitialization() {
+    protected void onInitialization() {
         //NO-OP
     }
 
@@ -64,12 +57,10 @@ public class CrashWindow extends FXWindow {
      * due to an error.
      */
     @Override
-    public void onPostInitialization() {
+    protected void onPostInitialization() {
         App.getInstance().addShutdownListener(code -> {
             if (code.error)
-                Platform.runLater(() -> {
-                    this.show(code);
-                });
+                Platform.runLater(() -> this.show(code));
 
             ThreadUtil.silentSleep(100);
             while (this.isShowing()) {
@@ -85,7 +76,7 @@ public class CrashWindow extends FXWindow {
      *
      * @param code the exit code to display.
      */
-    public void show(ExitCode code) {
+    private void show(ExitCode code) {
         getController().display(code);
         this.show();
     }

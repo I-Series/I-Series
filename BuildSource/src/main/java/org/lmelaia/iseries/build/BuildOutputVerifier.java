@@ -90,8 +90,9 @@ public class BuildOutputVerifier {
      * in an {@link IllegalArgumentException} if the output directory doesn't
      * exist.
      */
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public BuildOutputVerifier(File outputDirectory,
-            ExpectedFile... expectedFiles)
+                               ExpectedFile... expectedFiles)
             throws IllegalArgumentException {
         outputDirectory = Objects.requireNonNull(outputDirectory);
 
@@ -165,7 +166,7 @@ public class BuildOutputVerifier {
     public void verify() {
         LOG.info("Verifying output directory: " + outputDirectory);
 
-        contentNames = new ArrayList();
+        contentNames = new ArrayList<>();
 
         for (File f : outputDirectory.listFiles()) {
             if (logEmptyFiles && f.isFile()) {

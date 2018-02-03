@@ -33,7 +33,7 @@ import java.util.Objects;
  */
 public abstract class AppBase {
 
-    /**
+    /*
      * Configures the logger before it's initialized
      * by a constructor call.
      */
@@ -78,7 +78,7 @@ public abstract class AppBase {
      */
     public static void startApp(AppBase appClass, String[] args) {
         Objects.requireNonNull(appClass, "App class cannot be null")
-                .internalStart(Objects.requireNonNull(args, "Given argumets cannot be null"));
+                .internalStart(Objects.requireNonNull(args, "Given arguments cannot be null"));
     }
 
     /**
@@ -111,6 +111,7 @@ public abstract class AppBase {
      *
      * @param listener the listener to remove.
      */
+    @SuppressWarnings("unused")
     public void removeShutdownListener(ShutdownListener listener) {
         shutdownListeners.remove(listener);
     }
@@ -149,6 +150,7 @@ public abstract class AppBase {
     /**
      * @return the server instance.
      */
+    @SuppressWarnings("WeakerAccess")
     public Server getServer() {
         if (server == null) {
             try {
@@ -164,6 +166,7 @@ public abstract class AppBase {
     /**
      * @return the client instance.
      */
+    @SuppressWarnings("WeakerAccess")
     public Client getClient() {
         if (client == null) {
             try {
@@ -181,12 +184,13 @@ public abstract class AppBase {
      * containing the arguments passed to
      * this application.
      */
+    @SuppressWarnings("WeakerAccess")
     public ArgumentHandler getArgumentHandler() {
         return this.argumentHandler;
     }
 
     /**
-     * @param args
+     * @param args command line arguments.
      * @see ArgumentHandler#update(String[]).
      */
     protected void update(String[] args) {
@@ -196,7 +200,7 @@ public abstract class AppBase {
     /**
      * Internal method to start an app class.
      *
-     * @param args
+     * @param args the command line arguments.
      */
     private void internalStart(String args[]) {
         argumentHandler.update(args);
@@ -242,7 +246,8 @@ public abstract class AppBase {
      * the application. This is used in place of
      * a main(String[] args) method.
      *
-     * @throws Exception
+     * @throws Exception if any exception
+     * is thrown during the start procedure.
      */
     protected abstract void start() throws Exception;
 
@@ -271,7 +276,6 @@ public abstract class AppBase {
      * is desired to start before application
      * start.
      */
-    protected boolean initializeFX() {
-        return false;
-    }
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    protected abstract boolean initializeFX();
 }

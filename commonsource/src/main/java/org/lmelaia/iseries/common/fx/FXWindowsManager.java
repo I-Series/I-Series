@@ -81,7 +81,7 @@ public class FXWindowsManager extends Application {
     /**
      * List of all declared windows.
      */
-    private List<FXWindow> windows = new ArrayList<>();
+    private final List<FXWindow> windows = new ArrayList<>();
 
     /**
      * Starts the FX application thread in a nonblocking way
@@ -97,6 +97,7 @@ public class FXWindowsManager extends Application {
      *                    until the initialization of the fx thread
      *                    has completed.
      */
+    @SuppressWarnings("SameParameterValue")
     public static void startFX(String threadName, String[] args, String windowsPath, AppBase app, boolean block) {
         if (INSTANCE != null)
             throw new IllegalStateException("FX thread already started");
@@ -128,6 +129,7 @@ public class FXWindowsManager extends Application {
      *                               has not been initialized by
      *                               {@link #startFX(String, String[], String, AppBase, boolean)}.
      */
+    @SuppressWarnings("unused")
     public static FXWindowsManager getInstance() {
         if (INSTANCE == null)
             throw new IllegalStateException("Instance not initialized");
@@ -171,12 +173,15 @@ public class FXWindowsManager extends Application {
      */
     private void initWindows() {
         try {
-            for (Class c : getWindowClasses()) {
+            for (Class<? extends FXWindow> c : getWindowClasses()) {
                 LOG.debug("Initializing window: " + c.getCanonicalName());
 
                 String fxml = getFxmlFileName(c);
                 String css = getCssFileName(c);
+
+                @SuppressWarnings("unchecked")
                 Class<? extends ControllerBase> controllerClass = getControllerClass(c);
+
                 ControllerBase controller = null;
 
                 if (fxml != null) {
@@ -193,7 +198,7 @@ public class FXWindowsManager extends Application {
                     }
                 }
 
-                FXWindow window = (FXWindow) c.newInstance();
+                FXWindow window = c.newInstance();
                 windows.add(window);
                 window.initialize(fxml, css, controller);
             }
@@ -219,8 +224,9 @@ public class FXWindowsManager extends Application {
      * @throws IOException if the attempt to read class path resources
      *                     (jar files or directories) failed.
      */
-    private List<Class> getWindowClasses() throws IOException {
-        List<Class> classList = new ArrayList<>();
+    @SuppressWarnings("unchecked")
+    private List<Class<? extends FXWindow>> getWindowClasses() throws IOException {
+        List<Class<? extends FXWindow>> classList = new ArrayList<>();
         final ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
         for (final ClassPath.ClassInfo info : ClassPath.from(loader).getTopLevelClasses()) {
@@ -228,7 +234,7 @@ public class FXWindowsManager extends Application {
                 final Class<?> clazz = info.load();
                 if (clazz.getSuperclass().getCanonicalName().equals(FXWindow.class.getCanonicalName())) {
                     if (clazz.getDeclaredAnnotation(RegisterFXWindow.class) != null) {
-                        classList.add(clazz);
+                        classList.add((Class<? extends FXWindow>) clazz);
                     }
                 }
             }

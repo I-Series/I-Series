@@ -31,9 +31,6 @@ import java.net.URISyntaxException;
  */
 public final class AppLogger {
 
-    /**
-     * The logger for this class.
-     */
     private static Logger LOG;
 
     /**
@@ -48,6 +45,7 @@ public final class AppLogger {
      *
      * @param resource the log4j2 configuration file resource path.
      */
+    @SuppressWarnings("unused")
     public static void configure(String resource) throws URISyntaxException {
         configure(AppLogger.class.getResource(resource).toURI());
     }
@@ -58,6 +56,7 @@ public final class AppLogger {
      *
      * @param resource the log4j2 configuration file resource path.
      */
+    @SuppressWarnings("SameParameterValue")
     public static void silentConfigure(String resource) {
         try {
             silentConfigure(AppLogger.class.getResource(resource).toURI());
@@ -72,10 +71,12 @@ public final class AppLogger {
      *
      * @param config the log4j2 configuration file.
      */
+    @SuppressWarnings("WeakerAccess")
     public static void silentConfigure(URI config) {
         try {
             configure(config);
         } catch (IllegalStateException ex) {
+            LOG.warn("Silent configure failed: ", ex);
         }
     }
 
@@ -89,6 +90,7 @@ public final class AppLogger {
      * @throws IllegalStateException if the logger is already
      *                               configured.
      */
+    @SuppressWarnings("WeakerAccess")
     public static void configure(URI config) {
         if (initialized)
             throw new IllegalStateException("App Logger is already configured");
@@ -98,6 +100,9 @@ public final class AppLogger {
         context.setConfigLocation(config);
         initialized = true;
 
+        /*
+      The logger for this class.
+     */
         LOG = getLogger();
         LOG.info("Logger initialized with configuration file: "
                 + config.toString());

@@ -40,7 +40,7 @@ public enum Settings {
     LAUNCHER_PING_FREQUENCY("launcher_ping_frequency", 1000,
             "The frequency in milliseconds between pings to the launcher.");
 
-    /**
+    /*
      * Initializes the {@link SettingsStore}
      * and read the settings from file.
      */
@@ -51,11 +51,13 @@ public enum Settings {
     /**
      * Identifying name of the setting.
      */
+    @SuppressWarnings("WeakerAccess")
     public final String idn;
 
     /**
      * Description of the setting.
      */
+    @SuppressWarnings({"WeakerAccess", "unused"})
     public final String description;
     /**
      * List of registered callbacks.
@@ -73,6 +75,7 @@ public enum Settings {
      * @param def         the default value.
      * @param description the description of the setting.
      */
+    @SuppressWarnings("SameParameterValue")
     Settings(String idn, Object def, String description) {
         this.idn = idn;
         this.value = String.valueOf(def);
@@ -82,6 +85,7 @@ public enum Settings {
     /**
      * @return the current value of the setting.
      */
+    @SuppressWarnings("WeakerAccess")
     public String getValue() {
         return value;
     }
@@ -98,6 +102,7 @@ public enum Settings {
     /**
      * @return the current value of the setting as a {@link Boolean}.
      */
+    @SuppressWarnings("unused")
     public boolean getValueAsBoolean() {
         return Boolean.parseBoolean(value);
     }
@@ -107,6 +112,7 @@ public enum Settings {
      * @throws NumberFormatException if the value does not contain a
      *                               parsable long.
      */
+    @SuppressWarnings("unused")
     public long getValueAsLong() {
         return Long.parseLong(value);
     }
@@ -117,6 +123,7 @@ public enum Settings {
      *
      * @param listener the change listener to add.
      */
+    @SuppressWarnings("unused")
     public void addChangeListener(SettingChangeListener listener) {
         listeners.add(listener);
     }
@@ -127,6 +134,7 @@ public enum Settings {
      *
      * @param newVal the new value of the setting.
      */
+    @SuppressWarnings("WeakerAccess")
     public void changeValue(Object newVal) {
         this.value = String.valueOf(newVal);
         notifyChange();
@@ -176,7 +184,7 @@ public enum Settings {
          */
         private static final Properties store = new Properties();
 
-        /**
+        /*
          * Loads the settings from file and registers a
          * exit hook for saving settings.
          */
@@ -189,7 +197,9 @@ public enum Settings {
                 }
             } else {
                 try {
+                    //noinspection ResultOfMethodCallIgnored
                     SAVE_FILE.getParentFile().mkdirs();
+                    //noinspection ResultOfMethodCallIgnored
                     SAVE_FILE.createNewFile();
                     LOG.info("New settings file created");
                 } catch (IOException e) {

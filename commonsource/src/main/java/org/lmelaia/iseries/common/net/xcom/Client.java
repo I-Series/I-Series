@@ -41,7 +41,7 @@ public class Client {
     /**
      * Constructs a new client instance
      *
-     * @throws IOException if a xcom
+     * @throws IOException if a communication
      *                     object cannot be created.
      */
     public Client() throws IOException {
@@ -53,8 +53,9 @@ public class Client {
      *
      * @param serverPort port number the server was opened on.
      * @return {@code true} if the server is online, false otherwise.
-     * @throws IOException
+     * @throws IOException if the server cannot be pinged.
      */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean pingServer(int serverPort, int pingTimeout) throws IOException {
         comObj.send(new Message(MessageType.IS_ALIVE, serverPort, ""));
 
@@ -80,17 +81,16 @@ public class Client {
      *
      * @param to the message.
      * @return the response from the server.
-     * @throws IOException
+     * @throws IOException if the message cannot be sent.
      */
     public Message sendToServer(Message to) throws IOException {
         comObj.send(to);
-        Message rec = comObj.waitToReceive();
-        return rec;
+        return comObj.waitToReceive();
     }
 
     /**
-     * Closes this client instance and xcom
-     * object in use.
+     * Closes this client instance and all communication
+     * objects in use.
      */
     public void close() {
         comObj.disconnect();

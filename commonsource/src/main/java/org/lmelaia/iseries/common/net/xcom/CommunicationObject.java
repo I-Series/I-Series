@@ -24,6 +24,7 @@ import java.net.*;
  * Provides the ability to send and receive messages
  * through datagram sockets.
  */
+@SuppressWarnings({"JavaDoc", "WeakerAccess"})
 class CommunicationObject {
 
     /**
@@ -32,7 +33,7 @@ class CommunicationObject {
     private static final int DEFAULT_PACKET_SIZE = 1024;
 
     /**
-     * This computers inet address.
+     * This computers INet address.
      */
     private static InetAddress host = null;
 
@@ -47,23 +48,26 @@ class CommunicationObject {
     private final int port;
 
     /**
-     * Creates a new xcom object
+     * Creates a new communication object
      * opened on a random unused port.
      *
-     * @throws IOException
+     * @throws IOException if the object could
+     * not be created.
      */
+    @SuppressWarnings("WeakerAccess")
     public CommunicationObject() throws IOException {
         this(getRandomPort());
     }
 
     /**
-     * Creates a new xcom object on
+     * Creates a new communication object on
      * the given port.
      *
      * @param port the port number the socket
      *             should be opened on.
      * @throws IOException
      */
+    @SuppressWarnings("WeakerAccess")
     public CommunicationObject(int port) throws IOException {
         socketConnection = new DatagramSocket(port, getHost());
         this.port = port;
@@ -75,6 +79,7 @@ class CommunicationObject {
      * @param msg the message to be sent.
      * @throws IOException
      */
+    @SuppressWarnings("WeakerAccess")
     public void send(Message msg) throws IOException {
         socketConnection.send(msg.toDatagram());
     }
@@ -85,11 +90,11 @@ class CommunicationObject {
      * @return the message received.
      * @throws IOException
      */
+    @SuppressWarnings("WeakerAccess")
     public Message waitToReceive() throws IOException {
         DatagramPacket packet = getNewPacket();
         socketConnection.receive(packet);
-        Message m = Message.FromDatagram(packet);
-        return m;
+        return Message.FromDatagram(packet);
     }
 
     /**
@@ -100,6 +105,7 @@ class CommunicationObject {
      * @return the message received or null if the timeout was reached.
      * @throws IOException
      */
+    @SuppressWarnings("WeakerAccess")
     public Message waitToReceive(int timeout, TimeoutListener listener) throws IOException {
         socketConnection.setSoTimeout(timeout);
         Message m = null;
@@ -117,6 +123,7 @@ class CommunicationObject {
     /**
      * @return the port number this object was opened on.
      */
+    @SuppressWarnings("WeakerAccess")
     public int getPort() {
         return port;
     }
@@ -146,14 +153,16 @@ class CommunicationObject {
      *
      * @return the newly created datagram packet.
      */
+    @SuppressWarnings("WeakerAccess")
     public static DatagramPacket getNewPacket() {
         return new DatagramPacket(new byte[DEFAULT_PACKET_SIZE], DEFAULT_PACKET_SIZE);
     }
 
     /**
-     * @return this computers inet address.
+     * @return this computers INet address.
      * @throws UnknownHostException
      */
+    @SuppressWarnings("WeakerAccess")
     public static InetAddress getHost() throws UnknownHostException {
         if (host == null)
             host = InetAddress.getByAddress(new byte[]{127, 0, 0, 1});
@@ -165,6 +174,7 @@ class CommunicationObject {
      * @return a random unused port number.
      * @throws IOException
      */
+    @SuppressWarnings("WeakerAccess")
     public static int getRandomPort() throws IOException {
         return new ServerSocket(0).getLocalPort();
     }

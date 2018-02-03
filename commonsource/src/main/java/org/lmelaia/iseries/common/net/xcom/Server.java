@@ -36,7 +36,7 @@ public class Server {
     private static final Logger LOG = AppLogger.getLogger();
 
     /**
-     * Provides the xcom abilities.
+     * Provides the communication abilities.
      */
     private final CommunicationObject comObj;
 
@@ -53,7 +53,7 @@ public class Server {
     /**
      * Default constructor.
      *
-     * @throws IOException if xcom could not established.
+     * @throws IOException if communication could not established.
      */
     public Server() throws IOException {
         comObj = new CommunicationObject();
@@ -71,7 +71,7 @@ public class Server {
     }
 
     /**
-     * Writes the threads xcom objects port number
+     * Writes the threads communication objects port number
      * to file for client to read.
      */
     public void writePortNumber() {
@@ -81,6 +81,7 @@ public class Server {
     /**
      * @return true if the read is still active.
      */
+    @SuppressWarnings("unused")
     public boolean isRunning() {
         return responseThread.isAlive();
     }
@@ -95,7 +96,7 @@ public class Server {
     }
 
     /**
-     * @return the port number of the xcom object
+     * @return the port number of the communication object
      * in use by the thread.
      */
     public int getPort() {
@@ -123,6 +124,7 @@ public class Server {
         /**
          * Default constructor.
          */
+        @SuppressWarnings("WeakerAccess")
         public ResponseThread() {
             this.setDaemon(true);
         }
@@ -130,6 +132,7 @@ public class Server {
         /**
          * Receives messages in an infinite loop.
          */
+        @SuppressWarnings("InfiniteLoopStatement")
         @Override
         public void run() {
             LOG.info("Response thread started on port: " + comObj.getPort());

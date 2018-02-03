@@ -17,6 +17,7 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
+<!--suppress ALL -->
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.Image?>
@@ -29,7 +30,7 @@
     <children>
         <HBox prefHeight="70.0" prefWidth="485.0" VBox.vgrow="NEVER">
             <children>
-                <Label prefHeight="42.0" prefWidth="290.0" text="Unfortunatly, I-Series has crashed.">
+                <Label prefHeight="42.0" prefWidth="290.0" text="Unfortunately, I-Series has crashed.">
                     <font>
                         <Font size="18.0"/>
                     </font>

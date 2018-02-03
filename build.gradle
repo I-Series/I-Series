@@ -47,7 +47,7 @@ repositories {
  */
 buildscript {
     repositories {
-        mavenCentral();
+        mavenCentral()
     }
 
     dependencies{
@@ -155,7 +155,7 @@ task _run() {
  */
 task _cleanrun() {
     doFirst{
-        FileUtils.deleteDirectory(new File(System.getProperty("user.dir") + "/run"));
+        FileUtils.deleteDirectory(new File(System.getProperty("user.dir") + "/run"))
     }
 }
 
@@ -181,16 +181,16 @@ task _build(){
  * of the application for test runs.
  */
 void createRunDirectory(){
-    File rundir = new File(System.getProperty("user.dir") + "/run");
-    rundir.mkdir();
+    File runDir = new File(System.getProperty("user.dir") + "/run")
+    runDir.mkdir()
 
-    File source = new File(System.getProperty("user.dir") + "/buildOutput");
-    File dest = rundir;
+    File source = new File(System.getProperty("user.dir") + "/buildOutput")
+    File dest = runDir
 
     try {
-        FileUtils.copyDirectory(source, dest);
+        FileUtils.copyDirectory(source, dest)
     } catch (IOException e) {
-        println("Could not copy to run directory: " + e.getMessage());
+        println("Could not copy to run directory: " + e.getMessage())
     }
 }
 
