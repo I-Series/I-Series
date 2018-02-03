@@ -20,7 +20,6 @@ package org.lmelaia.iseries.launcher.fx.crash;
 import javafx.application.Platform;
 import org.apache.logging.log4j.Logger;
 import org.lmelaia.iseries.common.fx.FXWindow;
-import org.lmelaia.iseries.common.fx.FXWindowProperties;
 import org.lmelaia.iseries.common.fx.RegisterFXWindow;
 import org.lmelaia.iseries.common.system.AppLogger;
 import org.lmelaia.iseries.common.system.ExitCode;
@@ -30,7 +29,10 @@ import org.lmelaia.iseries.launcher.App;
 /**
  * The window class for the crash window.
  */
-@RegisterFXWindow
+@RegisterFXWindow(
+        fxmlFileName = "windows/crash_window.fxml",
+        controllerClass = CrashWindowController.class
+)
 public class CrashWindow extends FXWindow {
 
     /**
@@ -42,12 +44,9 @@ public class CrashWindow extends FXWindow {
      * Default constructor.
      */
     public CrashWindow() {
-        super(
-                new FXWindowProperties("Crash Prompt")
-                        .setFxml("windows/crash_window.fxml")
-                        .setController(new CrashWindowController())
-                        .setWidth(480).setHeight(178)
-        );
+        this.setTitle("Crash Prompt");
+        //this.setWidth(480);
+        //this.setHeight(178);
         this.setResizable(false);
     }
 

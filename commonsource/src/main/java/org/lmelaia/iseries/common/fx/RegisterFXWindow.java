@@ -31,4 +31,20 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RegisterFXWindow {
+
+    /**
+     * @return the name of the fxml file for the window.
+     */
+    String fxmlFileName() default "";
+
+    /**
+     * @return the name of the css file for the window
+     */
+    String cssFileName() default "";
+
+    /**
+     * @return the controller class for the window. This must
+     * be specified if an fxml file is specified.
+     */
+    Class<? extends ControllerBase> controllerClass() default ControllerBase.class;
 }

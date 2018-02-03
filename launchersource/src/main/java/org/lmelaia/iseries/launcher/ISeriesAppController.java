@@ -119,7 +119,7 @@ public class ISeriesAppController {
      */
     private static void stop(int code) {
         captureThread.stop();
-        App.getInstance().exit(ExitCode.getFromCode(code).setFromLauncher(false));
+        App.getInstance().exit(ExitCode.getFromCode(code).setRecoverable(true));
     }
 
     /**

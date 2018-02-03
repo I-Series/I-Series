@@ -98,6 +98,7 @@ public class ArgumentHandler {
      *
      * @param listener the change listener.
      */
+    @SuppressWarnings("unused")
     public void addChangeListener(ArgumentChangeListener listener) {
         listeners.add(listener);
     }
@@ -108,6 +109,7 @@ public class ArgumentHandler {
      *
      * @param listener the change listener.
      */
+    @SuppressWarnings("unused")
     public void removeChangeListener(ArgumentChangeListener listener) {
         listeners.remove(listener);
     }
@@ -116,6 +118,7 @@ public class ArgumentHandler {
      * @return the list of arguments not in a key-value
      * format. These are usually file names.
      */
+    @SuppressWarnings("unused")
     public String[] getUnnamedArguments() {
         return this.unnamedArguments;
     }

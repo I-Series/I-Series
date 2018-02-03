@@ -18,7 +18,6 @@
 package org.lmelaia.iseries.launcher;
 
 import org.apache.logging.log4j.Logger;
-import org.lmelaia.iseries.common.fx.FXWindowsManager;
 import org.lmelaia.iseries.common.net.xcom.FileComUtil;
 import org.lmelaia.iseries.common.net.xcom.Message;
 import org.lmelaia.iseries.common.net.xcom.MessageType;
@@ -112,10 +111,7 @@ public class App extends AppBase {
      * @throws IOException
      */
     @Override
-    public void start() throws Exception {
-        FXWindowsManager.startFX("Launcher", new String[0],
-                "org.lmelaia.iseries.launcher.fx.", this);
-
+    protected void start() throws Exception {
         int port = initCommunication();
 
         if (port == -1)
@@ -130,5 +126,35 @@ public class App extends AppBase {
                 exit(ExitCode.NORMAL);
             }
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return
+     */
+    @Override
+    protected boolean initializeFX() {
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return
+     */
+    @Override
+    protected String getFXThreadName() {
+        return "Launcher";
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return
+     */
+    @Override
+    protected String getFXWindowsClassPath() {
+        return "org.lmelaia.iseries.launcher.fx.";
     }
 }

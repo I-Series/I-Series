@@ -18,12 +18,12 @@
 package org.lmelaia.iseries.common.system;
 
 import org.apache.logging.log4j.Logger;
+import org.lmelaia.iseries.common.fx.FXWindowsManager;
 import org.lmelaia.iseries.common.net.xcom.Client;
 import org.lmelaia.iseries.common.net.xcom.Server;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -186,15 +186,6 @@ public abstract class AppBase {
     }
 
     /**
-     * Called when a main method tries to start
-     * the application. This is used in place of
-     * a main(String[] args) method.
-     *
-     * @throws Exception
-     */
-    public abstract void start() throws Exception;
-
-    /**
      * @param args
      * @see ArgumentHandler#update(String[]).
      */
@@ -209,7 +200,7 @@ public abstract class AppBase {
      */
     private void internalStart(String args[]) {
         argumentHandler.update(args);
-        LOG.info("Starting with arguments: " + Arrays.toString(args));
+        attemptFXInitialization();
 
         try {
             start();
@@ -218,6 +209,20 @@ public abstract class AppBase {
                     + this.getClass().getCanonicalName() + "] threw an error.", e);
             exit(ExitCode.UNHANDLED_EXCEPTION);
         }
+    }
+
+    /**
+     * Starts the fx thread if {@link #initializeFX()}
+     * returns true.
+     */
+    private void attemptFXInitialization() {
+        if (!initializeFX()) {
+            return;
+        }
+
+        FXWindowsManager.startFX(
+                getFXThreadName(), getArgumentHandler().reconstruct(),
+                getFXWindowsClassPath(), this, true);
     }
 
     /**
@@ -230,5 +235,43 @@ public abstract class AppBase {
             LOG.info(String.format("Details: [thread=%s, exception=%s]", t.getName(), e.toString()), e);
             exit(ExitCode.UNHANDLED_EXCEPTION);
         };
+    }
+
+    /**
+     * Called when a main method tries to start
+     * the application. This is used in place of
+     * a main(String[] args) method.
+     *
+     * @throws Exception
+     */
+    protected abstract void start() throws Exception;
+
+    /**
+     * @return the name of the fx thread.
+     */
+    protected String getFXThreadName() {
+        return null;
+    }
+
+    /**
+     * @return the package path to where
+     * the window classes are located. eg.
+     * com.name.app.windows
+     */
+    protected String getFXWindowsClassPath() {
+        return null;
+    }
+
+    /**
+     * Override this method to return {@code true}
+     * to have the fx thread initialized before
+     * application start.
+     *
+     * @return {@code true} when the fx thread
+     * is desired to start before application
+     * start.
+     */
+    protected boolean initializeFX() {
+        return false;
     }
 }

@@ -84,11 +84,10 @@ public enum ExitCode {
     public final boolean normal;
 
     /**
-     * The the request come from the
-     * launcher application or I-Series
-     * application.
+     * True when the exit was caused by the
+     * i-series application and it can be restarted.
      */
-    private boolean fromLauncher = true;
+    private boolean recoverable = false;
 
     /**
      * Constructor.
@@ -124,27 +123,35 @@ public enum ExitCode {
     @Override
     public String toString() {
         return this.getClass().toString()
-                + String.format("[code=%s, name=%s, description=%s, error=%s]",
-                code, this.name(), description, error);
+                + String.format("[code=%s, name=%s, description=%s, error=%s, recoverable=%s]",
+                code, this.name(), description, error, recoverable);
     }
 
     /**
-     * @return {@code true} if the exit was requested
-     * from the launcher jar.
+     * <b> Note: Calling this method clears
+     * the recoverable flag (turning it to false)
+     * </b>
+     *
+     * @return {@code true} if the exit
+     * request came from the i-series
+     * application and it can be restarted.
      */
-    public boolean isFromLauncher() {
-        return fromLauncher;
+    public boolean isRecoverable() {
+        boolean b = recoverable;
+        recoverable = false;
+        return b;
     }
 
     /**
      * Flags the exit request as originating
-     * from the launcher jar.
+     * from the i-series application and
+     * allowing the user to restart it.
      *
-     * @param fromLauncher true if requested by the launcher jar.
+     * @param recoverable true if requested by the i-series jar.
      * @return the exit request.
      */
-    public ExitCode setFromLauncher(boolean fromLauncher) {
-        this.fromLauncher = fromLauncher;
+    public ExitCode setRecoverable(boolean recoverable) {
+        this.recoverable = recoverable;
         return this;
     }
 }

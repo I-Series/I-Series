@@ -18,8 +18,6 @@
 package org.lmelaia.iseries;
 
 import org.apache.logging.log4j.Logger;
-import org.lmelaia.iseries.common.net.xcom.Message;
-import org.lmelaia.iseries.common.net.xcom.MessageListener;
 import org.lmelaia.iseries.common.net.xcom.MessageType;
 import org.lmelaia.iseries.common.system.AppBase;
 import org.lmelaia.iseries.common.system.AppLogger;
@@ -123,6 +121,8 @@ public class App extends AppBase {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(100, 100);
         frame.setVisible(true);
+
+        exit(ExitCode.TEST_EXIT);
     }
 
     /**
@@ -132,12 +132,9 @@ public class App extends AppBase {
      * argument handler instance.
      */
     private void registerArgumentReceiver() {
-        getServer().addMessageListener(new MessageListener() {
-            @Override
-            public void onMessageReceived(Message m) {
-                if (m.getMsgType().equals(MessageType.ARGS)) {
-                    update(m.getArgs().substring(1, m.getArgs().length() - 1).split(", "));
-                }
+        getServer().addMessageListener(m -> {
+            if (m.getMsgType().equals(MessageType.ARGS)) {
+                update(m.getArgs().substring(1, m.getArgs().length() - 1).split(", "));
             }
         });
     }
@@ -146,7 +143,7 @@ public class App extends AppBase {
      * Initializes and starts the application.
      */
     @Override
-    public void start() throws Exception {
+    protected void start() throws Exception {
         initLauncherCom(getArgumentHandler().getNamedArgument(DefinedArguments.PORT.key));
         registerArgumentReceiver();
         openDebugWindow();

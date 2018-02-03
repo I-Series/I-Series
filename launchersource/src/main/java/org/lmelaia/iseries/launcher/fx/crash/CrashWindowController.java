@@ -122,6 +122,6 @@ public final class CrashWindowController extends ControllerBase {
         this.wasRestarted = false;
         this.labelDescription.setText(code.description);
         this.labelCode.setText(String.valueOf(code.code));
-        this.buttonRestart.setDisable(code.isFromLauncher());
+        this.buttonRestart.setDisable(!code.isRecoverable());
     }
 }
