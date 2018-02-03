@@ -38,7 +38,7 @@ public @interface RegisterFXWindow {
     String fxmlFileName() default "";
 
     /**
-     * @return the name of the css file for the window
+     * @return the name of the css file for the window.
      */
     String cssFileName() default "";
 
