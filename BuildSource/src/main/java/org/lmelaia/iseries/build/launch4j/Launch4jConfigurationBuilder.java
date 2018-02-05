@@ -643,7 +643,7 @@ public class Launch4jConfigurationBuilder {
     protected String companyName;
 
     /**
-     * The internal name without extention, original file name or module name
+     * The internal name without extension, original file name or module name
      * for example.
      *
      * <p>
@@ -655,7 +655,7 @@ public class Launch4jConfigurationBuilder {
     /**
      * The original file name without the path. This is used to determine
      * whether the file has been renamed by the user. This option must end with
-     * the .exe extention.
+     * the .exe extension.
      *
      * <p>
      * This option cannot be {@code null} and is set to {@code null} by default.
@@ -1490,8 +1490,8 @@ public class Launch4jConfigurationBuilder {
         configurationBuilder.setHeapInPercent(isHeapInPercent);
         configurationBuilder.setJvmOptions(jvmOptions == null
                 ? null : Arrays.copyOf(jvmOptions, jvmOptions.length));
-        
-        //Envrionment variables
+
+        //Environment variables
         configurationBuilder.setEnvironmentVariables(
                 environmentVariables == null ? null 
                         : Arrays.copyOf(
@@ -1558,7 +1558,7 @@ public class Launch4jConfigurationBuilder {
     }
 
     private void validateOutputFile() {
-        checkString(outputFileName, "ouput file name");
+        checkString(outputFileName, "output file name");
 
         if (!outputFileName.endsWith(".exe")) {
             throw new InvalidLaunch4jConfigurationException(
@@ -1863,6 +1863,7 @@ public class Launch4jConfigurationBuilder {
 
         for (String variable : environmentVariables) {
             if (!variable.matches(".+=.+")) {
+                //noinspection SpellCheckingInspection
                 throw new InvalidLaunch4jConfigurationException(
                         "All environment variables should be in the format "
                         + "varname=[value][%varref%]");
@@ -1878,7 +1879,7 @@ public class Launch4jConfigurationBuilder {
             signalErrorOnTimeout = true;
         } else {
             //Splash file
-            checkString(splashScreenFileName, "spash screen file name");
+            checkString(splashScreenFileName, "splash screen file name");
 
             if (!splashScreenFileName.toLowerCase().endsWith(".bmp")) {
                 throw new InvalidLaunch4jConfigurationException(
@@ -1979,7 +1980,7 @@ public class Launch4jConfigurationBuilder {
 
         if (!originalFileName.toLowerCase().endsWith(".exe")) {
             throw new InvalidLaunch4jConfigurationException(
-                    "The original file name must end with the .exe extention");
+                    "The original file name must end with the .exe extension");
         }
     }
 

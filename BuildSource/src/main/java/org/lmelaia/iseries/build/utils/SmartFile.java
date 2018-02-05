@@ -15,23 +15,19 @@
  */
 package org.lmelaia.iseries.build.utils;
 
-import java.io.File;
-import static java.io.File.separator;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
-import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import static java.io.File.separator;
 
 /**
  * A utility class for working with a file or directory.
@@ -333,7 +329,8 @@ public class SmartFile {
     public String getFileExtension() {
         String last = "";
 
-        for (String llast : path.split(".")) {
+        for (@SuppressWarnings("SpellCheckingInspection")
+                String llast : path.split(".")) {
             last = llast;
         }
 
@@ -436,36 +433,37 @@ public class SmartFile {
      */
     public void doSafelyWithException(ResourceSafeBlock rsb)
             throws IOException {
-        if (rsb instanceof FileReaderResouceSafeBlock) {
-            FileReaderResouceSafeBlock frrsb
-                    = (FileReaderResouceSafeBlock) rsb;
+        if (rsb instanceof FileReaderResourceSafeBlock) {
+            @SuppressWarnings("SpellCheckingInspection") FileReaderResourceSafeBlock frrsb
+                    = (FileReaderResourceSafeBlock) rsb;
 
             try (FileReader reader = getReader()) {
                 frrsb.action(reader);
             }
         }
 
-        if (rsb instanceof FileWriterResouceSafeBlock) {
-            FileWriterResouceSafeBlock fwrsb
-                    = (FileWriterResouceSafeBlock) rsb;
+        if (rsb instanceof FileWriterResourceSafeBlock) {
+            //noinspection SpellCheckingInspection
+            FileWriterResourceSafeBlock fwrsb
+                    = (FileWriterResourceSafeBlock) rsb;
 
             try (FileWriter writer = getWriter()) {
                 fwrsb.action(writer);
             }
         }
 
-        if (rsb instanceof FileInputStreamResouceSafeBlock) {
-            FileInputStreamResouceSafeBlock fisrsb
-                    = (FileInputStreamResouceSafeBlock) rsb;
+        if (rsb instanceof FileInputStreamResourceSafeBlock) {
+            @SuppressWarnings("SpellCheckingInspection") FileInputStreamResourceSafeBlock fisrsb
+                    = (FileInputStreamResourceSafeBlock) rsb;
 
             try (FileInputStream input = getInputStream()) {
                 fisrsb.action(input);
             }
         }
 
-        if (rsb instanceof FileOutputStreamResouceSafeBlock) {
-            FileOutputStreamResouceSafeBlock fisrsb
-                    = (FileOutputStreamResouceSafeBlock) rsb;
+        if (rsb instanceof FileOutputStreamResourceSafeBlock) {
+            @SuppressWarnings("SpellCheckingInspection") FileOutputStreamResourceSafeBlock fisrsb
+                    = (FileOutputStreamResourceSafeBlock) rsb;
 
             try (FileOutputStream output = getOutputStream()) {
                 fisrsb.action(output);
@@ -523,13 +521,13 @@ public class SmartFile {
      */
     @SuppressWarnings("SameParameterValue")
     public SmartFile goBack(int times) {
-        StringBuilder newpath = new StringBuilder();
+        StringBuilder newPath = new StringBuilder();
         
         for(int i = 0; i < paths.length - times; i++){
-            newpath.append(paths[i]).append(separator);
+            newPath.append(paths[i]).append(separator);
         }
-        
-        return new SmartFile(newpath.toString());
+
+        return new SmartFile(newPath.toString());
     }
 
     /**
@@ -658,7 +656,7 @@ public class SmartFile {
      * 
      * Provides a file reader.
      */
-    public interface FileReaderResouceSafeBlock extends ResourceSafeBlock {
+    public interface FileReaderResourceSafeBlock extends ResourceSafeBlock {
         void action(FileReader reader) throws IOException;
     }
 
@@ -667,7 +665,7 @@ public class SmartFile {
      * 
      * Provides a file writer.
      */
-    public interface FileWriterResouceSafeBlock extends ResourceSafeBlock {
+    public interface FileWriterResourceSafeBlock extends ResourceSafeBlock {
         void action(FileWriter writer) throws IOException;
     }
 
@@ -676,7 +674,7 @@ public class SmartFile {
      * 
      * Provides a file output stream.
      */
-    public interface FileOutputStreamResouceSafeBlock extends ResourceSafeBlock {
+    public interface FileOutputStreamResourceSafeBlock extends ResourceSafeBlock {
         void action(FileOutputStream reader) throws IOException;
     }
 
@@ -685,7 +683,7 @@ public class SmartFile {
      * 
      * Provides a file input stream.
      */
-    public interface FileInputStreamResouceSafeBlock extends ResourceSafeBlock {
+    public interface FileInputStreamResourceSafeBlock extends ResourceSafeBlock {
         void action(FileInputStream reader) throws IOException;
     }
 }

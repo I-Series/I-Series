@@ -18,12 +18,13 @@
 package org.lmelaia.iseries;
 
 import org.apache.logging.log4j.Logger;
+import org.lmelaia.iseries.common.fx.FXWindowsManager;
 import org.lmelaia.iseries.common.net.xcom.MessageType;
 import org.lmelaia.iseries.common.system.AppBase;
 import org.lmelaia.iseries.common.system.AppLogger;
 import org.lmelaia.iseries.common.system.ExitCode;
+import org.lmelaia.iseries.fx.main.MainWindow;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -100,7 +101,6 @@ public class App extends AppBase {
     /**
      * @return the instance of this application.
      */
-    @SuppressWarnings("unused")
     public static App getInstance() {
         return INSTANCE;
     }
@@ -119,16 +119,6 @@ public class App extends AppBase {
 
         pingClientTask.schedule(new App.PingClientTask(), 0,
                 Settings.LAUNCHER_PING_FREQUENCY.getValueAsInt());
-    }
-
-    /**
-     * Opens a normal JFrame for debugging.
-     */
-    private void openDebugWindow() {
-        JFrame frame = new JFrame("Debug window");
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setSize(100, 100);
-        frame.setVisible(true);
     }
 
     /**
@@ -152,12 +142,37 @@ public class App extends AppBase {
     protected void start() throws Exception {
         initLauncherCom(getArgumentHandler().getNamedArgument(DefinedArguments.PORT.key));
         registerArgumentReceiver();
-        openDebugWindow();
+        FXWindowsManager.getInstance().showWindow(MainWindow.class);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return
+     */
     @Override
     protected boolean initializeFX() {
-        return false;
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return
+     */
+    @Override
+    protected String getFXThreadName() {
+        return "I-Series";
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return
+     */
+    @Override
+    protected String getFXWindowsClassPath() {
+        return "org.lmelaia.iseries.fx";
     }
 
     /**

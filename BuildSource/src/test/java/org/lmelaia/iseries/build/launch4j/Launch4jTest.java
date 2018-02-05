@@ -15,13 +15,15 @@
  */
 package org.lmelaia.iseries.build.launch4j;
 
-import java.io.File;
-import java.io.IOException;
-import static org.junit.Assert.fail;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.lmelaia.iseries.build.BuildConfiguration;
-import static org.lmelaia.iseries.build.BuildConfiguration.*;
+
+import java.io.File;
+import java.io.IOException;
+
+import static org.junit.Assert.fail;
+import static org.lmelaia.iseries.build.BuildConfiguration.SPROJECT_FOLDER;
 
 /**
  * Tests creating an executable with launch4j.
@@ -47,7 +49,7 @@ public class Launch4jTest {
     /**
      * Basic configuration for creating a standard executable.
      */
-    private Launch4jConfiguration l4jConfig
+    private final Launch4jConfiguration l4jConfig
             = new Launch4jConfigurationBuilder()
             .setOutputFile(EXECUTABLE_FILE.getAbsolutePath())
             .setJarFile(
@@ -75,7 +77,7 @@ public class Launch4jTest {
      * the executable, which will aid in debugging.
      * </p> 
      *
-     * @throws IOException
+     * @throws IOException ...
      */
     @Ignore
     @Test

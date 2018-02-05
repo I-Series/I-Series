@@ -84,8 +84,8 @@ public class TestFileTestingUtils {
 
     @Test
     public void B_testIDSystem() {
-        if(fileUtilsA.getFileByID("a nonexistant id") != null){
-            fail("A non-existant ID doesn't return null");
+        if (fileUtilsA.getFileByID("a nonexistent id") != null) {
+            fail("A non-existent ID doesn't return null");
         }
         
         if(fileUtilsA.getFileByID("TestFileA1") == null){
@@ -99,9 +99,9 @@ public class TestFileTestingUtils {
         if(fileUtilsA.getFileByID("TFA3") == null){
             fail("ID doesn't ignore lowercase");
         }
-        
-        if(fileUtilsB.getFileByID("a nonexistant id") != null){
-            fail("A non-existant ID doesn't return null");
+
+        if (fileUtilsB.getFileByID("a nonexistent id") != null) {
+            fail("A non-existent ID doesn't return null");
         }
         
         if(fileUtilsB.getFileByID("TestFileB1") == null){

@@ -15,11 +15,11 @@
  */
 package licence;
 
-import org.lmelaia.iseries.build.licence.Licences;
-import org.lmelaia.iseries.build.licence.Licence;
-import static org.junit.Assert.fail;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.lmelaia.iseries.build.licence.Licence;
+import org.lmelaia.iseries.build.licence.Licences;
+
+import static org.junit.Assert.fail;
 
 /**
  * Tests that each licence in the licences enum points to a valid file.

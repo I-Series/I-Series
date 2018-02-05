@@ -43,15 +43,15 @@ public enum JavaArchitecture {
     ONLY_32BIT("32");
 
     private final String officialName;
-    
-    JavaArchitecture(String officalName){
-        this.officialName = officalName;
+
+    JavaArchitecture(String officialName) {
+        this.officialName = officialName;
     }
     
     /**
      * @return the name of the property used in the launch4j configuration file. 
      */
-    public String getOfficalName() {
+    public String getOfficialName() {
         return this.officialName;
     }
 }

@@ -15,8 +15,9 @@
  */
 package org.lmelaia.iseries.build.licence;
 
-import java.io.File;
 import org.lmelaia.iseries.build.BuildConfiguration;
+
+import java.io.File;
 
 /**
  * An enum list of the available licences.
@@ -49,7 +50,7 @@ public enum Licences implements Licence{
      * should have a file extension of {@code .txt}.</b>
      * 
      */
-    private String name;
+    private final String name;
     
     /**
      * @param name the name of the licence and, by convention, the

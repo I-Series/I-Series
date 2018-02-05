@@ -22,7 +22,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import org.apache.logging.log4j.Logger;
-import org.lmelaia.iseries.common.fx.ControllerBase;
+import org.lmelaia.iseries.common.fx.FXController;
 import org.lmelaia.iseries.common.system.AppLogger;
 import org.lmelaia.iseries.common.system.ExitCode;
 import org.lmelaia.iseries.common.system.FilePathConstants;
@@ -34,7 +34,7 @@ import java.io.IOException;
 /**
  * The controller class for the crash window.
  */
-public final class CrashWindowController extends ControllerBase {
+public final class CrashWindowController extends FXController {
 
     /**
      * Logging framework instance.
@@ -65,7 +65,7 @@ public final class CrashWindowController extends ControllerBase {
     /**
      * True if the user requested a restart.
      */
-    private boolean wasRestarted = false;
+    private volatile boolean wasRestarted = false;
 
     /**
      * NO-OP
@@ -79,7 +79,9 @@ public final class CrashWindowController extends ControllerBase {
      */
     @SuppressWarnings("WeakerAccess")
     public boolean wasRestarted() {
-        return wasRestarted;
+        boolean b = wasRestarted;
+        wasRestarted = false;
+        return b;
     }
 
     /**
@@ -131,7 +133,6 @@ public final class CrashWindowController extends ControllerBase {
      * @param code the exit code.
      */
     void display(ExitCode code) {
-        this.wasRestarted = false;
         this.labelDescription.setText(code.description);
         this.labelCode.setText(String.valueOf(code.code));
         this.buttonRestart.setDisable(!code.isRecoverable());

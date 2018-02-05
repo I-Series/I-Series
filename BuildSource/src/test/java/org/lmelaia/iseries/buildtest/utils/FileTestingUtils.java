@@ -37,13 +37,14 @@ public class FileTestingUtils {
     /**
      * Default path.
      */
+    @SuppressWarnings("WeakerAccess")
     public static final String PATH_BUILD_TEST_FILES
             = System.getProperty("user.dir") + "\\tests\\";
 
     /**
      * A list of the test files.
      */
-    private List<TestFile> files = new ArrayList<>();
+    private final List<TestFile> files = new ArrayList<>();
 
     /**
      * See {@link #FileTestingUtils(java.lang.String[][])) for full documentation.
@@ -51,6 +52,7 @@ public class FileTestingUtils {
      * @param path the home directory of the test files.
      * @param files
      */
+    @SuppressWarnings({"SameParameterValue", "WeakerAccess", "ResultOfMethodCallIgnored"})
     public FileTestingUtils(String path, String[]... files) {
         new File(path).mkdirs();
         this.files.clear();
@@ -93,6 +95,7 @@ public class FileTestingUtils {
      * @param path the home directory of the test files
      * @param testFiles a list of test files.
      */
+    @SuppressWarnings({"SameParameterValue", "WeakerAccess", "ResultOfMethodCallIgnored"})
     public FileTestingUtils(String path, TestFile... testFiles) {
         new File(path).mkdirs();
 
@@ -237,6 +240,7 @@ public class FileTestingUtils {
          * @param id the files ID.
          * @return a reference to this object.
          */
+        @SuppressWarnings("WeakerAccess")
         public TestFile setID(String id) {
             this.id = Objects.requireNonNull(id);
             return this;

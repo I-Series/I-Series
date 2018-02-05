@@ -27,6 +27,8 @@ public interface ShutdownListener {
      * either through the user or a crash.
      *
      * @param code the code given as the reason for the application to close.
+     * @return true if the shutdown process should continue, false to
+     * abort the shutdown.
      */
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     boolean onShutdown(ExitCode code);

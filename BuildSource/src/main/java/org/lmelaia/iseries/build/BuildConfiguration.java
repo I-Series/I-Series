@@ -77,6 +77,7 @@ public class BuildConfiguration {
             .forward("buildoutput");
 
     static {
+        //noinspection ResultOfMethodCallIgnored
         SOUTPUT_FOLDER.getFile().mkdirs();
     }
 
@@ -113,6 +114,7 @@ public class BuildConfiguration {
             .forward("distribution");
 
     static {
+        //noinspection ResultOfMethodCallIgnored
         SDISTRIBUTION_FOLDER.getFile().mkdirs();
     }
 
@@ -409,6 +411,7 @@ public class BuildConfiguration {
      *
      * @param configuration the configuration settings for the executable file.
      */
+    @SuppressWarnings("SameParameterValue")
     private static void createExecutable(Launch4jConfiguration configuration) {
         Launch4jProcessWrapper launch4jProcess = new Launch4jProcessWrapper(
                 SLAUNCH4J_FOLDER.getFile(), configuration);

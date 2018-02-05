@@ -533,6 +533,7 @@ public class Launch4jConfiguration {
         doc.getRootElement().addNewElement("jar").addText(
                 (isWrapped()) ? getJarFileName() : getJarRuntimePath());
 
+        //noinspection SpellCheckingInspection
         doc.getRootElement().addNewElement("dontWrapJar")
                 .addText(!isWrapped());
         
@@ -541,7 +542,8 @@ public class Launch4jConfiguration {
         
         doc.getRootElement().addNewElement("icon")
                 .addText(getIconFileName());
-        
+
+        //noinspection SpellCheckingInspection
         doc.getRootElement().addNewElement("chdir")
                 .addText(getChangeDirectory());
         
@@ -647,7 +649,7 @@ public class Launch4jConfiguration {
                 .addText(getJavaUsageOptions().getOfficialName());
         
         jre.addNewElement("runtimeBits")
-                .addText(getJavaArchitecture().getOfficalName());
+                .addText(getJavaArchitecture().getOfficialName());
         
         if (getInitialHeapSize() != 0) {
             jre.addNewElement((areHeapSizesPercentages()) ? "initialHeapPercent"

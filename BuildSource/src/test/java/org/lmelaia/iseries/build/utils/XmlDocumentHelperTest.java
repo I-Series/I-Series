@@ -15,11 +15,12 @@
  */
 package org.lmelaia.iseries.build.utils;
 
-import javax.xml.parsers.ParserConfigurationException;
-import static org.junit.Assert.*;
 import org.junit.Test;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import static org.junit.Assert.fail;
 
 /**
  * Tests the xml document helper class.
@@ -36,7 +37,7 @@ public class XmlDocumentHelperTest {
             throws ParserConfigurationException {
         XmlDocumentHelper doc = XmlDocumentHelper.getInstanceWithNewDocument();
 
-        if (doc == null || doc.getXmlDocument() == null) {
+        if (doc.getXmlDocument() == null) {
             fail("Xml document or helper class are null");
         }
     }
@@ -92,8 +93,8 @@ public class XmlDocumentHelperTest {
 
     @Test
     public void testChaining() throws ParserConfigurationException {
-        Document doc
-                = XmlDocumentHelper.getInstanceWithNewDocument()
+        //noinspection SpellCheckingInspection
+        XmlDocumentHelper.getInstanceWithNewDocument()
                 .newRootElement("rootElement")
                 .addNewElement("someElement").addText("text")
                 .getRootElement().addNewElement("ElementA")

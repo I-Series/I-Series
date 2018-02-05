@@ -73,7 +73,7 @@ public class FXWindowsManager extends Application {
     private static AppBase app;
 
     /**
-     * Becomes true once the fx has completed
+     * Becomes true once the fx thread has completed
      * initialization.
      */
     private static volatile boolean started = false;
@@ -166,9 +166,46 @@ public class FXWindowsManager extends Application {
     }
 
     /**
+     * Get's the window instance by class from
+     * the list of registered windows.
+     *
+     * @param windowClass the class of the window instance/
+     * @param <T>         the window type.
+     * @return the window instance or {@code null} if the
+     * window was not registered.
+     */
+    @SuppressWarnings({"unchecked", "WeakerAccess"})
+    public <T extends FXWindow> T getWindow(Class<T> windowClass) {
+        for (FXWindow window : windows) {
+            if (window.getClass().equals(windowClass)) {
+                return (T) window;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Displays a registered window.
+     *
+     * @param windowClass the class of the window (eg. Window.class)
+     * @return {@code true} if the window was displayed.
+     */
+    @SuppressWarnings("UnusedReturnValue")
+    public boolean showWindow(Class<? extends FXWindow> windowClass) {
+        FXWindow window = getWindow(windowClass);
+
+        if (window == null)
+            return false;
+
+        Platform.runLater(window::show);
+        return window.isShowing();
+    }
+
+    /**
      * Constructs a new instance of each
      * declared window and calls the
-     * {@link FXWindow#initialize(String, String, ControllerBase)} method
+     * {@link FXWindow#initialize(String, String, FXController)} method
      * on it.
      */
     private void initWindows() {
@@ -180,9 +217,9 @@ public class FXWindowsManager extends Application {
                 String css = getCssFileName(c);
 
                 @SuppressWarnings("unchecked")
-                Class<? extends ControllerBase> controllerClass = getControllerClass(c);
+                Class<? extends FXController> controllerClass = getControllerClass(c);
 
-                ControllerBase controller = null;
+                FXController controller = null;
 
                 if (fxml != null) {
                     if (controllerClass == null) {
@@ -277,15 +314,15 @@ public class FXWindowsManager extends Application {
      * @param windowClass the window class to retrieve the value from.
      * @return the controller class from the window class annotation.
      */
-    private Class<? extends ControllerBase> getControllerClass(Class<? extends FXWindow> windowClass) {
+    private Class<? extends FXController> getControllerClass(Class<? extends FXWindow> windowClass) {
         if (windowClass.getDeclaredAnnotation(RegisterFXWindow.class) == null) {
             throw new IllegalArgumentException("Class: " + windowClass.getCanonicalName()
                     + " is not annotated with: " + RegisterFXWindow.class.getCanonicalName());
         }
 
-        Class<? extends ControllerBase> c
+        Class<? extends FXController> c
                 = windowClass.getDeclaredAnnotation(RegisterFXWindow.class).controllerClass();
 
-        return (c == ControllerBase.class) ? null : c;
+        return (c == FXController.class) ? null : c;
     }
 }

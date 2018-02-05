@@ -42,18 +42,18 @@ public enum JavaUsageOptions {
      * Only the JDK java runtime environment will be used.
      */
     ONLY_JDK("jdkOnly");
-    
-    private final String l4jOfficalName;
 
-    JavaUsageOptions(String l4jOfficalName) {
-        this.l4jOfficalName = l4jOfficalName;
+    private final String l4jOfficialName;
+
+    JavaUsageOptions(String l4jOfficialName) {
+        this.l4jOfficialName = l4jOfficialName;
     }
     
     /**
      * @return the name of the property used in the launch4j configuration file. 
      */
     public String getOfficialName(){
-        return this.l4jOfficalName;
+        return this.l4jOfficialName;
     }
     
     

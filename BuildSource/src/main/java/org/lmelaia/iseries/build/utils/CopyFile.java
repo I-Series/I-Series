@@ -15,10 +15,11 @@
  */
 package org.lmelaia.iseries.build.utils;
 
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
-import org.apache.commons.io.FileUtils;
 
 /**
  * Represents a file that needs to be copied over
@@ -31,12 +32,12 @@ public class CopyFile {
     /**
      * The file to copy over.
      */
-    private File source;
+    private final File source;
     
     /**
      * The folder to copy the file to.
      */
-    private File destFolder;
+    private final File destFolder;
     
     /**
      * Optional new name of the copied file.

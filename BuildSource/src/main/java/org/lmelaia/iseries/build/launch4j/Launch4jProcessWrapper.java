@@ -15,12 +15,7 @@
  */
 package org.lmelaia.iseries.build.launch4j;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Objects;
 
 /**
@@ -128,7 +123,7 @@ public final class Launch4jProcessWrapper {
                     //quiet
                     /*
       Number of milliseconds to wait before poling the process
-      while it is silent (i.e. has no more avaliable output).
+      while it is silent (i.e. has no more available output).
 
       <p>
       The smaller the number, the quicker the current thread will

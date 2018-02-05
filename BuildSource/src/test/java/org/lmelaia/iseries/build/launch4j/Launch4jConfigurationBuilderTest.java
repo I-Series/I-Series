@@ -15,19 +15,22 @@
  */
 package org.lmelaia.iseries.build.launch4j;
 
-import java.io.IOException;
 import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.*;
 import org.junit.BeforeClass;
+import org.junit.Test;
 import org.lmelaia.iseries.buildtest.utils.FileTestingUtils;
+
+import java.io.IOException;
+
+import static org.junit.Assert.fail;
 
 /**
  * Tests the launch4j configuration builder class.
  *
  * @author Luke Melaia
  */
+@SuppressWarnings("EmptyCatchBlock")
 public class Launch4jConfigurationBuilderTest {
 
     /**
@@ -79,6 +82,7 @@ public class Launch4jConfigurationBuilderTest {
         testObject = getNewTestObject();
     }
 
+    @SuppressWarnings("EmptyCatchBlock")
     @Test
     public void testValidateOutputFile() {
         //Test for null exe
@@ -110,6 +114,7 @@ public class Launch4jConfigurationBuilderTest {
         }
     }
 
+    @SuppressWarnings("EmptyCatchBlock")
     @Test
     public void testValidateJarFile() {
         //Test for null jar
@@ -133,11 +138,12 @@ public class Launch4jConfigurationBuilderTest {
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
 
-        //Test for nonexistant jar.
+        //Test for nonexistent jar.
         try {
+            //noinspection SpellCheckingInspection
             testObject.setJarFile(System.getProperty("user.dir")
                     + "\\tests\\Nojar.jar").create();
-            fail("Test allows nonexistant jar");
+            fail("Test allows nonexistent jar");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
 
@@ -179,7 +185,7 @@ public class Launch4jConfigurationBuilderTest {
         }
 
         try {
-            testObject.setJarRuntimePath("somepath:").create();
+            testObject.setJarRuntimePath("somePath:").create();
             fail("Test allows runtime path without ':' when wrap is false");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
@@ -189,13 +195,13 @@ public class Launch4jConfigurationBuilderTest {
     public void testValidateManifestFile() {
         try {
             testObject.setWrapperManifest("something.not").create();
-            fail("Test allows manifest without propper extension");
+            fail("Test allows manifest without proper extension");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
 
         try {
-            testObject.setWrapperManifest("someplace/someotherplace.manifest").create();
-            fail("Test allows nonexistant manifest");
+            testObject.setWrapperManifest("someplace/someOtherPlace.manifest").create();
+            fail("Test allows nonexistent manifest");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
 
@@ -210,14 +216,14 @@ public class Launch4jConfigurationBuilderTest {
     @Test
     public void testValidateIconFile() {
         try {
-            testObject.setIconFile("wrong.filetype").create();
+            testObject.setIconFile("wrong.fileType").create();
             fail("Test allows incorrect file type");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
 
         try {
-            testObject.setIconFile("nonexistant_file.ico").create();
-            fail("Test allows nonexistant file");
+            testObject.setIconFile("nonexistent_file.ico").create();
+            fail("Test allows nonexistent file");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
 
@@ -542,18 +548,21 @@ public class Launch4jConfigurationBuilderTest {
         }
 
         try {
+            //noinspection SpellCheckingInspection
             testObject.setEnvironmentVariables("sasd=").create();
             fail("Test allows invalid environment variable");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
 
         try {
+            //noinspection SpellCheckingInspection
             testObject.setEnvironmentVariables("=sdahss").create();
             fail("Test allows invalid environment variable");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
 
         try {
+            //noinspection SpellCheckingInspection
             testObject.setEnvironmentVariables("sasd=asdasd").create();
         } catch (InvalidLaunch4jConfigurationException ex) {
             fail("Test doesn't allow valid environment variable");
@@ -589,6 +598,7 @@ public class Launch4jConfigurationBuilderTest {
         }
 
         try {
+            //noinspection SpellCheckingInspection
             testObject.setSplashFile("doesntExist.bmp").create();
             fail("Test allows empty splash file when enabled");
         } catch (InvalidLaunch4jConfigurationException ex) {
@@ -597,14 +607,14 @@ public class Launch4jConfigurationBuilderTest {
         try {
             testObject.setSplashFile(System.getProperty("user.dir")
                     + "\\tests\\EmptySplash.bmp").setTimeout(0).create();
-            fail("Test allows timout < 1 when enabled");
+            fail("Test allows timeout < 1 when enabled");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
         
         try {
             testObject.setSplashFile(System.getProperty("user.dir")
                     + "\\tests\\EmptySplash.bmp").setTimeout(9001).create();
-            fail("Test allows timout > 900 when enabled");
+            fail("Test allows timeout > 900 when enabled");
         } catch (InvalidLaunch4jConfigurationException ex) {
         }
         testObject.setTimeout(60);

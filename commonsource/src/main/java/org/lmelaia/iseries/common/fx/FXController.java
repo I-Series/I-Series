@@ -20,7 +20,7 @@ package org.lmelaia.iseries.common.fx;
 /**
  * Base class for fx window controllers.
  */
-public abstract class ControllerBase {
+public abstract class FXController {
 
     /**
      * Window instance this controller belongs to.
@@ -30,7 +30,7 @@ public abstract class ControllerBase {
     /**
      * Default public constructor.
      */
-    public ControllerBase() {
+    public FXController() {
     }
 
     /**

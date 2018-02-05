@@ -21,6 +21,7 @@ import org.apache.logging.log4j.Logger;
 import org.lmelaia.iseries.common.fx.FXWindowsManager;
 import org.lmelaia.iseries.common.net.xcom.Client;
 import org.lmelaia.iseries.common.net.xcom.Server;
+import org.lmelaia.iseries.common.util.ThreadUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -121,6 +122,11 @@ public abstract class AppBase {
      * applications (i.e. launcher), along with notifying
      * all registered shutdown shutdownListeners.
      *
+     * This is done on a separate thread
+     * to ensure that, killing the thread
+     * that called this method doesn't halt
+     * the shutdown process.
+     *
      * @param code the exit code.
      */
     public void exit(ExitCode code) {
@@ -130,20 +136,11 @@ public abstract class AppBase {
             LOG.warn("Shutting down due to abnormal termination");
         }
 
-        boolean abort = false;
+        ShutdownThread shutdownThread = new ShutdownThread(code);
+        shutdownThread.start();
 
-        for (ShutdownListener listener : shutdownListeners) {
-            if (!listener.onShutdown(code)) {
-                abort = true;
-                break;
-            }
-        }
-
-        if (!abort) {
-            LOG.info("Shutdown complete: " + code.toString());
-            System.exit(code.code);
-        } else {
-            LOG.trace("Shutdown aborted");
+        while (shutdownThread.isAlive()) {
+            ThreadUtil.silentSleep(100);
         }
     }
 
@@ -278,4 +275,61 @@ public abstract class AppBase {
      */
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     protected abstract boolean initializeFX();
+
+    /**
+     * Thread responsible for calling the registered
+     * shutdown hooks and closing the application
+     * if an abort isn't requested.
+     */
+    class ShutdownThread extends Thread {
+
+        /**
+         * Exit code given.
+         */
+        private ExitCode exitCode = null;
+
+        /**
+         * Creates a new shutdown thread.
+         *
+         * @param code exit code to give
+         *             registered shutdown
+         *             listeners.
+         */
+        ShutdownThread(ExitCode code) {
+            super("Shutdown thread");
+            this.exitCode = code;
+        }
+
+        /**
+         * Starts the shutdown process.
+         * <p>
+         * This consists of calling all registered
+         * shutdown listeners, and, if none
+         * requested an abort, closes the
+         * application through the {@link System#exit(int)}
+         * method.
+         */
+        @Override
+        public void run() {
+            if (exitCode == null) {
+                throw new IllegalArgumentException("ExitCode cannot be null");
+            }
+
+            boolean aborted = false;
+
+
+            for (ShutdownListener listener : shutdownListeners) {
+                if (!listener.onShutdown(exitCode)) {
+                    aborted = true;
+                }
+            }
+
+            if (aborted) {
+                LOG.trace("Shutdown aborted");
+            } else {
+                LOG.info("Shutdown complete: " + exitCode.toString());
+                System.exit(exitCode.code);
+            }
+        }
+    }
 }

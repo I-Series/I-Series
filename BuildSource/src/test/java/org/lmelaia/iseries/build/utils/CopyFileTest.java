@@ -15,15 +15,17 @@
  */
 package org.lmelaia.iseries.build.utils;
 
-import java.io.File;
-import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
-import static org.junit.Assert.fail;
-import org.junit.Test;
 import org.junit.BeforeClass;
+import org.junit.Test;
 import org.lmelaia.iseries.build.BuildConfiguration;
 import org.lmelaia.iseries.buildtest.utils.FileTestingUtils;
+
+import java.io.File;
+import java.io.IOException;
+
+import static org.junit.Assert.fail;
 import static org.lmelaia.iseries.buildtest.utils.FileTestingUtils.TestFile;
 
 /**
@@ -43,7 +45,8 @@ public class CopyFileTest {
     
     public CopyFileTest() {
     }
-    
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @BeforeClass
     public static void setup() throws IOException{
         DEST_FOLDER.mkdirs();
@@ -56,40 +59,36 @@ public class CopyFileTest {
         FileUtils.deleteDirectory(DEST_FOLDER);
     }
 
+    @SuppressWarnings("EmptyMethod")
     @Test
     public void testCopyFileCreation() {
-        CopyFile testA = new CopyFile(
-                FILE_TESTING_UTILS.getFileByID("File1.txt"), DEST_FOLDER);
-        
-        CopyFile testB = new CopyFile(
-                FILE_TESTING_UTILS.getFileByID("File2.txt"), DEST_FOLDER,
-                "someNewName");
     }
-    
+
+    @SuppressWarnings("ConstantConditions")
     @Test
     public void testCopyFileCopying() throws IOException{
         CopyFile testA = new CopyFile(
                 FILE_TESTING_UTILS.getFileByID("File1.txt"), DEST_FOLDER);
-        
+
         CopyFile testB = new CopyFile(
                 FILE_TESTING_UTILS.getFileByID("File2.txt"), DEST_FOLDER,
                 "someNewName.txt");
-        
+
         File testACopy = testA.copy();
         File testBCopy = testB.copy();
-        
+
         if(!testACopy.exists())
             fail("TestA was not copied");
-        
+
         if(!testBCopy.exists())
             fail("TestB was not copied");
-        
+
         if(testACopy.length() == 0)
             fail("TestA is empty");
-        
+
         if(testBCopy.length() == 0)
             fail("TestB is empty");
-        
+
         if(DEST_FOLDER.listFiles().length == 0){
             fail("Destination folder contains no files");
         }

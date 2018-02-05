@@ -16,21 +16,20 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-
 <!--suppress ALL -->
+
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<VBox xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity"
-      minHeight="-Infinity" minWidth="-Infinity" prefHeight="187.0" prefWidth="485.0"
-      xmlns="http://javafx.com/javafx/8.0.112">
+<VBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+      prefHeight="187.0" prefWidth="510.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <HBox prefHeight="70.0" prefWidth="485.0" VBox.vgrow="NEVER">
+        <HBox prefHeight="57.0" prefWidth="510.0" VBox.vgrow="NEVER">
             <children>
-                <Label prefHeight="42.0" prefWidth="290.0" text="Unfortunately, I-Series has crashed.">
+                <Label prefHeight="47.0" prefWidth="374.0" text="Unfortunately, I-Series has crashed.">
                     <font>
                         <Font size="18.0"/>
                     </font>
@@ -38,7 +37,7 @@
                         <Insets left="20.0" top="20.0"/>
                     </padding>
                 </Label>
-                <Region prefHeight="81.0" prefWidth="148.0" HBox.hgrow="ALWAYS"/>
+                <Region prefHeight="47.0" prefWidth="119.0" HBox.hgrow="ALWAYS"/>
                 <ImageView fitHeight="45.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="NEVER">
                     <image>
                         <Image url="windows/icons/crash_warning.png"/>
@@ -73,7 +72,7 @@
                 <Insets left="20.0" top="10.0"/>
             </padding>
         </VBox>
-        <HBox alignment="CENTER_RIGHT" prefHeight="35.0" prefWidth="485.0" spacing="5.0"
+        <HBox alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="510.0" spacing="5.0"
               style="-fx-background-color: #ededed;" VBox.vgrow="NEVER">
             <children>
                 <Button fx:id="buttonLauncherLog" mnemonicParsing="false" onAction="#onOpenLogsAction" prefWidth="85.0"

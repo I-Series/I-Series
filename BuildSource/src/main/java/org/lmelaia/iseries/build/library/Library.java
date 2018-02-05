@@ -15,9 +15,10 @@
  */
 package org.lmelaia.iseries.build.library;
 
-import java.util.Objects;
 import org.lmelaia.iseries.build.licence.Licence;
 import org.lmelaia.iseries.build.utils.CopyFile;
+
+import java.util.Objects;
 
 /**
  * Represents a library used by the root project.
@@ -87,6 +88,7 @@ public class Library {
      *                 extension.
      * @param licence The licence the library is licensed under.
      */
+    @SuppressWarnings("SameParameterValue")
     public Library(String name, String[] fileNames, Licence licence){
         this.name = Objects.requireNonNull(name);
         this.fileName = null;

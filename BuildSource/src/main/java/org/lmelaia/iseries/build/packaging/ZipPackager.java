@@ -15,13 +15,7 @@
  */
 package org.lmelaia.iseries.build.packaging;
 
-import java.io.Closeable;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URI;
 import java.util.Deque;
 import java.util.LinkedList;
@@ -82,19 +76,19 @@ public class ZipPackager {
      * Zips the files and folder within the directory.
      *  
      * @param directory the directory to zip
-     * @param zipfile the zip file
+     * @param zipFile the zip file
      * @throws IOException  if the zip file cannot be written to.
      */
     @SuppressWarnings("ConstantConditions")
-    private static void zip(File directory, File zipfile) throws IOException {
+    private static void zip(File directory, File zipFile) throws IOException {
         URI base = directory.toURI();
         Deque<File> queue = new LinkedList<>();
         queue.push(Objects.requireNonNull(directory));
-        OutputStream out = new FileOutputStream(zipfile);
+        OutputStream out = new FileOutputStream(zipFile);
         Closeable res = out;
         try {
-            ZipOutputStream zout = new ZipOutputStream(out);
-            res = zout;
+            ZipOutputStream zipOut = new ZipOutputStream(out);
+            res = zipOut;
             while (!queue.isEmpty()) {
                 directory = queue.pop();
                 for (File kid : directory.listFiles()) {
@@ -102,11 +96,11 @@ public class ZipPackager {
                     if (kid.isDirectory()) {
                         queue.push(kid);
                         name = name.endsWith("/") ? name : name + "/";
-                        zout.putNextEntry(new ZipEntry(name));
+                        zipOut.putNextEntry(new ZipEntry(name));
                     } else {
-                        zout.putNextEntry(new ZipEntry(name));
-                        copy(kid, zout);
-                        zout.closeEntry();
+                        zipOut.putNextEntry(new ZipEntry(name));
+                        copy(kid, zipOut);
+                        zipOut.closeEntry();
                     }
                 }
             }

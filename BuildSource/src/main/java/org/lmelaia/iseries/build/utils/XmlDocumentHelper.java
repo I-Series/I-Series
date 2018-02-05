@@ -15,12 +15,13 @@
  */
 package org.lmelaia.iseries.build.utils;
 
-import java.util.Objects;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.util.Objects;
 
 /**
  * A set of utilities which aid in working with xml documents.
@@ -205,7 +206,7 @@ public class XmlDocumentHelper {
         /**
          * @return the xml document being worked on. 
          */
-        @SuppressWarnings("WeakerAccess")
+        @SuppressWarnings({"WeakerAccess", "UnusedReturnValue"})
         public Document getDocument(){
             return this.DOCUMENT.getXmlDocument();
         }

@@ -52,7 +52,7 @@ public abstract class FXWindow extends Stage {
     /**
      * This windows controller. Might be null.
      */
-    protected ControllerBase controller = null;
+    protected FXController controller = null;
 
     /**
      * Sets the root object and scene for the window.
@@ -63,7 +63,7 @@ public abstract class FXWindow extends Stage {
      */
     @SuppressWarnings("ConstantConditions")
     private void setScene(String fxmlFileName, String cssFileName,
-                          ControllerBase controller) {
+                          FXController controller) {
         if (fxmlFileName != null) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(fxmlFileName));
@@ -110,7 +110,7 @@ public abstract class FXWindow extends Stage {
      * The first of the two initialization stages.
      */
     void initialize(String fxmlFileName, String cssFileName,
-                    ControllerBase controllerClass) {
+                    FXController controllerClass) {
         setScene(fxmlFileName, cssFileName, controllerClass);
 
         if (controllerClass != null)
@@ -167,7 +167,7 @@ public abstract class FXWindow extends Stage {
      * window.
      */
     @SuppressWarnings("unused")
-    public ControllerBase getController() {
+    public FXController getController() {
         return this.controller;
     }
 }

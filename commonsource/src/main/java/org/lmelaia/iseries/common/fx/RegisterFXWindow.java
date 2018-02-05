@@ -46,5 +46,5 @@ public @interface RegisterFXWindow {
      * @return the controller class for the window. This must
      * be specified if an fxml file is specified.
      */
-    Class<? extends ControllerBase> controllerClass() default ControllerBase.class;
+    Class<? extends FXController> controllerClass() default FXController.class;
 }
