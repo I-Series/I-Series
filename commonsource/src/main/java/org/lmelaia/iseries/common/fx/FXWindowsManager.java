@@ -25,7 +25,6 @@ import org.apache.logging.log4j.Logger;
 import org.lmelaia.iseries.common.system.AppBase;
 import org.lmelaia.iseries.common.system.AppLogger;
 import org.lmelaia.iseries.common.system.ExitCode;
-import org.lmelaia.iseries.common.util.ThreadUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -73,6 +72,12 @@ public class FXWindowsManager extends Application {
     private static AppBase app;
 
     /**
+     * Lock object for the guard block in
+     * {@link #startFX(String, String[], String, AppBase, boolean)}.
+     */
+    private static final Object guardLock = new Object();
+
+    /**
      * Becomes true once the fx thread has completed
      * initialization.
      */
@@ -117,8 +122,15 @@ public class FXWindowsManager extends Application {
         Platform.setImplicitExit(false);
 
         if (block) {
-            while (!started)
-                ThreadUtil.silentSleep(100);
+            synchronized (guardLock) {
+                while (!started) {
+                    try {
+                        guardLock.wait();
+                    } catch (InterruptedException e) {
+                        LOG.warn("FX Window manager guard lock was interrupted", e);
+                    }
+                }
+            }
         }
     }
 
@@ -163,6 +175,9 @@ public class FXWindowsManager extends Application {
         }
 
         started = true;
+        synchronized (guardLock) {
+            guardLock.notifyAll();
+        }
     }
 
     /**

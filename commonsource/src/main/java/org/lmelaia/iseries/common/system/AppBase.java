@@ -21,7 +21,6 @@ import org.apache.logging.log4j.Logger;
 import org.lmelaia.iseries.common.fx.FXWindowsManager;
 import org.lmelaia.iseries.common.net.xcom.Client;
 import org.lmelaia.iseries.common.net.xcom.Server;
-import org.lmelaia.iseries.common.util.ThreadUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -57,6 +56,11 @@ public abstract class AppBase {
      * passed to this application.
      */
     private final ArgumentHandler argumentHandler = new ArgumentHandler();
+
+    /**
+     * Lock for the shutdown threads guard block.
+     */
+    private final Object shutdownLock = new Object();
 
     /**
      * Client instance.
@@ -130,17 +134,23 @@ public abstract class AppBase {
      * @param code the exit code.
      */
     public void exit(ExitCode code) {
-        LOG.info("Application close requested.");
+        LOG.info("Application close requested from thread: " + Thread.currentThread().getName());
 
         if (!code.normal) {
             LOG.warn("Shutting down due to abnormal termination");
         }
 
-        ShutdownThread shutdownThread = new ShutdownThread(code);
+        ShutdownThread shutdownThread = new ShutdownThread(code, shutdownLock);
         shutdownThread.start();
 
-        while (shutdownThread.isAlive()) {
-            ThreadUtil.silentSleep(100);
+        synchronized (shutdownLock) {
+            while (shutdownThread.isAlive()) {
+                try {
+                    shutdownLock.wait();
+                } catch (InterruptedException e) {
+                    LOG.warn("Shutdown thread was interrupted", e);
+                }
+            }
         }
     }
 
@@ -284,6 +294,11 @@ public abstract class AppBase {
     class ShutdownThread extends Thread {
 
         /**
+         * Lock object for the guard block.
+         */
+        private final Object lock;
+
+        /**
          * Exit code given.
          */
         private ExitCode exitCode = null;
@@ -295,9 +310,10 @@ public abstract class AppBase {
          *             registered shutdown
          *             listeners.
          */
-        ShutdownThread(ExitCode code) {
+        ShutdownThread(ExitCode code, Object lock) {
             super("Shutdown thread");
-            this.exitCode = code;
+            this.exitCode = Objects.requireNonNull(code, "Exit code cannot be null");
+            this.lock = Objects.requireNonNull(lock, "Lock cannot be null");
         }
 
         /**
@@ -329,6 +345,10 @@ public abstract class AppBase {
             } else {
                 LOG.info("Shutdown complete: " + exitCode.toString());
                 System.exit(exitCode.code);
+            }
+
+            synchronized (lock) {
+                lock.notifyAll();
             }
         }
     }
