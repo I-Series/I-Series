@@ -58,11 +58,6 @@ public abstract class AppBase {
     private final ArgumentHandler argumentHandler = new ArgumentHandler();
 
     /**
-     * Lock for the shutdown threads guard block.
-     */
-    private final Object shutdownLock = new Object();
-
-    /**
      * Client instance.
      */
     private Client client = null;
@@ -131,6 +126,9 @@ public abstract class AppBase {
      * that called this method doesn't halt
      * the shutdown process.
      *
+     * This method blocks until all shutdown
+     * listeners have been called.
+     *
      * @param code the exit code.
      */
     public void exit(ExitCode code) {
@@ -140,17 +138,13 @@ public abstract class AppBase {
             LOG.warn("Shutting down due to abnormal termination");
         }
 
-        ShutdownThread shutdownThread = new ShutdownThread(code, shutdownLock);
+        ShutdownThread shutdownThread = new ShutdownThread(code);
         shutdownThread.start();
 
-        synchronized (shutdownLock) {
-            while (shutdownThread.isAlive()) {
-                try {
-                    shutdownLock.wait();
-                } catch (InterruptedException e) {
-                    LOG.warn("Shutdown thread was interrupted", e);
-                }
-            }
+        try {
+            shutdownThread.join();
+        } catch (InterruptedException e) {
+            LOG.debug("Interrupt", e);
         }
     }
 
@@ -294,11 +288,6 @@ public abstract class AppBase {
     class ShutdownThread extends Thread {
 
         /**
-         * Lock object for the guard block.
-         */
-        private final Object lock;
-
-        /**
          * Exit code given.
          */
         private ExitCode exitCode = null;
@@ -310,10 +299,9 @@ public abstract class AppBase {
          *             registered shutdown
          *             listeners.
          */
-        ShutdownThread(ExitCode code, Object lock) {
+        ShutdownThread(ExitCode code) {
             super("Shutdown thread");
             this.exitCode = Objects.requireNonNull(code, "Exit code cannot be null");
-            this.lock = Objects.requireNonNull(lock, "Lock cannot be null");
         }
 
         /**
@@ -333,7 +321,6 @@ public abstract class AppBase {
 
             boolean aborted = false;
 
-
             for (ShutdownListener listener : shutdownListeners) {
                 if (!listener.onShutdown(exitCode)) {
                     aborted = true;
@@ -345,10 +332,6 @@ public abstract class AppBase {
             } else {
                 LOG.info("Shutdown complete: " + exitCode.toString());
                 System.exit(exitCode.code);
-            }
-
-            synchronized (lock) {
-                lock.notifyAll();
             }
         }
     }

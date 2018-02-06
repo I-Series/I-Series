@@ -18,10 +18,11 @@
 package org.lmelaia.iseries.launcher.fx.crash;
 
 import javafx.application.Platform;
+import org.apache.logging.log4j.Logger;
 import org.lmelaia.iseries.common.fx.FXWindow;
 import org.lmelaia.iseries.common.fx.RegisterFXWindow;
+import org.lmelaia.iseries.common.system.AppLogger;
 import org.lmelaia.iseries.common.system.ExitCode;
-import org.lmelaia.iseries.common.util.ThreadUtil;
 import org.lmelaia.iseries.launcher.App;
 
 /**
@@ -34,6 +35,17 @@ import org.lmelaia.iseries.launcher.App;
 public class CrashWindow extends FXWindow {
 
     /**
+     * Logging framework instance.
+     */
+    private static final Logger LOG = AppLogger.getLogger();
+
+    /**
+     * Lock object used when waiting
+     * on this window to close.
+     */
+    private final Object lock = new Object();
+
+    /**
      * Default constructor.
      */
     public CrashWindow() {
@@ -42,11 +54,16 @@ public class CrashWindow extends FXWindow {
     }
 
     /**
-     * NO-OP
+     * Notifies objects waiting on {@link #lock}
+     * that the window has closed.
      */
     @Override
     protected void onInitialization() {
-        //NO-OP
+        this.setOnHiding((e) -> {
+            synchronized (lock) {
+                lock.notifyAll();
+            }
+        });
     }
 
     /**
@@ -57,12 +74,19 @@ public class CrashWindow extends FXWindow {
     @Override
     protected void onPostInitialization() {
         App.getInstance().addShutdownListener(code -> {
-            if (code.error)
+            if (code.error) {
                 Platform.runLater(() -> this.show(code));
 
-            ThreadUtil.silentSleep(100);
-            while (this.isShowing()) {
-                ThreadUtil.silentSleep(500);
+                synchronized (lock) {
+                    do {
+                        try {
+                            lock.wait();
+                        } catch (InterruptedException e) {
+                            LOG.info("Interrupted", e);
+                        }
+                    }
+                    while (this.isShowing());
+                }
             }
 
             return !getController().wasRestarted();
