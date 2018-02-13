@@ -181,7 +181,7 @@ public class FXWindowsManager extends Application {
     }
 
     /**
-     * Get's the window instance by class from
+     * Gets the window instance by class from
      * the list of registered windows.
      *
      * @param windowClass the class of the window instance/

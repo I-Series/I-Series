@@ -100,7 +100,6 @@ public class Server {
      * in use by the thread.
      */
     public int getPort() {
-        responseThread.interrupt();
         return comObj.getPort();
     }
 
