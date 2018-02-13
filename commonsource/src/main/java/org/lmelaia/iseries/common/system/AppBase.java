@@ -19,10 +19,8 @@ package org.lmelaia.iseries.common.system;
 
 import org.apache.logging.log4j.Logger;
 import org.lmelaia.iseries.common.fx.FXWindowsManager;
-import org.lmelaia.iseries.common.net.xcom.Client;
-import org.lmelaia.iseries.common.net.xcom.Server;
+import org.lmelaia.iseries.common.net.ipc.Messenger;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -58,14 +56,11 @@ public abstract class AppBase {
     private final ArgumentHandler argumentHandler = new ArgumentHandler();
 
     /**
-     * Client instance.
+     * This application instances messenger object used
+     * for communicating with other running
+     * application instances.
      */
-    private Client client = null;
-
-    /**
-     * Server instance.
-     */
-    private Server server = null;
+    private Messenger messenger = null;
 
     /**
      * Constructs, initialises and initiates
@@ -149,38 +144,6 @@ public abstract class AppBase {
     }
 
     /**
-     * @return the server instance.
-     */
-    @SuppressWarnings("WeakerAccess")
-    public Server getServer() {
-        if (server == null) {
-            try {
-                server = new Server();
-            } catch (IOException e) {
-                throw new RuntimeException("Could not get server instance", e);
-            }
-        }
-
-        return server;
-    }
-
-    /**
-     * @return the client instance.
-     */
-    @SuppressWarnings("WeakerAccess")
-    public Client getClient() {
-        if (client == null) {
-            try {
-                client = new Client();
-            } catch (IOException e) {
-                throw new RuntimeException("Could not get client instance", e);
-            }
-        }
-
-        return client;
-    }
-
-    /**
      * @return the argument handler object
      * containing the arguments passed to
      * this application.
@@ -188,6 +151,16 @@ public abstract class AppBase {
     @SuppressWarnings("WeakerAccess")
     public ArgumentHandler getArgumentHandler() {
         return this.argumentHandler;
+    }
+
+    /**
+     * @return the {@link Messenger} object for this application instance.
+     */
+    public Messenger getMessenger() {
+        if (messenger == null)
+            messenger = new Messenger(getMessengerTimeout());
+
+        return messenger;
     }
 
     /**
@@ -251,6 +224,14 @@ public abstract class AppBase {
      * is thrown during the start procedure.
      */
     protected abstract void start() throws Exception;
+
+    /**
+     * Should return the timeout for receiving replies
+     * from other messenger instances and pinging them.
+     *
+     * @return the timeout in milliseconds.
+     */
+    protected abstract int getMessengerTimeout();
 
     /**
      * @return the name of the fx thread.

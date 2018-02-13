@@ -19,13 +19,12 @@ package org.lmelaia.iseries;
 
 import org.apache.logging.log4j.Logger;
 import org.lmelaia.iseries.common.fx.FXWindowsManager;
-import org.lmelaia.iseries.common.net.xcom.MessageType;
 import org.lmelaia.iseries.common.system.AppBase;
 import org.lmelaia.iseries.common.system.AppLogger;
 import org.lmelaia.iseries.common.system.ExitCode;
 import org.lmelaia.iseries.fx.main.MainWindow;
 
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -106,16 +105,13 @@ public class App extends AppBase {
     }
 
     /**
-     * Initializes communication with the launcher.
-     *
-     * @param portArg the port number given through the
-     *                application arguments.
+     * Writes the receiver port of the this instances
+     * messenger object and starts the ping client
+     * task.
      */
-    private void initLauncherCom(String portArg) {
-        hostPort = Integer.parseInt(portArg);
-
-        getServer().start("I-Series");
-        getServer().writePortNumber();
+    private void postInitIPC() {
+        hostPort = Integer.parseInt(getArgumentHandler().getNamedArgument(DefinedArguments.PORT.key));
+        getMessenger().writeToPortFile();
 
         pingClientTask.schedule(new App.PingClientTask(), 0,
                 Settings.LAUNCHER_PING_FREQUENCY.getValueAsInt());
@@ -128,9 +124,12 @@ public class App extends AppBase {
      * argument handler instance.
      */
     private void registerArgumentReceiver() {
-        getServer().addMessageListener(m -> {
-            if (m.getMsgType().equals(MessageType.ARGS)) {
-                update(m.getArgs().substring(1, m.getArgs().length() - 1).split(", "));
+        getMessenger().addMessageListener(message -> {
+            if (message.get("name").getAsString().equals("argument_change")) {
+                ArrayList<String> arguments = new ArrayList<>();
+                message.get("arguments").getAsJsonArray().forEach(
+                        element -> arguments.add(element.getAsString()));
+                update(arguments.toArray(new String[arguments.size()]));
             }
         });
     }
@@ -140,9 +139,19 @@ public class App extends AppBase {
      */
     @Override
     protected void start() throws Exception {
-        initLauncherCom(getArgumentHandler().getNamedArgument(DefinedArguments.PORT.key));
+        postInitIPC();
         registerArgumentReceiver();
         FXWindowsManager.getInstance().showWindow(MainWindow.class);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return
+     */
+    @Override
+    protected int getMessengerTimeout() {
+        return 200;
     }
 
     /**
@@ -187,13 +196,9 @@ public class App extends AppBase {
          */
         @Override
         public void run() {
-            try {
-                if (!getClient().pingServer(hostPort, 2000)) {
-                    LOG.fatal("Client not responding.");
-                    App.INSTANCE.exit(ExitCode.UNRESPONSIVE_LAUNCHER);
-                }
-            } catch (IOException e) {
-                App.INSTANCE.exit(ExitCode.LAUNCHER_COM_FAILED);
+            if (!getMessenger().ping(hostPort)) {
+                LOG.fatal("Client not responding.");
+                App.INSTANCE.exit(ExitCode.UNRESPONSIVE_LAUNCHER);
             }
         }
     }

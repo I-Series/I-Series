@@ -17,16 +17,14 @@
 
 package org.lmelaia.iseries.launcher;
 
+import com.google.gson.JsonObject;
 import org.apache.logging.log4j.Logger;
-import org.lmelaia.iseries.common.net.xcom.FileComUtil;
-import org.lmelaia.iseries.common.net.xcom.Message;
-import org.lmelaia.iseries.common.net.xcom.MessageType;
 import org.lmelaia.iseries.common.system.AppBase;
 import org.lmelaia.iseries.common.system.AppLogger;
 import org.lmelaia.iseries.common.system.ExitCode;
+import org.lmelaia.iseries.common.util.JsonObjectBuilder;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 /**
  * Main launcher application instance.
@@ -62,34 +60,26 @@ public class App extends AppBase {
     }
 
     /**
-     * Initializes communication with the main application
-     * process and sets up the server to receive requests.
-     *
-     * @throws IOException if the last port number couldn't
-     * be read
+     * @return the last port number written to file
+     *         if an application instance is running
+     *         on it.
      */
-    private int initCommunication() throws IOException {
-        LOG.info("Attempting to get port number");
+    private int getPortIfRunning() {
+        int givenPort = getMessenger().readFromPortFile();
 
-        int port = FileComUtil.getLastKnownPort();
-
-        if (port == -1) {
-            LOG.info("No port number could be obtained. Starting new instance.");
-            getServer().start("Launcher");
+        if (givenPort == -1) {
+            LOG.info("No last port number could be found");
             return -1;
-        } else {
-            LOG.info("Found server port number: " + port);
-            LOG.info("Attempting connection...");
-
-            if (!getClient().pingServer(port, 200)) {
-                getClient().close();
-                LOG.info("Server not responding, assuming no server exists. Starting new instance.");
-                getServer().start("Launcher");
-                return -1;
-            } else {
-                return port;
-            }
         }
+
+        if (getMessenger().ping(givenPort)) {
+            LOG.info("Found running port: " + givenPort);
+            return givenPort;
+        } else {
+            LOG.info("No instance running on last known port");
+        }
+
+        return -1;
     }
 
     /**
@@ -100,14 +90,6 @@ public class App extends AppBase {
     }
 
     /**
-     * @return the port number the server is running on.
-     */
-    @SuppressWarnings("WeakerAccess")
-    public int getServerPort() {
-        return this.getServer().getPort();
-    }
-
-    /**
      * Starts the launcher application process.
      *
      * @throws IOException if communication
@@ -115,20 +97,38 @@ public class App extends AppBase {
      */
     @Override
     protected void start() throws Exception {
-        int port = initCommunication();
+        int port = getPortIfRunning();
 
         if (port == -1)
             startInstance();
         else {
-            LOG.info("Arguments sent: " + Arrays.toString(getArgumentHandler().reconstruct()));
-            Message m = getClient().sendToServer(new Message(MessageType.ARGS, port, Arrays.toString(
-                    getArgumentHandler().reconstruct()
-            )));
-            if (m.getMsgType().equals(MessageType.RECEIVED)) {
+            LOG.info("Sending new argument change request...");
+
+            JsonObject reply = getMessenger().send(
+                    new JsonObjectBuilder()
+                            .addName("argument_change")
+                            .add("arguments", getArgumentHandler().reconstruct())
+                            .get(),
+                    port);
+
+            if (reply != null) {
                 LOG.info("Message received");
                 exit(ExitCode.NORMAL);
+            } else {
+                LOG.fatal("Failed to send argument change request");
+                exit(ExitCode.IPC_FAILURE);
             }
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return
+     */
+    @Override
+    protected int getMessengerTimeout() {
+        return 200;
     }
 
     /**

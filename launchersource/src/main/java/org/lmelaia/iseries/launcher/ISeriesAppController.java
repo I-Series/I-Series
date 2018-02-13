@@ -134,7 +134,7 @@ public class ISeriesAppController {
                 + " -jar "
                 + "\"" + System.getProperty("user.dir")
                 + File.separator
-                + JAR_FILENAME + "\" --port=" + App.getInstance().getServerPort());
+                + JAR_FILENAME + "\" --port=" + App.getInstance().getMessenger().getReceiverPort());
 
 
         if (args != null) {

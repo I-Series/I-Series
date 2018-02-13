@@ -57,9 +57,9 @@ public enum ExitCode {
     UNRESPONSIVE_LAUNCHER(12, "The launcher has closed or become unresponsive.", true),
 
     /**
-     * Failed to communicate with the launcher due to an exception.
+     * Failed to communicate with another instance due to an exception.
      */
-    LAUNCHER_COM_FAILED(13, "Failed to communicate with the launcher.", true),
+    IPC_FAILURE(13, "An inter process communication failure occurred.", true),
 
     /**
      * Used in place where the exit code wasn't specified in any

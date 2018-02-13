@@ -124,7 +124,8 @@ public class Messenger {
             DatagramPacket messageData = toPacket(message, port);
             this.sender.send(messageData);
 
-            LOG.debug("Message: " + GSON.toJson(message) + " sent to port: " + port);
+            if (!message.get("name").getAsString().equals("ping"))
+                LOG.debug("Message: " + GSON.toJson(message) + " sent to port: " + port);
 
             DatagramPacket reply = getEmptyPacket();
             this.sender.receive(reply);
@@ -340,13 +341,12 @@ public class Messenger {
                         continue;
                     }
 
-                    LOG.info("Message received: " + GSON.toJson(message));
-
                     if (message.get("name").getAsString().equals("ping")) {
                         JsonObject reply = new JsonObject();
                         reply.add("name", new JsonPrimitive("return_ping"));
                         reply(reply, packet.getPort());
                     } else {
+                        LOG.info("Message received: " + GSON.toJson(message));
                         notifyListeners(message);
                         JsonObject reply = new JsonObject();
                         reply.add("name", new JsonPrimitive("received"));
