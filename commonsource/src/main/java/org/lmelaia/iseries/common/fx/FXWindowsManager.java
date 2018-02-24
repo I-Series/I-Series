@@ -171,7 +171,7 @@ public class FXWindowsManager extends Application {
             postInitWindows();
         } catch (Exception e) {
             LOG.fatal("Uncaught exception propagated to FX start()", e);
-            app.exit(ExitCode.UNHANDLED_EXCEPTION);
+            app.exit(ExitCode.UNEXPECTED_ERROR);
         }
 
         started = true;

@@ -185,7 +185,7 @@ public abstract class AppBase {
         } catch (Exception e) {
             LOG.fatal("Start method of app class["
                     + this.getClass().getCanonicalName() + "] threw an error.", e);
-            exit(ExitCode.UNHANDLED_EXCEPTION);
+            exit(ExitCode.UNEXPECTED_ERROR);
         }
     }
 
@@ -211,7 +211,7 @@ public abstract class AppBase {
         return (t, e) -> {
             LOG.fatal("Uncaught exception found.");
             LOG.info(String.format("Details: [thread=%s, exception=%s]", t.getName(), e.toString()), e);
-            exit(ExitCode.UNHANDLED_EXCEPTION);
+            exit(ExitCode.UNEXPECTED_ERROR);
         };
     }
 

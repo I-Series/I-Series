@@ -49,7 +49,7 @@ public enum ExitCode {
      * An exception went uncaught and propagated to
      * the uncaught exception handler.
      */
-    UNHANDLED_EXCEPTION(11, "An unhandled error occurred preventing the application from continuing.", true),
+    UNEXPECTED_ERROR(11, "An unexpected error occurred preventing the application from continuing.", true),
 
     /**
      * The launcher is not responding to messages and/or pings.

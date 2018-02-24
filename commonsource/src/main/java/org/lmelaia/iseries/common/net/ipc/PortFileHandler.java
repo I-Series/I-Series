@@ -20,7 +20,7 @@ class PortFileHandler {
     /**
      * The file the data is written to.
      */
-    private static final File PORT_FILE = new File("savedata/port_1.int");
+    private static final File PORT_FILE = new File("savedata/port.int");
 
     /**
      * The private singleton instance of this class.
@@ -33,6 +33,7 @@ class PortFileHandler {
     private PortFileHandler() {
         if (!PORT_FILE.exists()) {
             LOG.warn("Port file does not exist: " + PORT_FILE);
+            PORT_FILE.getParentFile().mkdirs();
 
             try {
                 if (!PORT_FILE.createNewFile()) {
@@ -71,7 +72,7 @@ class PortFileHandler {
     /**
      * @return the last port number written to file.
      */
-    public int read() {
+    int read() {
         int port = -1;
         String content = null;
 
