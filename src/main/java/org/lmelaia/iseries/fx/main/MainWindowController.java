@@ -21,7 +21,7 @@ public class MainWindowController extends FXController {
 
     /**
      * Causes the application to crash
-     * with an exit code of {@link ExitCode#TEST_EXIT}/
+     * with an exit code of {@link ExitCode#TEST_EXIT}.
      *
      * @param event event object.
      */

@@ -29,11 +29,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Application class responsible for controlling
- * the lifecycle of the application.
- * <p>
- * 7,869
- * 37
+ * Main class for the application.
  */
 public class App extends AppBase {
 

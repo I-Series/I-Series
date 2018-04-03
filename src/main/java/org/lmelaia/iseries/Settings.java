@@ -33,7 +33,7 @@ import java.util.Properties;
  *
  * <p>
  * Settings are read from and saved to file
- * at the appropriate times without intervention.
+ * when the application starts and exists.
  */
 public enum Settings {
 
@@ -59,10 +59,12 @@ public enum Settings {
      */
     @SuppressWarnings({"WeakerAccess", "unused"})
     public final String description;
+
     /**
      * List of registered callbacks.
      */
     private final List<SettingChangeListener> listeners = new ArrayList<>();
+
     /**
      * The value of the setting.
      */
