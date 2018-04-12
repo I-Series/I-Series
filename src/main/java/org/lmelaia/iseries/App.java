@@ -125,7 +125,7 @@ public class App extends AppBase {
                 ArrayList<String> arguments = new ArrayList<>();
                 message.get("arguments").getAsJsonArray().forEach(
                         element -> arguments.add(element.getAsString()));
-                update(arguments.toArray(new String[arguments.size()]));
+                update(arguments.toArray(new String[0]));
             }
         });
     }
@@ -134,7 +134,7 @@ public class App extends AppBase {
      * Initializes and starts the application.
      */
     @Override
-    protected void start() throws Exception {
+    protected void start() {
         postInitIPC();
         registerArgumentReceiver();
         FXWindowsManager.getInstance().showWindow(MainWindow.class);
