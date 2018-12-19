@@ -7,7 +7,7 @@ import javafx.scene.layout.AnchorPane;
 import org.lmelaia.iseries.App;
 import org.lmelaia.iseries.common.fx.FXController;
 import org.lmelaia.iseries.common.system.ExitCode;
-import org.lmelaia.iseries.fx.main.util.ControlUtil;
+import org.lmelaia.iseries.fx.util.ControlUtil;
 
 import static java.util.Objects.requireNonNull;
 

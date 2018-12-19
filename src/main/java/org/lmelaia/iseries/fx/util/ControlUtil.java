@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.lmelaia.iseries.fx.main.util;
+package org.lmelaia.iseries.fx.util;
 
 import javafx.scene.Node;
 import javafx.scene.image.Image;

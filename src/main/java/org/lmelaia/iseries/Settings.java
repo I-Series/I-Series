@@ -48,7 +48,9 @@ public enum Settings {
 
     WINDOW_HEIGHT("window_height", 0.5D, "Height of the main window"),
 
-    MEDIA_PLAYER_VOLUME("media_player_volume", 0.5D, "Media player volume set by user");
+    MEDIA_PLAYER_VOLUME("media_player_volume", 0.5D, "Media player volume set by user"),
+
+    WINDOW_CLOSE_PREFERENCE("window_close_preference", 0, "What to do when the user closes the main window.");
 
     /*
      * Initializes the {@link SettingsStore}

@@ -21,6 +21,7 @@ import org.lmelaia.iseries.Settings;
 import org.lmelaia.iseries.common.fx.FXWindow;
 import org.lmelaia.iseries.common.fx.RegisterFXWindow;
 import org.lmelaia.iseries.common.system.ExitCode;
+import org.lmelaia.iseries.fx.exit_dialog.ExitDialog;
 
 /**
  * The main display window for I-Series.
@@ -31,6 +32,11 @@ import org.lmelaia.iseries.common.system.ExitCode;
         controllerClass = MainWindowController.class
 )
 public class MainWindow extends FXWindow {
+
+    /**
+     * Object reference to setting for quick access.
+     */
+    private static final Settings quitPreference = Settings.WINDOW_CLOSE_PREFERENCE;
 
     /**
      * Override generic controller instance.
@@ -49,7 +55,27 @@ public class MainWindow extends FXWindow {
      */
     @Override
     protected void onInitialization() {
-        this.setOnCloseRequest(e -> App.getInstance().exit(ExitCode.NORMAL));
+        this.setOnCloseRequest(e -> {
+            if (quitPreference.getValueAsInt() == 0) {
+                ExitDialog.Result result = ExitDialog.present();
+                if (result.remember())
+                    quitPreference.changeValue(result.getOption().value);
+
+                if (result.getOption() == ExitDialog.ResultOption.QUIT)
+                    App.getInstance().exit(ExitCode.NORMAL);
+
+                if (result.getOption() == ExitDialog.ResultOption.TRAY)
+                    this.setIconified(true);
+
+                e.consume();
+            } else if (quitPreference.getValueAsInt() == 1) {
+                App.getInstance().exit(ExitCode.NORMAL);
+            } else if (quitPreference.getValueAsInt() == 2) {
+                this.setIconified(true);
+            }
+
+            e.consume();
+        });
 
         App.getInstance().addShutdownListener(code -> {
             saveState();
