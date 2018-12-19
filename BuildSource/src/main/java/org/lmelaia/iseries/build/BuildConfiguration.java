@@ -61,7 +61,7 @@ public class BuildConfiguration {
      */
     public static final SmartFile SLAUNCH4J_FOLDER = SmartFile.getSmartFile(
             //CHANGE: Change this to the path of launch4j on your machine.
-            "C:/Program Files (x86)/Launch4j");
+            "D:\\Programs\\Launch4j");
 
     //******************************
     //    CONFIGURATION SETTINGS

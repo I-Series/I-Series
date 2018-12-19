@@ -50,6 +50,7 @@ public class CrashWindow extends FXWindow {
      */
     public CrashWindow() {
         this.setTitle("Crash Prompt");
+        this.setAlwaysOnTop(true);
         this.setResizable(false);
     }
 

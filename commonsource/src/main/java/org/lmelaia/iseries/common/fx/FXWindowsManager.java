@@ -49,6 +49,8 @@ public class FXWindowsManager extends Application {
      */
     private static final Logger LOG = AppLogger.getLogger();
 
+    private static final String COMMON_WINDOWS = "org.lmelaia.iseries.common.fx";
+
     /**
      * FX window manager instance.
      */
@@ -279,16 +281,36 @@ public class FXWindowsManager extends Application {
     @SuppressWarnings("unchecked")
     private List<Class<? extends FXWindow>> getWindowClasses() throws IOException {
         List<Class<? extends FXWindow>> classList = new ArrayList<>();
-        final ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        classList.addAll(getWindowClasses(windowsPath));
+        classList.addAll(getWindowClasses(COMMON_WINDOWS));
+        return classList;
+    }
 
-        for (final ClassPath.ClassInfo info : ClassPath.from(loader).getTopLevelClasses()) {
-            if (info.getName().startsWith(windowsPath)) {
+    @SuppressWarnings("unchecked")
+    private List<Class<? extends FXWindow>> getWindowClasses(String path) throws IOException {
+        List<Class<? extends FXWindow>> classList = new ArrayList<>();
+
+        final ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        for (final ClassPath.ClassInfo info : ClassPath.from(loader).getAllClasses()) {
+            if (info.getName().startsWith(path)) {
                 final Class<?> clazz = info.load();
-                if (clazz.getSuperclass().getCanonicalName().equals(FXWindow.class.getCanonicalName())) {
-                    if (clazz.getDeclaredAnnotation(RegisterFXWindow.class) != null) {
-                        classList.add((Class<? extends FXWindow>) clazz);
+                try {
+                    try {
+                        if (clazz.newInstance() instanceof FXWindow) {
+                            if (clazz.getDeclaredAnnotation(RegisterFXWindow.class) != null) {
+                                classList.add((Class<? extends FXWindow>) clazz);
+                                LOG.debug("Identified possible window class: " + clazz.getCanonicalName());
+                            }
+                        } else {
+                            LOG.debug("Skipping window class: " + clazz.getCanonicalName());
+                        }
+                    } catch (InstantiationException | IllegalAccessException e) {
+                        LOG.debug("Failed to process a possible window class: " + clazz.getCanonicalName());
                     }
+                } catch (NullPointerException e) {
+                    LOG.error("Failed to process possible window class: " + clazz.getCanonicalName());
                 }
+
             }
         }
 

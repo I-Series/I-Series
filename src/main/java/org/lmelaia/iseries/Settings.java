@@ -38,7 +38,17 @@ import java.util.Properties;
 public enum Settings {
 
     LAUNCHER_PING_FREQUENCY("launcher_ping_frequency", 1000,
-            "The frequency in milliseconds between pings to the launcher.");
+            "The frequency in milliseconds between pings to the launcher."),
+
+    WINDOW_X("window_x", 600D, "X position of the main window."),
+
+    WINDOW_Y("window_y", 600D, "Y position of the main window"),
+
+    WINDOW_WIDTH("window_width", 0.5D, "Width of the main window"),
+
+    WINDOW_HEIGHT("window_height", 0.5D, "Height of the main window"),
+
+    MEDIA_PLAYER_VOLUME("media_player_volume", 0.5D, "Media player volume set by user");
 
     /*
      * Initializes the {@link SettingsStore}
@@ -99,6 +109,15 @@ public enum Settings {
      */
     public int getValueAsInt() {
         return Integer.parseInt(value);
+    }
+
+    /**
+     * @return the current value of the setting as a {@link Double}.
+     * @throws NumberFormatException if the value does not contain a
+     *                               parsable double.
+     */
+    public double getValueAsDouble() {
+        return Double.parseDouble(value);
     }
 
     /**

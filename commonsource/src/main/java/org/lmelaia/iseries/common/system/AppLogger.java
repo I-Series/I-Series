@@ -100,9 +100,7 @@ public final class AppLogger {
         context.setConfigLocation(config);
         initialized = true;
 
-        /*
-      The logger for this class.
-     */
+        /*The logger for this class.*/
         LOG = getLogger();
         LOG.info("Logger initialized with configuration file: "
                 + config.toString());
