@@ -12,10 +12,30 @@
       <MenuBar maxHeight="15.0" prefWidth="495.0" style="-fx-background-color: rgb(234, 234, 234);"
                AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <menus>
-            <Menu fx:id="menu_file" mnemonicParsing="false" text="File">
+            <Menu fx:id="menu_file" mnemonicParsing="false" text="I-Series">
                <items>
                   <MenuItem mnemonicParsing="false" style="-fx-width: 100;" text="Settings"/>
+                  <SeparatorMenuItem mnemonicParsing="false"/>
+                  <MenuItem mnemonicParsing="false" text="Show Quit Dialog"/>
+                  <SeparatorMenuItem mnemonicParsing="false"/>
+                  <MenuItem mnemonicParsing="false" text="Minimize"/>
+                  <MenuItem mnemonicParsing="false" text="Move to tray"/>
                   <MenuItem mnemonicParsing="false" onAction="#onMenuQuit" text="Quit"/>
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Library">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="Action 1"/>
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Entry">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="Action 1"/>
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Media Player">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="Action 1"/>
                </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Help">
@@ -146,6 +166,9 @@
                                     </Button>
                                  </children>
                               </HBox>
+                              <AnchorPane layoutX="37.0" layoutY="-13.0" prefHeight="200.0" prefWidth="200.0"
+                                          AnchorPane.bottomAnchor="62.0" AnchorPane.leftAnchor="0.0"
+                                          AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
                            </children>
                         </AnchorPane>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="315.0" prefWidth="421.0">
