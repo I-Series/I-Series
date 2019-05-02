@@ -49,6 +49,9 @@ public class FXWindowsManager extends Application {
      */
     private static final Logger LOG = AppLogger.getLogger();
 
+    /**
+     * Package path to .fxml window files in the common jar.
+     */
     private static final String COMMON_WINDOWS = "org.lmelaia.iseries.common.fx";
 
     /**

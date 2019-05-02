@@ -27,7 +27,6 @@ import org.lmelaia.iseries.common.fx.RegisterFXWindow;
         cssFileName = "windows/entry_dialog.css",
         controllerClass = EntryDialogController.class
 )
-
 public class EntryDialog extends FXWindow {
 
     /**

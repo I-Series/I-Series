@@ -118,8 +118,18 @@ public class App extends AppBase {
         return INSTANCE;
     }
 
+    /**
+     * @return the global entry library instance.
+     */
     public Library getLibrary() {
         return library;
+    }
+
+    /**
+     * @return the global window manager.
+     */
+    public FXWindowsManager getWindowsManager() {
+        return FXWindowsManager.getInstance();
     }
 
     /**
