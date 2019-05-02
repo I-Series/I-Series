@@ -23,7 +23,11 @@ import org.lmelaia.iseries.common.system.AppBase;
 import org.lmelaia.iseries.common.system.AppLogger;
 import org.lmelaia.iseries.common.system.ExitCode;
 import org.lmelaia.iseries.fx.main.MainWindow;
+import org.lmelaia.iseries.library.Library;
+import org.lmelaia.iseries.library.LibraryException;
+import org.lmelaia.iseries.library.NamedEntrySorter;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -47,6 +51,11 @@ public class App extends AppBase {
      * The timer responsible for running the {@link App.PingClientTask}.
      */
     private final Timer pingClientTask = new Timer("Ping client", true);
+
+    /**
+     * The global library instance.
+     */
+    private final Library library;
 
     /**
      * The port on which the launchers
@@ -88,9 +97,18 @@ public class App extends AppBase {
     /**
      * Constructor.
      */
-    App() {
+    App() throws LibraryException.LibraryFetchException, LibraryException.LibraryCreationException {
         this.manageThread(Thread.currentThread());
         INSTANCE = this;
+        try {
+            this.library = new Library(new File(Settings.LIBRARY_PATH.getValue()), NamedEntrySorter.NAMED_ENTRY_SORTER);
+        } catch (LibraryException.LibraryFetchException e) {
+            //TODO: Add dialogs to deal with this problem.
+            throw e;
+        } catch (LibraryException.LibraryCreationException e) {
+            //TODO: Add dialogs to deal with this problem.
+            throw e;
+        }
     }
 
     /**
@@ -98,6 +116,10 @@ public class App extends AppBase {
      */
     public static App getInstance() {
         return INSTANCE;
+    }
+
+    public Library getLibrary() {
+        return library;
     }
 
     /**

@@ -50,7 +50,11 @@ public enum Settings {
 
     MEDIA_PLAYER_VOLUME("media_player_volume", 0.5D, "Media player volume set by user"),
 
-    WINDOW_CLOSE_PREFERENCE("window_close_preference", 0, "What to do when the user closes the main window.");
+    WINDOW_CLOSE_PREFERENCE("window_close_preference", 0,
+            "What to do when the user closes the main window."),
+
+    LIBRARY_PATH("library_path", System.getProperty("user.home") + "/I-Series-Library/",
+            "The file path to the I-Series Library.");
 
     /*
      * Initializes the {@link SettingsStore}

@@ -213,13 +213,13 @@
             </AnchorPane>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="207.0" prefWidth="193.0">
                <children>
-                  <HBox id="control_bar" prefHeight="45.0" prefWidth="493.0" styleClass="white_background"
+                  <HBox id="control_bar" prefHeight="40.0" prefWidth="629.0" styleClass="white_background"
                         AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <Button id="control_btn_add" fx:id="controlButtonAdd" mnemonicParsing="false" prefHeight="32.0"
-                                prefWidth="32.0" styleClass="white_background">
+                        <Button id="control_btn_add" fx:id="controlButtonAdd" mnemonicParsing="false" prefHeight="0.0"
+                                prefWidth="15.0" styleClass="white_background">
                            <HBox.margin>
-                              <Insets right="5.0" top="6.0"/>
+                              <Insets right="15.0" top="6.0"/>
                            </HBox.margin>
                            <graphic>
                               <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
@@ -228,11 +228,14 @@
                                  </image>
                               </ImageView>
                            </graphic>
+                           <padding>
+                              <Insets bottom="2.0" top="2.0"/>
+                           </padding>
                         </Button>
                         <Button id="control_btn_edit" fx:id="controlButtonEdit" mnemonicParsing="false"
-                                prefHeight="32.0" prefWidth="32.0" styleClass="white_background">
+                                prefHeight="13.0" prefWidth="17.0" styleClass="white_background">
                            <HBox.margin>
-                              <Insets right="5.0" top="6.0"/>
+                              <Insets right="15.0" top="6.0"/>
                            </HBox.margin>
                            <graphic>
                               <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
@@ -241,9 +244,12 @@
                                  </image>
                               </ImageView>
                            </graphic>
+                           <padding>
+                              <Insets bottom="2.0" top="2.0"/>
+                           </padding>
                         </Button>
                         <Button id="control_btn_delete" fx:id="controlButtonDelete" mnemonicParsing="false"
-                                prefHeight="32.0" prefWidth="32.0" styleClass="white_background">
+                                prefHeight="3.0" prefWidth="18.0" styleClass="white_background">
                            <HBox.margin>
                               <Insets right="5.0" top="6.0"/>
                            </HBox.margin>
@@ -254,13 +260,20 @@
                                  </image>
                               </ImageView>
                            </graphic>
+                           <padding>
+                              <Insets bottom="2.0" top="2.0"/>
+                           </padding>
                         </Button>
                         <Region prefHeight="45.0" prefWidth="0.0" HBox.hgrow="ALWAYS"/>
-                        <Region prefHeight="45.0" prefWidth="0.0" HBox.hgrow="ALWAYS"/>
+                        <Region prefHeight="7.0" prefWidth="195.0" HBox.hgrow="ALWAYS"/>
                         <AnchorPane nodeOrientation="LEFT_TO_RIGHT" prefHeight="45.0" prefWidth="259.0">
                            <children>
-                              <TextField id="control_search_bar" fx:id="controlInputField" layoutX="6.0" layoutY="10.0"
-                                         prefHeight="25.0" prefWidth="265.0"/>
+                              <TextField id="control_search_bar" fx:id="controlInputField" layoutX="3.0" layoutY="8.0"
+                                         prefHeight="0.0" prefWidth="265.0">
+                                 <padding>
+                                    <Insets bottom="3.0" left="3.0" top="4.0"/>
+                                 </padding>
+                              </TextField>
                            </children>
                         </AnchorPane>
                      </children>
@@ -271,9 +284,9 @@
                         <Insets left="5.0" right="5.0"/>
                      </padding>
                   </HBox>
-                  <TreeTableView fx:id="entryTable" editable="true" layoutY="38.0" prefHeight="451.0" prefWidth="493.0"
+                  <TreeTableView fx:id="entryTable" editable="true" layoutY="39.0" prefHeight="471.0" prefWidth="629.0"
                                  AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                                 AnchorPane.topAnchor="45.0"/>
+                                 AnchorPane.topAnchor="39.0"/>
                </children>
             </AnchorPane>
          </items>

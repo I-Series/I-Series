@@ -1,5 +1,7 @@
 package org.lmelaia.iseries.library;
 
+import java.io.File;
+
 /**
  * Provides a way to sort library entries
  * on the file system.
@@ -24,8 +26,10 @@ public interface EntrySorter {
      * library under the given path.
      *
      * @param entry the entry to be sorted.
+     * @param libraryPath the file path to the I-Series Library
+     *                    on disk.
      * @return the relative path
      * the entry will be sorted in.
      */
-    String getRelativeFilePath(LibraryEntry entry);
+    String getRelativeFilePath(LibraryEntry entry, File libraryPath);
 }

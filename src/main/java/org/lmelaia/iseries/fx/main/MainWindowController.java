@@ -6,7 +6,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import org.lmelaia.iseries.App;
 import org.lmelaia.iseries.common.fx.FXController;
+import org.lmelaia.iseries.common.fx.FXWindowsManager;
 import org.lmelaia.iseries.common.system.ExitCode;
+import org.lmelaia.iseries.fx.entry_dialog.EntryDialog;
 import org.lmelaia.iseries.fx.util.ControlUtil;
 
 import static java.util.Objects.requireNonNull;
@@ -177,7 +179,14 @@ public class MainWindowController extends FXController {
         }
 
         private void onAddPressed(ActionEvent e) {
+            EntryDialog entryDialog = FXWindowsManager.getInstance().getWindow(EntryDialog.class);
 
+            if (entryDialog.getOwner() == null)
+                FXWindowsManager.getInstance().getWindow(EntryDialog.class).initOwner(
+                        FXWindowsManager.getInstance().getWindow(MainWindow.class)
+                );
+
+            FXWindowsManager.getInstance().showWindow(EntryDialog.class);
         }
 
         private void onEditPressed(ActionEvent e) {

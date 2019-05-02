@@ -320,15 +320,17 @@ class LibraryFileManager {
      * @return the relative path for the entry.
      */
     private File getPathFromEntry(LibraryEntry entry) {
-        String givenFolderName = entrySorter.getRelativeFilePath(entry);
+        String givenFolderName = entrySorter.getRelativeFilePath(entry, path);
         File givenFolder;
 
-        if (givenFolderName == null)
+        File givenFile = new File(path.getAbsolutePath()
+                + "/" + givenFolderName);
+
+        if (givenFolderName == null || givenFile.exists())
             givenFolder = new File(path.getAbsolutePath()
-                    + UNSORTED_PATH_NAME + "/" + entry.getUUID());
+                    + "/" + entry.getUUID());
         else
-            givenFolder = new File(path.getAbsolutePath()
-                    + "/" + givenFolderName + " (" + entry.getUUID() + ")");
+            givenFolder = givenFile;
 
         givenFolder.mkdirs();
         return givenFolder;

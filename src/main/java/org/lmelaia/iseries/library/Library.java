@@ -67,7 +67,8 @@ public class Library {
     private final LibraryFileManager fileManager;
 
     /**
-     * Constructs a new library.
+     * Constructs a new library. This will create a new
+     * library file structure if one does not exist.
      *
      * @param libraryPath the path of the library on disk.
      * @param sorter      the sorter responsible for providing
@@ -151,7 +152,7 @@ public class Library {
      * within the the index.
      */
     public LibraryEntry[] getAll() {
-        return mapping.values().toArray(new LibraryEntry[mapping.entrySet().size()]);
+        return mapping.values().toArray(new LibraryEntry[0]);
     }
 
     /**
@@ -229,7 +230,7 @@ public class Library {
      * These entries are removed from the index.
      */
     public String[] getMissingEntries() {
-        return missingEntries.toArray(new String[missingEntries.size()]);
+        return missingEntries.toArray(new String[0]);
     }
 
     /**
@@ -251,7 +252,7 @@ public class Library {
      * These entries are removed from the index.
      */
     public String[] getCorruptedEntries() {
-        return corruptedEntries.toArray(new String[corruptedEntries.size()]);
+        return corruptedEntries.toArray(new String[0]);
     }
 
     /**

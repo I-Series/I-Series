@@ -17,8 +17,6 @@ package org.lmelaia.iseries;
 
 import org.lmelaia.iseries.common.system.AppBase;
 
-import java.io.IOException;
-
 /**
  * Starting point of the i-series application.
  *
@@ -33,7 +31,7 @@ public class Main {
      *
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         Thread.currentThread().setName("I-Series Main");
         AppBase.startApp(new App(), args);
     }
