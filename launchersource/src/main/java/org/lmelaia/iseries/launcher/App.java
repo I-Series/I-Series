@@ -90,6 +90,26 @@ public class App extends AppBase {
     }
 
     /**
+     * Registers a shutdown listener that checks
+     * for the restart shutdown code and
+     * acts accordingly.
+     */
+    private void registerRestartListener() {
+        App.getInstance().addShutdownListener(code -> {
+            if (code == ExitCode.RESTART) {
+                try {
+                    ISeriesAppController.start(null);
+                } catch (IOException e) {
+                    LOG.error("Failed to restart I-Series after restart request", e);
+                }
+                return false;
+            }
+
+            return true;
+        });
+    }
+
+    /**
      * Starts the launcher application process.
      *
      * @throws IOException if communication
@@ -119,6 +139,8 @@ public class App extends AppBase {
                 exit(ExitCode.IPC_FAILURE);
             }
         }
+
+        registerRestartListener();
     }
 
     /**

@@ -9,6 +9,7 @@ import org.lmelaia.iseries.common.fx.FXController;
 import org.lmelaia.iseries.common.fx.FXWindowsManager;
 import org.lmelaia.iseries.common.system.ExitCode;
 import org.lmelaia.iseries.fx.entry_dialog.EntryDialog;
+import org.lmelaia.iseries.fx.settings.SettingsWindow;
 import org.lmelaia.iseries.fx.util.ControlUtil;
 
 import static java.util.Objects.requireNonNull;
@@ -87,6 +88,17 @@ public class MainWindowController extends FXController {
     @FXML
     private TreeTableView entryTable;
 
+    //Menu Bar
+
+    @FXML
+    private MenuItem menuItemQuit;
+
+    @FXML
+    private MenuItem menuItemSettings;
+
+    @FXML
+    private MenuItem menuItemRestart;
+
     //*******
     //* END *
     //*******
@@ -96,6 +108,8 @@ public class MainWindowController extends FXController {
     protected MediaPlayer mediaPlayer;
 
     protected Navigator navigator;
+
+    protected MenuBar menuBar;
 
     /**
      * Initializes sub components.
@@ -111,22 +125,15 @@ public class MainWindowController extends FXController {
 
         navigator = new Navigator(navButtonNavigator, navButtonInformation, navButtonEpisodes, navDisplayPane);
         navigator.init();
-    }
 
-    /**
-     * Closes the application.
-     *
-     * @param e quit menu item action event.
-     */
-    @FXML
-    protected void onMenuQuit(ActionEvent e) {
-        App.getInstance().exit(ExitCode.NORMAL);
+        menuBar = new MenuBar();
+        menuBar.init();
     }
 
     /**
      * Sub class for controlling the main window control bar.
      */
-    protected static class ControlBar implements SubControl {
+    protected class ControlBar implements SubControl {
 
         /**
          * Add entry button.
@@ -182,11 +189,9 @@ public class MainWindowController extends FXController {
             EntryDialog entryDialog = FXWindowsManager.getInstance().getWindow(EntryDialog.class);
 
             if (entryDialog.getOwner() == null)
-                FXWindowsManager.getInstance().getWindow(EntryDialog.class).initOwner(
-                        FXWindowsManager.getInstance().getWindow(MainWindow.class)
-                );
+                entryDialog.initOwner(getWindow());
 
-            FXWindowsManager.getInstance().showWindow(EntryDialog.class);
+            entryDialog.showAndWait();
         }
 
         private void onEditPressed(ActionEvent e) {
@@ -205,7 +210,7 @@ public class MainWindowController extends FXController {
     /**
      * Sub class for controlling the media player window.
      */
-    protected static class MediaPlayer implements SubControl {
+    protected class MediaPlayer implements SubControl {
 
         /**
          * Media window seek slider.
@@ -289,7 +294,7 @@ public class MainWindowController extends FXController {
     /**
      * Sub class for controlling the main windows navigator.
      */
-    protected static class Navigator implements SubControl {
+    protected class Navigator implements SubControl {
 
         /**
          * Navigator button.
@@ -409,6 +414,33 @@ public class MainWindowController extends FXController {
 
         private void onEpisodesBtnPress(ActionEvent e) {
             this.changeToEpisodes();
+        }
+    }
+
+    private class MenuBar implements SubControl {
+
+        @Override
+        public void init() {
+            menuItemQuit.setOnAction(this::onQuit);
+            menuItemSettings.setOnAction(this::onSettings);
+            menuItemRestart.setOnAction(this::onRestart);
+        }
+
+        private void onQuit(ActionEvent e) {
+            App.getInstance().exit(ExitCode.NORMAL);
+        }
+
+        private void onSettings(ActionEvent e) {
+            SettingsWindow settingsWindow = App.getInstance().getWindowsManager().getWindow(SettingsWindow.class);
+
+            if (settingsWindow.getOwner() == null)
+                settingsWindow.initOwner(getWindow());
+
+            settingsWindow.showAndWait();
+        }
+
+        private void onRestart(ActionEvent e) {
+            App.getInstance().exit(ExitCode.RESTART);
         }
     }
 

@@ -28,11 +28,6 @@ package org.lmelaia.iseries.common.system;
 public enum ExitCode {
 
     /**
-     * Normal termination.
-     */
-    NORMAL(0, "Normal exit.", false),
-
-    /**
      * Termination caused by the user forcibly terminating
      * the application through the os (e.g. through task
      * managers 'end task' on windows), a crash in the jvm
@@ -61,11 +56,26 @@ public enum ExitCode {
      */
     IPC_FAILURE(13, "An inter process communication failure occurred.", true),
 
+    RESTART_FAILURE(14, "Failed to restart I-Series", true),
+
+    //Special Codes
+
+    /**
+     * Normal termination.
+     */
+    NORMAL(0, "Normal exit.", false),
+
     /**
      * Used in place where the exit code wasn't specified in any
      * of the other enums.
      */
-    UNKNOWN_ERROR(-500, "Unknown exit code.", true);
+    UNKNOWN_ERROR(-500, "Unknown exit code.", true),
+
+    /**
+     * Exit code that will request the launcher restart the application
+     * instead of exiting quietly.
+     */
+    RESTART(-600, "Exit code that requests a restart from the launcher.", false);
 
     /**
      * The exit code for use in {@link System#exit(int)}.

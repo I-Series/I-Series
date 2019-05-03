@@ -14,21 +14,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.lmelaia.iseries.fx.settings;
 
-package org.lmelaia.iseries.common.system;
+import org.lmelaia.iseries.common.fx.FXWindow;
+import org.lmelaia.iseries.common.fx.RegisterFXWindow;
 
 /**
- * Callback for application shutdown requests.
+ * Settings window class.
  */
-public interface ShutdownListener {
+@RegisterFXWindow(
+        fxmlFileName = "windows/settings_window.fxml",
+        cssFileName = "windows/settings_window.css",
+        controllerClass = SettingsWindowController.class
+)
+public class SettingsWindow extends FXWindow {
 
     /**
-     * Called when the application is requested to close,
-     * either through the user or a crash.
-     *
-     * @param code the code given as the reason for the application to close.
-     * @return true if the shutdown process should continue, false to
-     * abort the shutdown.
+     * {@inheritDoc}
      */
-    boolean onShutdown(ExitCode code);
+    @Override
+    protected void onInitialization() {
+        this.setTitle("I-Series Settings");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onPostInitialization() {
+
+    }
 }
