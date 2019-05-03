@@ -21,6 +21,7 @@ import com.google.common.reflect.ClassPath;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import org.apache.logging.log4j.Logger;
 import org.lmelaia.iseries.common.system.AppBase;
 import org.lmelaia.iseries.common.system.AppLogger;
@@ -211,14 +212,60 @@ public class FXWindowsManager extends Application {
      * @param windowClass the class of the window (eg. Window.class)
      * @return {@code true} if the window was displayed.
      */
-    @SuppressWarnings("UnusedReturnValue")
     public boolean showWindow(Class<? extends FXWindow> windowClass) {
         FXWindow window = getWindow(windowClass);
 
         if (window == null)
             return false;
 
+        if (window.isShowing())
+            return false;
+
         Platform.runLater(window::show);
+        return window.isShowing();
+    }
+
+    /**
+     * Displays a registered window with the {@code showAndWait()}
+     * method.
+     *
+     * @param windowClass the class of the window (eg. Window.class)
+     * @return {@code true} if the window was displayed.
+     */
+    public boolean showWindowAndWait(Class<? extends FXWindow> windowClass) {
+        FXWindow window = getWindow(windowClass);
+
+        if (window == null)
+            return false;
+
+        if (window.isShowing())
+            return false;
+
+        Platform.runLater(window::showAndWait);
+        return window.isShowing();
+    }
+
+    /**
+     * Displays a registered window with the {@code showAndWait()}
+     * method with an option to set the owner.
+     *
+     * @param windowClass the class of the window (eg. Window.class)
+     * @param owner       the parent window.
+     * @return {@code true} if the window was displayed.
+     */
+    public boolean showWindowAndWait(Class<? extends FXWindow> windowClass, Window owner) {
+        FXWindow window = getWindow(windowClass);
+
+        if (window == null)
+            return false;
+
+        if (window.isShowing())
+            return false;
+
+        if (window.getOwner() == null && owner != null)
+            window.initOwner(owner);
+
+        Platform.runLater(window::showAndWait);
         return window.isShowing();
     }
 
@@ -236,7 +283,6 @@ public class FXWindowsManager extends Application {
                 String fxml = getFxmlFileName(c);
                 String css = getCssFileName(c);
 
-                @SuppressWarnings("unchecked")
                 Class<? extends FXController> controllerClass = getControllerClass(c);
 
                 FXController controller = null;
@@ -281,7 +327,6 @@ public class FXWindowsManager extends Application {
      * @throws IOException if the attempt to read class path resources
      *                     (jar files or directories) failed.
      */
-    @SuppressWarnings("unchecked")
     private List<Class<? extends FXWindow>> getWindowClasses() throws IOException {
         List<Class<? extends FXWindow>> classList = new ArrayList<>();
         classList.addAll(getWindowClasses(windowsPath));
@@ -289,7 +334,7 @@ public class FXWindowsManager extends Application {
         return classList;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "UnstableApiUsage"})
     private List<Class<? extends FXWindow>> getWindowClasses(String path) throws IOException {
         List<Class<? extends FXWindow>> classList = new ArrayList<>();
 
