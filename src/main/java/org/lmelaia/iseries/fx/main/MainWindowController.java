@@ -12,8 +12,6 @@ import org.lmelaia.iseries.fx.entry_dialog.EntryDialog;
 import org.lmelaia.iseries.fx.settings.SettingsWindow;
 import org.lmelaia.iseries.fx.util.ControlUtil;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * The controller class for the main window.
  */
@@ -103,30 +101,22 @@ public class MainWindowController extends FXController {
     //* END *
     //*******
 
-    protected ControlBar controlBar;
+    protected final ControlBar controlBar = new ControlBar();
 
-    protected MediaPlayer mediaPlayer;
+    protected final MediaPlayer mediaPlayer = new MediaPlayer();
 
-    protected Navigator navigator;
+    protected final Navigator navigator = new Navigator();
 
-    protected MenuBar menuBar;
+    protected final MenuBar menuBar = new MenuBar();
 
     /**
      * Initializes sub components.
      */
     @Override
     public void init() {
-        controlBar = new ControlBar(controlButtonAdd, controlButtonEdit, controlButtonDelete, controlInputField);
         controlBar.init();
-
-        mediaPlayer = new MediaPlayer(mediaSliderSeek, mediaSliderVolume, mediaButtonPrevious, mediaButtonBack,
-                mediaButtonPlay, mediaButtonForward, mediaButtonNext, mediaButtonEnlarge);
         mediaPlayer.init();
-
-        navigator = new Navigator(navButtonNavigator, navButtonInformation, navButtonEpisodes, navDisplayPane);
         navigator.init();
-
-        menuBar = new MenuBar();
         menuBar.init();
     }
 
@@ -134,42 +124,6 @@ public class MainWindowController extends FXController {
      * Sub class for controlling the main window control bar.
      */
     protected class ControlBar implements SubControl {
-
-        /**
-         * Add entry button.
-         */
-        protected Button controlButtonAdd;
-
-        /**
-         * Edit entry button.
-         */
-        protected Button controlButtonEdit;
-
-        /**
-         * Delete entry button.
-         */
-        protected Button controlButtonDelete;
-
-        /**
-         * Search bar.
-         */
-        protected TextField controlInputField;
-
-        /**
-         * Initializes components.
-         *
-         * @param add
-         * @param edit
-         * @param delete
-         * @param input
-         */
-        @SuppressWarnings("JavaDoc")
-        private ControlBar(Button add, Button edit, Button delete, TextField input) {
-            controlButtonAdd = requireNonNull(add, "ControlButtonAdd=null");
-            controlButtonEdit = requireNonNull(edit, "ControlButtonEdit=null");
-            controlButtonDelete = requireNonNull(delete, "ControlButtonDelete=null");
-            controlInputField = requireNonNull(input, "ControlInputField=null");
-        }
 
         /**
          * Sets up this classes components.
@@ -186,12 +140,7 @@ public class MainWindowController extends FXController {
         }
 
         private void onAddPressed(ActionEvent e) {
-            EntryDialog entryDialog = FXWindowsManager.getInstance().getWindow(EntryDialog.class);
-
-            if (entryDialog.getOwner() == null)
-                entryDialog.initOwner(getWindow());
-
-            entryDialog.showAndWait();
+            FXWindowsManager.getInstance().showWindowAndWait(EntryDialog.class, getWindow());
         }
 
         private void onEditPressed(ActionEvent e) {
@@ -213,81 +162,20 @@ public class MainWindowController extends FXController {
     protected class MediaPlayer implements SubControl {
 
         /**
-         * Media window seek slider.
-         */
-        protected Slider mediaSliderSeek;
-
-        /**
-         * Media window volume bar.
-         */
-        protected Slider mediaSliderVolume;
-
-        /**
-         * Previous file/episode media button.
-         */
-        protected Button mediaButtonPrevious;
-
-        /**
-         * Rewind media button.
-         */
-        protected Button mediaButtonBack;
-
-        /**
-         * Play/pause media button.
-         */
-        protected Button mediaButtonPlay;
-
-        /**
-         * Media fast forward button.
-         */
-        protected Button mediaButtonForward;
-
-        /**
-         * Next file/episode media button.
-         */
-        protected Button mediaButtonNext;
-
-        /**
-         * Media button full screen.
-         */
-        protected Button mediaButtonEnlarge;
-
-        /**
-         * Initializes components.
-         *
-         * @param seek
-         * @param volume
-         * @param previous
-         * @param back
-         * @param play
-         * @param forward
-         * @param next
-         * @param enlarge
-         */
-        @SuppressWarnings("JavaDoc")
-        private MediaPlayer(Slider seek, Slider volume, Button previous, Button back, Button play,
-                            Button forward, Button next, Button enlarge) {
-            this.mediaSliderSeek = requireNonNull(seek);
-            this.mediaSliderVolume = requireNonNull(volume);
-            this.mediaButtonPrevious = requireNonNull(previous);
-            this.mediaButtonBack = requireNonNull(back);
-            this.mediaButtonPlay = requireNonNull(play);
-            this.mediaButtonForward = requireNonNull(forward);
-            this.mediaButtonNext = requireNonNull(next);
-            this.mediaButtonEnlarge = requireNonNull(enlarge);
-        }
-
-        /**
          * Sets up this classes components.
          */
         @Override
         public void init() {
-            this.mediaButtonPrevious.setDisable(true);
-            this.mediaButtonBack.setDisable(true);
-            this.mediaButtonPlay.setDisable(true);
-            this.mediaButtonForward.setDisable(true);
-            this.mediaButtonNext.setDisable(true);
-            this.mediaButtonEnlarge.setDisable(true);
+            mediaButtonPrevious.setDisable(true);
+            mediaButtonBack.setDisable(true);
+            mediaButtonPlay.setDisable(true);
+            mediaButtonForward.setDisable(true);
+            mediaButtonNext.setDisable(true);
+            mediaButtonEnlarge.setDisable(true);
+        }
+
+        public Slider getVolumeSlider() {
+            return mediaSliderVolume;
         }
     }
 
@@ -295,27 +183,6 @@ public class MainWindowController extends FXController {
      * Sub class for controlling the main windows navigator.
      */
     protected class Navigator implements SubControl {
-
-        /**
-         * Navigator button.
-         */
-        private Button navButtonNavigator;
-
-        /**
-         * Information button.
-         */
-        private Button navButtonInformation;
-
-        /**
-         * Episodes button.
-         */
-        private Button navButtonEpisodes;
-
-        /**
-         * Anchor pane to which switchable components are
-         * added to/removed from.
-         */
-        private AnchorPane navDisplayPane;
 
         /**
          * Navigator tree view (library).
@@ -329,19 +196,8 @@ public class MainWindowController extends FXController {
 
         /**
          * Initializes components.
-         *
-         * @param navigator
-         * @param information
-         * @param episodes
-         * @param display
          */
-        @SuppressWarnings("JavaDoc")
-        protected Navigator(Button navigator, Button information, Button episodes, AnchorPane display) {
-            this.navButtonNavigator = requireNonNull(navigator);
-            this.navButtonInformation = requireNonNull(information);
-            this.navButtonEpisodes = requireNonNull(episodes);
-            this.navDisplayPane = requireNonNull(display);
-
+        protected Navigator() {
             navTreeRoot = new TreeItem<>("Library");
             navigatorTree = new TreeView<>(navTreeRoot);
         }
@@ -417,8 +273,14 @@ public class MainWindowController extends FXController {
         }
     }
 
+    /**
+     * Controller class for the main windows menu bar.
+     */
     private class MenuBar implements SubControl {
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void init() {
             menuItemQuit.setOnAction(this::onQuit);
@@ -431,12 +293,7 @@ public class MainWindowController extends FXController {
         }
 
         private void onSettings(ActionEvent e) {
-            SettingsWindow settingsWindow = App.getInstance().getWindowsManager().getWindow(SettingsWindow.class);
-
-            if (settingsWindow.getOwner() == null)
-                settingsWindow.initOwner(getWindow());
-
-            settingsWindow.showAndWait();
+            App.getInstance().getWindowsManager().showWindowAndWait(SettingsWindow.class, getWindow());
         }
 
         private void onRestart(ActionEvent e) {
@@ -448,6 +305,12 @@ public class MainWindowController extends FXController {
      * Interface for sub component controllers.
      */
     private interface SubControl {
+
+        /**
+         * Init method for each sub control.
+         * Called from the main controllers {@link MainWindowController#init()}
+         * method.
+         */
         void init();
     }
 }

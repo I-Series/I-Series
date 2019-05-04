@@ -148,7 +148,7 @@ public class App extends AppBase {
     /**
      * Registers a message listener
      * to receive new arguments from connecting
-     * clients and update this applications
+     * launchers and update this applications
      * argument handler instance.
      */
     private void registerArgumentReceiver() {
