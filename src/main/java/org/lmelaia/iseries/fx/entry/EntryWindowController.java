@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.lmelaia.iseries.fx.entry_dialog;
+package org.lmelaia.iseries.fx.entry;
 
 import com.google.gson.JsonPrimitive;
 import javafx.event.ActionEvent;
@@ -30,7 +30,7 @@ import org.lmelaia.iseries.library.LibraryException;
 /**
  * The controller class the entry dialog window.
  */
-public class EntryDialogController extends FXController {
+public class EntryWindowController extends FXController {
 
     @FXML
     private Label uuid;

@@ -34,7 +34,17 @@ public enum Licences implements Licence{
     /**
      * The Apache 2.0 licence.
      */
-    APACHE("Apache 2.0");
+    APACHE("Apache 2.0"),
+
+    /**
+     * The text file containing the list
+     * of credits/acknowledgements and
+     * the licences that come with them.
+     * <br/>
+     * This is not a license but it's
+     * treated as one for simplicity.
+     */
+    ACKNOWLEDGEMENTS("Acknowledgements");
 
     /**
      * The name of the licence.

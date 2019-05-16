@@ -29,8 +29,9 @@ import java.io.IOException;
 
 /**
  * Base class for all FX windows managed by the {@link FXWindowsManager}.
+ * @param <C> the controller class type.
  */
-public abstract class FXWindow extends Stage {
+public abstract class FXWindow<C extends FXController> extends Stage {
 
     /**
      * Logging object.
@@ -52,7 +53,7 @@ public abstract class FXWindow extends Stage {
     /**
      * This windows controller. Might be null.
      */
-    protected FXController controller = null;
+    protected C controller = null;
 
     /**
      * Sets the root object and scene for the window.
@@ -68,7 +69,8 @@ public abstract class FXWindow extends Stage {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(fxmlFileName));
                 loader.setController(controller);
-                this.controller = controller;
+                //noinspection unchecked
+                this.controller = (C) controller;
 
                 this.root = loader.load();
 
@@ -167,7 +169,7 @@ public abstract class FXWindow extends Stage {
      * window.
      */
     @SuppressWarnings("unused")
-    public FXController getController() {
+    public C getController() {
         return this.controller;
     }
 }

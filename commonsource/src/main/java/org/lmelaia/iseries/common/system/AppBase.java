@@ -31,6 +31,15 @@ import java.util.Objects;
  */
 public abstract class AppBase {
 
+    /**
+     * The version number assigned to the release
+     * of the application built from this version
+     * of the code base. This version number
+     * is available to all sub-project within
+     * the code base.
+     */
+    public static final String VERSION = "0.0.1-Alpha";
+
     /*
      * Configures the logger before it's initialized
      * by a constructor call.
@@ -176,11 +185,18 @@ public abstract class AppBase {
      *
      * @param args the command line arguments.
      */
-    private void internalStart(String args[]) {
+    private void internalStart(String[] args) {
         argumentHandler.update(args);
         attemptFXInitialization();
 
         try {
+            LOG.info(
+                    "-------------------------------------------------\n"
+                            + "\t Starting new I-Series Process:\n"
+                            + "\t\tName: " + getRunningProcessName() + "\n"
+                            + "\t\tVersion: " + VERSION + "\n"
+                            + "\t-------------------------------------------------"
+            );
             start();
         } catch (Exception e) {
             LOG.fatal("Start method of app class["
@@ -258,8 +274,16 @@ public abstract class AppBase {
      * is desired to start before application
      * start.
      */
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     protected abstract boolean initializeFX();
+
+    /**
+     * @return the file name and path of the running
+     * process. This can be used to determine what sub-project
+     * is actually using the common source sub-project.
+     */
+    public static String getRunningProcessName() {
+        return System.getProperty("java.class.path");
+    }
 
     /**
      * Thread responsible for calling the registered
@@ -271,7 +295,7 @@ public abstract class AppBase {
         /**
          * Exit code given.
          */
-        private ExitCode exitCode = null;
+        private ExitCode exitCode;
 
         /**
          * Creates a new shutdown thread.

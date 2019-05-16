@@ -41,7 +41,10 @@
             </Menu>
             <Menu mnemonicParsing="false" text="Help">
                <items>
-                   <MenuItem mnemonicParsing="false" text="About"/>
+                   <MenuItem mnemonicParsing="false" text="Documentation"/>
+                   <MenuItem mnemonicParsing="false" text="Check for Updates"/>
+                   <MenuItem mnemonicParsing="false" text="Report a Bug / Request a Feature"/>
+                   <MenuItem fx:id="menuItemAbout" mnemonicParsing="false" text="About"/>
                </items>
             </Menu>
          </menus>

@@ -37,9 +37,21 @@ public class FilePathConstants {
     public static final File APPLICATION_LOGS_PATH = new File(APPLICATION_PATH.getAbsolutePath() + "/logs/");
 
     /**
+     * The path to the I-Series license.txt file.
+     */
+    public static final File APPLICATION_LICENSE_PATH = new File(APPLICATION_PATH + "/I-Series Licence.txt");
+
+    /**
+     * The path to the I-Series Acknowledgements.txt file.
+     */
+    public static final File APPLICATION_ACKNOWLEDGEMENTS_PATH
+            = new File(APPLICATION_PATH + "/I-Series Acknowledgements.txt");
+
+    /**
      * Private constructor.
      */
     private FilePathConstants() {
+        throw new RuntimeException(FilePathConstants.class.getCanonicalName() + " cannot be instantiated.");
     }
 
 }

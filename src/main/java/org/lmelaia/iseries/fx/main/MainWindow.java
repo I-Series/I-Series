@@ -21,7 +21,7 @@ import org.lmelaia.iseries.Settings;
 import org.lmelaia.iseries.common.fx.FXWindow;
 import org.lmelaia.iseries.common.fx.RegisterFXWindow;
 import org.lmelaia.iseries.common.system.ExitCode;
-import org.lmelaia.iseries.fx.exit_dialog.ExitDialog;
+import org.lmelaia.iseries.fx.exit.ExitWindow;
 
 /**
  * The main display window for I-Series.
@@ -31,17 +31,12 @@ import org.lmelaia.iseries.fx.exit_dialog.ExitDialog;
         cssFileName = "windows/main_window.css",
         controllerClass = MainWindowController.class
 )
-public class MainWindow extends FXWindow {
+public class MainWindow extends FXWindow<MainWindowController> {
 
     /**
      * Object reference to setting for quick access.
      */
     private static final Settings quitPreference = Settings.WINDOW_CLOSE_PREFERENCE;
-
-    /**
-     * Override generic controller instance.
-     */
-    protected MainWindowController controller;
 
     /**
      * Constructs a new window instance.
@@ -57,14 +52,14 @@ public class MainWindow extends FXWindow {
     protected void onInitialization() {
         this.setOnCloseRequest(e -> {
             if (quitPreference.getValueAsInt() == 0) {
-                ExitDialog.Result result = ExitDialog.present();
+                ExitWindow.Result result = ExitWindow.present();
                 if (result.remember())
                     quitPreference.changeValue(result.getOption().value);
 
-                if (result.getOption() == ExitDialog.ResultOption.QUIT)
+                if (result.getOption() == ExitWindow.ResultOption.QUIT)
                     App.getInstance().exit(ExitCode.NORMAL);
 
-                if (result.getOption() == ExitDialog.ResultOption.TRAY)
+                if (result.getOption() == ExitWindow.ResultOption.TRAY)
                     this.setIconified(true);
 
                 e.consume();
@@ -91,7 +86,6 @@ public class MainWindow extends FXWindow {
      */
     @Override
     protected void onPostInitialization() {
-        this.controller = (MainWindowController) super.controller;
         loadLastState();
     }
 

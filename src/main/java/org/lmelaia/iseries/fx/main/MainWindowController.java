@@ -8,7 +8,8 @@ import org.lmelaia.iseries.App;
 import org.lmelaia.iseries.common.fx.FXController;
 import org.lmelaia.iseries.common.fx.FXWindowsManager;
 import org.lmelaia.iseries.common.system.ExitCode;
-import org.lmelaia.iseries.fx.entry_dialog.EntryDialog;
+import org.lmelaia.iseries.fx.about.AboutWindow;
+import org.lmelaia.iseries.fx.entry.EntryWindow;
 import org.lmelaia.iseries.fx.settings.SettingsWindow;
 import org.lmelaia.iseries.fx.util.ControlUtil;
 
@@ -97,6 +98,9 @@ public class MainWindowController extends FXController {
     @FXML
     private MenuItem menuItemRestart;
 
+    @FXML
+    private MenuItem menuItemAbout;
+
     //*******
     //* END *
     //*******
@@ -140,7 +144,7 @@ public class MainWindowController extends FXController {
         }
 
         private void onAddPressed(ActionEvent e) {
-            FXWindowsManager.getInstance().showWindowAndWait(EntryDialog.class, getWindow());
+            FXWindowsManager.getInstance().showWindowAndWait(EntryWindow.class, getWindow());
         }
 
         private void onEditPressed(ActionEvent e) {
@@ -286,6 +290,7 @@ public class MainWindowController extends FXController {
             menuItemQuit.setOnAction(this::onQuit);
             menuItemSettings.setOnAction(this::onSettings);
             menuItemRestart.setOnAction(this::onRestart);
+            menuItemAbout.setOnAction(this::onAbout);
         }
 
         private void onQuit(ActionEvent e) {
@@ -298,6 +303,10 @@ public class MainWindowController extends FXController {
 
         private void onRestart(ActionEvent e) {
             App.getInstance().exit(ExitCode.RESTART);
+        }
+
+        private void onAbout(ActionEvent e) {
+            App.getInstance().getWindowsManager().showWindowAndWait(AboutWindow.class);
         }
     }
 

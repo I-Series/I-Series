@@ -27,7 +27,7 @@ import org.lmelaia.iseries.common.fx.RegisterFXWindow;
         cssFileName = "windows/settings_window.css",
         controllerClass = SettingsWindowController.class
 )
-public class SettingsWindow extends FXWindow {
+public class SettingsWindow extends FXWindow<SettingsWindowController> {
 
     /**
      * {@inheritDoc}

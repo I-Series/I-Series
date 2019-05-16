@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.lmelaia.iseries.fx.entry_dialog;
+package org.lmelaia.iseries.fx.entry;
 
 import org.lmelaia.iseries.common.fx.FXWindow;
 import org.lmelaia.iseries.common.fx.RegisterFXWindow;
@@ -23,11 +23,11 @@ import org.lmelaia.iseries.common.fx.RegisterFXWindow;
  * The window class the entry dialog.
  */
 @RegisterFXWindow(
-        fxmlFileName = "windows/entry_dialog.fxml",
-        cssFileName = "windows/entry_dialog.css",
-        controllerClass = EntryDialogController.class
+        fxmlFileName = "windows/entry_window.fxml",
+        cssFileName = "windows/entry_window.css",
+        controllerClass = EntryWindowController.class
 )
-public class EntryDialog extends FXWindow {
+public class EntryWindow extends FXWindow<EntryWindowController> {
 
     /**
      * {@inheritDoc}

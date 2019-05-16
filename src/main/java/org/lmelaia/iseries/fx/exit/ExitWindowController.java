@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.lmelaia.iseries.fx.exit_dialog;
+package org.lmelaia.iseries.fx.exit;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -24,7 +24,7 @@ import org.lmelaia.iseries.common.fx.FXController;
 /**
  * Quit confirmation dialog controller.
  */
-public class ExitDialogController extends FXController {
+public class ExitWindowController extends FXController {
 
     @FXML
     private Button btnQuit;
@@ -41,7 +41,7 @@ public class ExitDialogController extends FXController {
     /**
      * Currently selected button.
      */
-    protected ExitDialog.ResultOption result = ExitDialog.ResultOption.CANCEL;
+    protected ExitWindow.ResultOption result = ExitWindow.ResultOption.CANCEL;
 
     /**
      * @return true if the remember choice check box is
@@ -57,17 +57,17 @@ public class ExitDialogController extends FXController {
     @Override
     public void init() {
         btnQuit.setOnAction(a -> {
-            result = ExitDialog.ResultOption.QUIT;
+            result = ExitWindow.ResultOption.QUIT;
             this.getWindow().close();
         });
 
         btnTray.setOnAction(a -> {
-            result = ExitDialog.ResultOption.TRAY;
+            result = ExitWindow.ResultOption.TRAY;
             this.getWindow().close();
         });
 
         btnCancel.setOnAction(a -> {
-            result = ExitDialog.ResultOption.CANCEL;
+            result = ExitWindow.ResultOption.CANCEL;
             this.getWindow().close();
         });
 

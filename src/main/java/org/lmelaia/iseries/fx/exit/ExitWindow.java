@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.lmelaia.iseries.fx.exit_dialog;
+package org.lmelaia.iseries.fx.exit;
 
 import javafx.stage.Stage;
 import org.lmelaia.iseries.common.fx.FXWindow;
@@ -25,11 +25,11 @@ import org.lmelaia.iseries.common.fx.RegisterFXWindow;
  * Main window close confirmation dialog.
  */
 @RegisterFXWindow(
-        fxmlFileName = "windows/exit_dialog.fxml",
-        cssFileName = "windows/exit_dialog.css",
-        controllerClass = ExitDialogController.class
+        fxmlFileName = "windows/exit_window.fxml",
+        cssFileName = "windows/exit_window.css",
+        controllerClass = ExitWindowController.class
 )
-public class ExitDialog extends FXWindow {
+public class ExitWindow extends FXWindow<ExitWindowController> {
 
     /**
      * Sets the window properties.
@@ -53,12 +53,12 @@ public class ExitDialog extends FXWindow {
      * @return The users choice given to the dialog.
      */
     public static Result present() {
-        ExitDialog dialog = FXWindowsManager.getInstance().getWindow(ExitDialog.class);
+        ExitWindow dialog = FXWindowsManager.getInstance().getWindow(ExitWindow.class);
         dialog.showAndWait();
 
         return new Result(
-                ((ExitDialogController) dialog.controller).result,
-                ((ExitDialogController) dialog.controller).remember()
+                dialog.controller.result,
+                dialog.controller.remember()
         );
     }
 

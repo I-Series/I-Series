@@ -101,11 +101,13 @@ public class BuildConfiguration {
      */
     public static final SmartFile SLIBRARIES_FOLDER = SPROJECT_FOLDER
             .forward("build").forward("libs").forward("libs");
+
     /**
      * The folder containing the licences for the libraries.
      */
     public static final SmartFile SLEGAL_FOLDER = SOUTPUT_FOLDER
             .forward("legal");
+
     /**
      * The distribution folder. Contains the files which will be distributed to
      * the user.
@@ -191,6 +193,9 @@ public class BuildConfiguration {
         new OutputCopyFile(Licences.GNU.getFile(),
         APPLICATION_NAME + " Licence.txt"),
 
+            new OutputCopyFile(Licences.ACKNOWLEDGEMENTS.getFile(),
+                    APPLICATION_NAME + " Acknowledgements.txt"),
+
         new OutputCopyFile(SLAUNCHER_FOLDER.forward("build").forward("libs")
                 .forward("launchersource.jar").getFile(), "I-Series.jar")
     };
@@ -208,13 +213,15 @@ public class BuildConfiguration {
     //******************************
     //             LISTS
     //******************************
+
     /**
      * A list of the libraries for the launcher project.
      */
     @SuppressWarnings("MismatchedReadAndWriteOfArray")
     private static final Library[] LAUNCHER_LIBRARIES = {
-
+            //Empty
     };
+
     /**
      * A list of directories required to exist before beginning a full build.
      */
@@ -229,10 +236,12 @@ public class BuildConfiguration {
         new ExpectedFile("legal"),
         new ExpectedFile("libs"),
         new ExpectedFile(APPLICATION_NAME + " Licence.txt"),
+            new ExpectedFile(APPLICATION_NAME + " Acknowledgements.txt"),
         new ExpectedFile(APPLICATION_NAME + ".exe"),
         new ExpectedFile(APPLICATION_NAME + ".jar"),
         new ExpectedFile(APPLICATION_NAME + "-Base.jar")
     };
+
     /**
      * List of files expected to be in the distribution directory.
      */
@@ -240,6 +249,7 @@ public class BuildConfiguration {
         new ExpectedFile(SWINDOWS_ZIP_FILE.getFileName()),
         new ExpectedFile(SCROSSPLATFORM_ZIP_FILE.getFileName())
     };
+
     /**
      * The verifier for the output folder.
      */
@@ -247,6 +257,7 @@ public class BuildConfiguration {
             = new BuildOutputVerifier(SOUTPUT_FOLDER.getFile(),
                     OUTPUT_DIR_FILES)
             .setLogExtraFiles(true);
+
     /**
      * The verifier for the output folder.
      */
@@ -254,6 +265,7 @@ public class BuildConfiguration {
             = new BuildOutputVerifier(SDISTRIBUTION_FOLDER.getFile(),
                     DIST_DIR_FILES)
             .setLogExtraFiles(true);
+
     /**
      * The configuration settings to build the I-Series executable.
      */
