@@ -270,6 +270,28 @@ public class FXWindowsManager extends Application {
     }
 
     /**
+     * Displays the given FXWindow with the {@code showAndWait()}
+     * method with an option to set the owner.
+     *
+     * @param window the given FXWindow.
+     * @param owner  the parent window.
+     * @return {@code true} if the window was displayed.
+     */
+    public boolean showWindowAndWait(FXWindow window, Window owner) {
+        if (window == null)
+            return false;
+
+        if (window.isShowing())
+            return false;
+
+        if (window.getOwner() == null && owner != null)
+            window.initOwner(owner);
+
+        Platform.runLater(window::showAndWait);
+        return window.isShowing();
+    }
+
+    /**
      * Constructs a new instance of each
      * declared window and calls the
      * {@link FXWindow#initialize(String, String, FXController)} method

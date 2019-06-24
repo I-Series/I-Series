@@ -55,11 +55,18 @@ public class NamedEntrySorter implements EntrySorter {
         if (entry.getInformation().get("name") == null)
             return entry.getUUID();
 
-        File entryFolder = new File(libraryPath + "/" + entry.getInformation().get("name").getAsString());
+        String name = entry.getInformation().get("name").getAsString();
+        name = name
+                .replace("?", "")
+                .replace("/", "")
+                .replace("\\", "")
+                .replace(":", "");
+
+        File entryFolder = new File(libraryPath + "/" + name);
 
         if (entryFolder.exists())
-            return entry.getInformation().get("name").getAsString() + " (" + entry.getUUID() + ")";
+            return name + " (" + entry.getUUID() + ")";
 
-        return entry.getInformation().get("name").getAsString();
+        return name;
     }
 }

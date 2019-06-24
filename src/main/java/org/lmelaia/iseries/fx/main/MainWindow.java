@@ -98,6 +98,8 @@ public class MainWindow extends FXWindow<MainWindowController> {
         Settings.WINDOW_Y.changeValue(this.getY());
         Settings.WINDOW_WIDTH.changeValue(this.getWidth());
         Settings.WINDOW_HEIGHT.changeValue(this.getHeight());
+
+        this.controller.saveState();
     }
 
     /**
@@ -111,5 +113,7 @@ public class MainWindow extends FXWindow<MainWindowController> {
 
         this.setWidth(Settings.WINDOW_WIDTH.getValueAsDouble());
         this.setHeight(Settings.WINDOW_HEIGHT.getValueAsDouble());
+
+        this.controller.loadState();
     }
 }

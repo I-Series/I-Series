@@ -1,17 +1,10 @@
 package org.lmelaia.iseries.fx.main;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import org.lmelaia.iseries.App;
 import org.lmelaia.iseries.common.fx.FXController;
-import org.lmelaia.iseries.common.fx.FXWindowsManager;
-import org.lmelaia.iseries.common.system.ExitCode;
-import org.lmelaia.iseries.fx.about.AboutWindow;
-import org.lmelaia.iseries.fx.entry.EntryWindow;
-import org.lmelaia.iseries.fx.settings.SettingsWindow;
-import org.lmelaia.iseries.fx.util.ControlUtil;
+import org.lmelaia.iseries.ilibrary.ITableEntry;
 
 /**
  * The controller class for the main window.
@@ -34,7 +27,11 @@ public class MainWindowController extends FXController {
     private Button controlButtonDelete;
 
     @FXML
+    private Button controlButtonUnindex;
+
+    @FXML
     private TextField controlInputField;
+
 
     //Media Player
 
@@ -85,7 +82,7 @@ public class MainWindowController extends FXController {
     protected SplitPane splitPaneHorizontal;
 
     @FXML
-    private TreeTableView entryTable;
+    private TableView<ITableEntry> entryTable;
 
     //Menu Bar
 
@@ -105,221 +102,88 @@ public class MainWindowController extends FXController {
     //* END *
     //*******
 
-    protected final ControlBar controlBar = new ControlBar();
+    /**
+     * Handles the Toolbar part of the main
+     * window.
+     */
+    protected ActionBarControl controlBar;
 
-    protected final MediaPlayer mediaPlayer = new MediaPlayer();
+    /**
+     * Handles the media player part of the main
+     * window.
+     */
+    protected MediaPlayerControl mediaPlayer;
 
-    protected final Navigator navigator = new Navigator();
+    /**
+     * Handles the navigator part of the main
+     * window.
+     */
+    protected NavigatorControl navigator;
 
-    protected final MenuBar menuBar = new MenuBar();
+    /**
+     * Handles the menu bar part of the main
+     * window.
+     */
+    protected MenuBarControl menuBar;
+
+    /**
+     * Handles the table in the main window.
+     */
+    protected TableController tableController;
 
     /**
      * Initializes sub components.
      */
     @Override
     public void init() {
+        //Consider initialing from a list
+        controlBar = new ActionBarControl(this, new Object[]{
+                controlButtonAdd, controlButtonEdit, controlButtonDelete, controlInputField, controlButtonUnindex
+        });
+
+        this.mediaPlayer = new MediaPlayerControl(this, new Object[]{
+                mediaButtonPrevious, mediaButtonBack, mediaButtonPlay, mediaButtonForward,
+                mediaButtonNext, mediaButtonEnlarge, mediaSliderVolume
+        });
+
+        navigator = new NavigatorControl(this, new Object[]{
+                navDisplayPane, navButtonNavigator, navButtonInformation, navButtonEpisodes
+        });
+
+        this.menuBar = new MenuBarControl(this, new Object[]{
+                menuItemQuit, menuItemSettings, menuItemRestart, menuItemAbout
+        });
+
+        this.tableController = new TableController(this, entryTable);
+
         controlBar.init();
         mediaPlayer.init();
         navigator.init();
         menuBar.init();
+        tableController.init();
     }
 
     /**
-     * Sub class for controlling the main window control bar.
+     * Saves the state (user changed)
+     * of each sub-controller.
      */
-    protected class ControlBar implements SubControl {
-
-        /**
-         * Sets up this classes components.
-         */
-        @Override
-        public void init() {
-            controlButtonAdd.setOnAction(this::onAddPressed);
-            controlButtonEdit.setOnAction(this::onEditPressed);
-            controlButtonDelete.setOnAction(this::onDeletePressed);
-            controlInputField.setOnAction(this::onInputEntered);
-
-            controlButtonEdit.setDisable(true);
-            controlButtonDelete.setDisable(true);
-        }
-
-        private void onAddPressed(ActionEvent e) {
-            FXWindowsManager.getInstance().showWindowAndWait(EntryWindow.class, getWindow());
-        }
-
-        private void onEditPressed(ActionEvent e) {
-
-        }
-
-        private void onDeletePressed(ActionEvent e) {
-
-        }
-
-        private void onInputEntered(ActionEvent e) {
-
-        }
+    protected void saveState() {
+        controlBar.saveState();
+        mediaPlayer.saveState();
+        navigator.saveState();
+        menuBar.saveState();
+        tableController.saveState();
     }
 
     /**
-     * Sub class for controlling the media player window.
+     * Loads the state (user changed)
+     * of each sub-controller.
      */
-    protected class MediaPlayer implements SubControl {
-
-        /**
-         * Sets up this classes components.
-         */
-        @Override
-        public void init() {
-            mediaButtonPrevious.setDisable(true);
-            mediaButtonBack.setDisable(true);
-            mediaButtonPlay.setDisable(true);
-            mediaButtonForward.setDisable(true);
-            mediaButtonNext.setDisable(true);
-            mediaButtonEnlarge.setDisable(true);
-        }
-
-        public Slider getVolumeSlider() {
-            return mediaSliderVolume;
-        }
-    }
-
-    /**
-     * Sub class for controlling the main windows navigator.
-     */
-    protected class Navigator implements SubControl {
-
-        /**
-         * Navigator tree view (library).
-         */
-        private TreeView<String> navigatorTree;
-
-        /**
-         * Navigator tree view root node.
-         */
-        private TreeItem<String> navTreeRoot;
-
-        /**
-         * Initializes components.
-         */
-        protected Navigator() {
-            navTreeRoot = new TreeItem<>("Library");
-            navigatorTree = new TreeView<>(navTreeRoot);
-        }
-
-        /**
-         * Sets up this classes components.
-         */
-        @Override
-        public void init() {
-            navTreeRoot.setGraphic(ControlUtil.getImageView("/images/img_library_24.png"));
-            navigatorTree.getSelectionModel().selectFirst();
-
-            AnchorPane.setRightAnchor(navigatorTree, 0D);
-            AnchorPane.setLeftAnchor(navigatorTree, 0D);
-            AnchorPane.setTopAnchor(navigatorTree, 0D);
-            AnchorPane.setBottomAnchor(navigatorTree, 0D);
-
-            navButtonNavigator.setOnAction(this::onNavigatorBtnPress);
-            navButtonInformation.setOnAction(this::onInformationBtnPress);
-            navButtonEpisodes.setOnAction(this::onEpisodesBtnPress);
-
-            changeToNavigator();
-        }
-
-        /**
-         * Switches to the navigator tab (tree view).
-         */
-        public void changeToNavigator() {
-            resetNavButtons();
-            ControlUtil.setBackgroundColor(navButtonNavigator, "lightblue");
-            navDisplayPane.getChildren().clear();
-            navDisplayPane.getChildren().add(navigatorTree);
-        }
-
-        /**
-         * Switches to the information tab.
-         */
-        public void changeToInformation() {
-            resetNavButtons();
-            ControlUtil.setBackgroundColor(navButtonInformation, "lightblue");
-            navDisplayPane.getChildren().clear();
-        }
-
-        /**
-         * Switches to the episodes tab.
-         */
-        public void changeToEpisodes() {
-            resetNavButtons();
-            ControlUtil.setBackgroundColor(navButtonEpisodes, "lightblue");
-            navDisplayPane.getChildren().clear();
-        }
-
-        /**
-         * Resets the navigation buttons background colors.
-         */
-        private void resetNavButtons() {
-            String color = "rgb(240, 240, 240)";
-            ControlUtil.setBackgroundColor(navButtonNavigator, color);
-            ControlUtil.setBackgroundColor(navButtonInformation, color);
-            ControlUtil.setBackgroundColor(navButtonEpisodes, color);
-        }
-
-        private void onNavigatorBtnPress(ActionEvent e) {
-            this.changeToNavigator();
-        }
-
-        private void onInformationBtnPress(ActionEvent e) {
-            this.changeToInformation();
-        }
-
-        private void onEpisodesBtnPress(ActionEvent e) {
-            this.changeToEpisodes();
-        }
-    }
-
-    /**
-     * Controller class for the main windows menu bar.
-     */
-    private class MenuBar implements SubControl {
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void init() {
-            menuItemQuit.setOnAction(this::onQuit);
-            menuItemSettings.setOnAction(this::onSettings);
-            menuItemRestart.setOnAction(this::onRestart);
-            menuItemAbout.setOnAction(this::onAbout);
-        }
-
-        private void onQuit(ActionEvent e) {
-            App.getInstance().exit(ExitCode.NORMAL);
-        }
-
-        private void onSettings(ActionEvent e) {
-            App.getInstance().getWindowsManager().showWindowAndWait(SettingsWindow.class, getWindow());
-        }
-
-        private void onRestart(ActionEvent e) {
-            App.getInstance().exit(ExitCode.RESTART);
-        }
-
-        private void onAbout(ActionEvent e) {
-            App.getInstance().getWindowsManager().showWindowAndWait(AboutWindow.class);
-        }
-    }
-
-    /**
-     * Interface for sub component controllers.
-     */
-    private interface SubControl {
-
-        /**
-         * Init method for each sub control.
-         * Called from the main controllers {@link MainWindowController#init()}
-         * method.
-         */
-        void init();
+    protected void loadState() {
+        controlBar.loadState();
+        mediaPlayer.loadState();
+        navigator.loadState();
+        menuBar.loadState();
+        tableController.loadState();
     }
 }

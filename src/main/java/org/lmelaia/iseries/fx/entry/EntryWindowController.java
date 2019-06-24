@@ -16,7 +16,6 @@
  */
 package org.lmelaia.iseries.fx.entry;
 
-import com.google.gson.JsonPrimitive;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -24,7 +23,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import org.lmelaia.iseries.App;
 import org.lmelaia.iseries.common.fx.FXController;
-import org.lmelaia.iseries.library.LibraryEntry;
+import org.lmelaia.iseries.ilibrary.IEntry;
 import org.lmelaia.iseries.library.LibraryException;
 
 /**
@@ -50,18 +49,13 @@ public class EntryWindowController extends FXController {
     /**
      * The entry this window will modify/add.
      */
-    private LibraryEntry workingEntry;
+    private IEntry workingEntry;
 
     /**
      * {@inheritDoc}
      */
     @Override
     public void init() {
-        this.getWindow().setOnShowing(e -> {
-            this.workingEntry = new LibraryEntry();
-            this.uuid.setText(workingEntry.getUUID());
-        });
-
         btnAdd.setOnAction(this::onAddPressed);
         btnRefresh.setOnAction(this::onRefreshPressed);
         btnCancel.setOnAction(this::onCancelPressed);
@@ -76,10 +70,10 @@ public class EntryWindowController extends FXController {
      * @param e -
      */
     private void onAddPressed(ActionEvent e) {
-        workingEntry.getInformation().add("name", new JsonPrimitive(fieldName.getText()));
+        workingEntry.setName(fieldName.getText());
 
         try {
-            App.getInstance().getLibrary().add(workingEntry);
+            App.getInstance().getILibrary().add(workingEntry);
         } catch (LibraryException.EntryModificationException e1) {
             throw new RuntimeException(e1);//TODO: fix
         }
@@ -96,7 +90,7 @@ public class EntryWindowController extends FXController {
      * @param e -
      */
     private void onRefreshPressed(ActionEvent e) {
-        this.getWindow().getOnShowing().handle(null);
+        setWorkingEntry(null);
     }
 
     /**
@@ -108,5 +102,58 @@ public class EntryWindowController extends FXController {
      */
     private void onCancelPressed(ActionEvent e) {
         this.getWindow().close();
+    }
+
+    /**
+     * Sets the entry this window will
+     * modify and add/update.
+     *
+     * @param entry the entry or {@code null}
+     *              for a new entry.
+     */
+    private void setWorkingEntry(IEntry entry) {
+        if (entry == null)
+            entry = new IEntry();
+
+        this.workingEntry = entry;
+
+        this.uuid.setText(workingEntry.getUUID());
+        this.clear();
+    }
+
+    /**
+     * Populates the fields in the window
+     * from the data in the {@link #workingEntry}.
+     */
+    private void populateFromEntry() {
+        this.fieldName.setText(this.workingEntry.getName());
+    }
+
+    /**
+     * Clears any entered user input.
+     */
+    private void clear() {
+        this.fieldName.setText("");
+    }
+
+    // PUBLIC
+
+    /**
+     * Sets this window instance to add
+     * mode.
+     */
+    public void addMode() {
+        setWorkingEntry(null);
+        this.btnAdd.setText("Add");
+    }
+
+    /**
+     * Sets this window instance to edit
+     * mode.
+     */
+    public void editMode(IEntry entry) {
+        setWorkingEntry(entry);
+        populateFromEntry();
+        this.btnAdd.setText("Update");
     }
 }

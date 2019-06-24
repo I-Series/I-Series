@@ -26,12 +26,23 @@
             </Menu>
             <Menu mnemonicParsing="false" text="Library">
                <items>
-                   <MenuItem mnemonicParsing="false" text="Action 1"/>
+                   <MenuItem mnemonicParsing="false" text="Change Library Location"/>
+                   <SeparatorMenuItem mnemonicParsing="false"/>
+                   <MenuItem mnemonicParsing="false" text="Export"/>
+                   <MenuItem mnemonicParsing="false" text="Import"/>
+                   <SeparatorMenuItem mnemonicParsing="false"/>
+                   <MenuItem mnemonicParsing="false" text="Backup"/>
+                   <MenuItem mnemonicParsing="false" text="Restore"/>
                </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Entry">
                <items>
-                   <MenuItem mnemonicParsing="false" text="Action 1"/>
+                   <MenuItem mnemonicParsing="false" text="Add New Entry"/>
+                   <MenuItem mnemonicParsing="false" text="Edit"/>
+                   <MenuItem mnemonicParsing="false" text="Delete"/>
+                   <SeparatorMenuItem mnemonicParsing="false"/>
+                   <MenuItem mnemonicParsing="false" text="Export"/>
+                   <MenuItem mnemonicParsing="false" text="Import"/>
                </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Media Player">
@@ -255,7 +266,7 @@
                          <Button id="control_btn_delete" fx:id="controlButtonDelete" mnemonicParsing="false"
                                  prefHeight="3.0" prefWidth="18.0" styleClass="white_background">
                            <HBox.margin>
-                               <Insets right="5.0" top="6.0"/>
+                               <Insets right="15.0" top="6.0"/>
                            </HBox.margin>
                            <graphic>
                               <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
@@ -267,7 +278,23 @@
                            <padding>
                                <Insets bottom="2.0" top="2.0"/>
                            </padding>
-                        </Button>
+                         </Button>
+                         <Button id="control_btn_delete" fx:id="controlButtonUnindex" mnemonicParsing="false"
+                                 prefHeight="3.0" prefWidth="18.0" styleClass="white_background">
+                             <graphic>
+                                 <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                     <image>
+                                         <Image url="@../images/img_unindex.png"/>
+                                     </image>
+                                 </ImageView>
+                             </graphic>
+                             <padding>
+                                 <Insets bottom="2.0" top="2.0"/>
+                             </padding>
+                             <HBox.margin>
+                                 <Insets right="5.0" top="6.0"/>
+                             </HBox.margin>
+                         </Button>
                          <Region prefHeight="45.0" prefWidth="0.0" HBox.hgrow="ALWAYS"/>
                          <Region prefHeight="7.0" prefWidth="195.0" HBox.hgrow="ALWAYS"/>
                         <AnchorPane nodeOrientation="LEFT_TO_RIGHT" prefHeight="45.0" prefWidth="259.0">
@@ -288,9 +315,9 @@
                          <Insets left="5.0" right="5.0"/>
                      </padding>
                   </HBox>
-                   <TreeTableView fx:id="entryTable" editable="true" layoutY="39.0" prefHeight="471.0" prefWidth="629.0"
-                                  AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                                  AnchorPane.topAnchor="39.0"/>
+                   <TableView fx:id="entryTable" editable="true" layoutY="39.0" prefHeight="471.0" prefWidth="629.0"
+                              AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                              AnchorPane.topAnchor="39.0"/>
                </children>
             </AnchorPane>
          </items>

@@ -23,6 +23,7 @@ import org.lmelaia.iseries.common.system.AppBase;
 import org.lmelaia.iseries.common.system.AppLogger;
 import org.lmelaia.iseries.common.system.ExitCode;
 import org.lmelaia.iseries.fx.main.MainWindow;
+import org.lmelaia.iseries.ilibrary.ILibrary;
 import org.lmelaia.iseries.library.Library;
 import org.lmelaia.iseries.library.LibraryException;
 import org.lmelaia.iseries.library.NamedEntrySorter;
@@ -56,6 +57,12 @@ public class App extends AppBase {
      * The global library instance.
      */
     private final Library library;
+
+    /**
+     * The global ILibrary instance. Used
+     * instead of {@link #library}.
+     */
+    private final ILibrary iLibrary;
 
     /**
      * The port on which the launchers
@@ -109,6 +116,8 @@ public class App extends AppBase {
             //TODO: Add dialogs to deal with this problem.
             throw e;
         }
+
+        this.iLibrary = new ILibrary(library);
     }
 
     /**
@@ -119,10 +128,11 @@ public class App extends AppBase {
     }
 
     /**
-     * @return the global entry library instance.
+     * @return the global {@link ILibrary}
+     * instance.
      */
-    public Library getLibrary() {
-        return library;
+    public ILibrary getILibrary() {
+        return iLibrary;
     }
 
     /**
