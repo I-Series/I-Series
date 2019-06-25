@@ -98,6 +98,9 @@ public class MainWindowController extends FXController {
     @FXML
     private MenuItem menuItemAbout;
 
+    @FXML
+    private MenuItem menuItemTray;
+
     //*******
     //* END *
     //*******
@@ -151,7 +154,7 @@ public class MainWindowController extends FXController {
         });
 
         this.menuBar = new MenuBarControl(this, new Object[]{
-                menuItemQuit, menuItemSettings, menuItemRestart, menuItemAbout
+                menuItemQuit, menuItemSettings, menuItemRestart, menuItemAbout, menuItemTray
         });
 
         this.tableController = new TableController(this, entryTable);

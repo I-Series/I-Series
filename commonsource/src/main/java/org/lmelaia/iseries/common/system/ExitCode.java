@@ -21,9 +21,9 @@ package org.lmelaia.iseries.common.system;
  * All available exit codes for the application.
  * <p>
  * An exit code contains:
- * the integer exit code for use in {@link System#exit(int)}.
- * the reason for the exit.
- * if the exit was caused by an error (signals the application to crash if true).
+ * the integer exit code for use in {@link System#exit(int)},
+ * the reason for the exit, and, if the exit was caused by an
+ * error (signals the application to crash if true).
  */
 public enum ExitCode {
 
@@ -56,7 +56,25 @@ public enum ExitCode {
      */
     IPC_FAILURE(13, "An inter process communication failure occurred.", true),
 
+    /**
+     * Failed to restart the I-Series application.
+     */
     RESTART_FAILURE(14, "Failed to restart I-Series", true),
+
+    /**
+     * No icon found for the launchers Tray Mode
+     */
+    NO_TRAY_ICON(15, "No tray icon found in launcher", true),
+
+    /**
+     * Main I-Series app could not be started.
+     */
+    START_FAILURE(16, "Failed to Launch I-Series", true),
+
+    /**
+     * Tray mode could not be started.
+     */
+    TRAY_MODE_FAILURE(17, "Could not start Tray Mode", true),
 
     //Special Codes
 
@@ -75,7 +93,13 @@ public enum ExitCode {
      * Exit code that will request the launcher restart the application
      * instead of exiting quietly.
      */
-    RESTART(-600, "Exit code that requests a restart from the launcher.", false);
+    RESTART(-600, "Requests a restart from the launcher.", false),
+
+    /**
+     * Special exit code that requests the launcher go into Tray mode
+     * instead of exit.
+     */
+    TRAY(-700, "Requests the launcher go into Tray mode.", false);
 
     /**
      * The exit code for use in {@link System#exit(int)}.

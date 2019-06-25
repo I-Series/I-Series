@@ -110,6 +110,22 @@ public class App extends AppBase {
     }
 
     /**
+     * Registers a shutdown listener that checks
+     * for the tray shutdown code and
+     * acts accordingly.
+     */
+    private void registerTrayModeListener() {
+        App.getInstance().addShutdownListener(code -> {
+            if (code == ExitCode.TRAY) {
+                TrayMode.activate(getMessenger());
+                return false;
+            }
+
+            return true;
+        });
+    }
+
+    /**
      * Starts the launcher application process.
      *
      * @throws IOException if communication
@@ -141,6 +157,7 @@ public class App extends AppBase {
         }
 
         registerRestartListener();
+        registerTrayModeListener();
     }
 
     /**

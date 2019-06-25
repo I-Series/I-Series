@@ -60,13 +60,13 @@ public class MainWindow extends FXWindow<MainWindowController> {
                     App.getInstance().exit(ExitCode.NORMAL);
 
                 if (result.getOption() == ExitWindow.ResultOption.TRAY)
-                    this.setIconified(true);
+                    App.getInstance().exit(ExitCode.TRAY);
 
                 e.consume();
             } else if (quitPreference.getValueAsInt() == 1) {
                 App.getInstance().exit(ExitCode.NORMAL);
             } else if (quitPreference.getValueAsInt() == 2) {
-                this.setIconified(true);
+                App.getInstance().exit(ExitCode.TRAY);
             }
 
             e.consume();

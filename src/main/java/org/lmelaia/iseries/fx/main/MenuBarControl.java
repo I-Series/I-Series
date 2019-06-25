@@ -39,6 +39,11 @@ class MenuBarControl implements SubControl {
     private final MenuItem about;
 
     /**
+     * File->Move to tray.
+     */
+    private final MenuItem tray;
+
+    /**
      * Constructor.
      *
      * @param window     The main windows controller class instance.
@@ -50,6 +55,7 @@ class MenuBarControl implements SubControl {
         this.settings = (MenuItem) components[1];
         this.restart = (MenuItem) components[2];
         this.about = (MenuItem) components[3];
+        this.tray = (MenuItem) components[4];
     }
 
     /**
@@ -61,6 +67,7 @@ class MenuBarControl implements SubControl {
         settings.setOnAction(this::onSettings);
         restart.setOnAction(this::onRestart);
         about.setOnAction(this::onAbout);
+        tray.setOnAction(this::onTray);
     }
 
     /**
@@ -114,4 +121,14 @@ class MenuBarControl implements SubControl {
     private void onAbout(ActionEvent e) {
         App.getInstance().getWindowsManager().showWindowAndWait(AboutWindow.class);
     }
+
+    /**
+     * Called when the move to tray menu item is pressed.
+     *
+     * @param e action event.
+     */
+    private void onTray(ActionEvent e) {
+        App.getInstance().exit(ExitCode.TRAY);
+    }
+
 }
