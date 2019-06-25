@@ -18,6 +18,7 @@
 package org.lmelaia.iseries.launcher.fx.crash;
 
 import javafx.application.Platform;
+import javafx.scene.image.Image;
 import org.apache.logging.log4j.Logger;
 import org.lmelaia.iseries.common.fx.FXWindow;
 import org.lmelaia.iseries.common.fx.RegisterFXWindow;
@@ -50,6 +51,7 @@ public class CrashWindow extends FXWindow {
      */
     public CrashWindow() {
         this.setTitle("Crash Prompt");
+        this.getIcons().add(new Image("/images/iseries-32.png"));
         this.setAlwaysOnTop(true);
         this.setResizable(false);
     }

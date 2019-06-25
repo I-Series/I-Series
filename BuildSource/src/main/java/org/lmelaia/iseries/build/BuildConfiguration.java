@@ -276,6 +276,7 @@ public class BuildConfiguration {
                     .setOutputFile(
                             SOUTPUT_FOLDER.forward(EXECUTABLE_NAME).getPath())
                     .setMinimumJreVersion("1.8.0_111")
+            .setIconFile(SPROJECT_FOLDER.forward("iseries-32.ico").getFile().getAbsolutePath())
                     .create();
 
     //******************************
@@ -343,6 +344,7 @@ public class BuildConfiguration {
      */
     @SuppressWarnings("unused")
     private static void addLauncherLibrariesToList() {
+        //noinspection RedundantOperationOnEmptyContainer
         for (Library library : LAUNCHER_LIBRARIES) {
             try {
                 LAUNCHER_LIBRARY_MANAGER.addLibrary(library);
@@ -436,6 +438,8 @@ public class BuildConfiguration {
         } catch (IOException ex) {
             LOG.error("Launch4j process failed", ex);
         }
+
+        LOG.info("Launch4J output: " + output);
 
         if (!output.toString().equals("launch4j: Compiling resources")) {
             LOG.error("Launch4j produced unexpected output: "

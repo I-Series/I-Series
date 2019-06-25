@@ -99,7 +99,7 @@ public class TrayMode {
      * The icon displayed in the System Tray when in Tray Mode.
      */
     private final TrayIcon icon = new TrayIcon(
-            Objects.requireNonNull(createImage("/images/tray-icon.png", "Tray Icon"))
+            Objects.requireNonNull(createImage("/images/iseries-16.png", "Tray Icon"))
     );
 
     /**
@@ -131,12 +131,13 @@ public class TrayMode {
         icon.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                popupMenu.onOpen(null);
+
             }
 
             @Override
             public void mousePressed(MouseEvent e) {
-
+                if (e.getButton() == MouseEvent.BUTTON1)
+                    popupMenu.onOpen(null);
             }
 
             @Override
@@ -157,7 +158,7 @@ public class TrayMode {
 
         icon.addActionListener(popupMenu::onOpen);
         icon.setActionCommand("I-Series");
-        icon.setToolTip("I-Series (Tray Mode)");
+        icon.setToolTip("I-Series");
         icon.setImageAutoSize(true);
         icon.setPopupMenu(popupMenu);
     }

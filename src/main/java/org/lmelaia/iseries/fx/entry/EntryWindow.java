@@ -16,6 +16,7 @@
  */
 package org.lmelaia.iseries.fx.entry;
 
+import javafx.scene.image.Image;
 import org.lmelaia.iseries.common.fx.FXWindow;
 import org.lmelaia.iseries.common.fx.RegisterFXWindow;
 
@@ -35,6 +36,7 @@ public class EntryWindow extends FXWindow<EntryWindowController> {
     @Override
     protected void onInitialization() {
         this.setTitle("I-Series Entry Editor - New");
+        this.getIcons().add(new Image("/images/iseries-32.png"));
     }
 
     /**

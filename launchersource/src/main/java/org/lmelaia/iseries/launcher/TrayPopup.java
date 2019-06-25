@@ -48,11 +48,6 @@ public class TrayPopup extends PopupMenu {
      * Adds all the MenuItems to this Popup Menu.
      */
     private void addItems() {
-        MenuItem ISeries = new MenuItem("I-Series");
-        ISeries.setEnabled(false);
-        this.add(ISeries);
-        this.addSeparator();
-
         this.add(CONTINUE);
         this.add(OPEN);
         this.addSeparator();

@@ -16,6 +16,7 @@
  */
 package org.lmelaia.iseries.fx.main;
 
+import javafx.scene.image.Image;
 import org.lmelaia.iseries.App;
 import org.lmelaia.iseries.Settings;
 import org.lmelaia.iseries.common.fx.FXWindow;
@@ -50,6 +51,8 @@ public class MainWindow extends FXWindow<MainWindowController> {
      */
     @Override
     protected void onInitialization() {
+        this.getIcons().add(new Image("/images/iseries-32.png"));
+
         this.setOnCloseRequest(e -> {
             if (quitPreference.getValueAsInt() == 0) {
                 ExitWindow.Result result = ExitWindow.present();

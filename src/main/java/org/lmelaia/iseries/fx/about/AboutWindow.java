@@ -1,5 +1,6 @@
 package org.lmelaia.iseries.fx.about;
 
+import javafx.scene.image.Image;
 import org.lmelaia.iseries.common.fx.FXWindow;
 import org.lmelaia.iseries.common.fx.RegisterFXWindow;
 
@@ -19,6 +20,7 @@ public class AboutWindow extends FXWindow<AboutWindowController> {
     @Override
     protected void onInitialization() {
         this.setTitle("About I-Series");
+        this.getIcons().add(new Image("/images/iseries-32.png"));
         this.setResizable(false);
     }
 
@@ -30,8 +32,6 @@ public class AboutWindow extends FXWindow<AboutWindowController> {
      */
     @Override
     protected void onPostInitialization() {
-        this.setOnShowing(e -> {
-            controller.btnClose.requestFocus();
-        });
+        this.setOnShowing(e -> controller.btnClose.requestFocus());
     }
 }

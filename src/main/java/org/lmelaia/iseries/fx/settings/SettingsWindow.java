@@ -16,6 +16,7 @@
  */
 package org.lmelaia.iseries.fx.settings;
 
+import javafx.scene.image.Image;
 import org.lmelaia.iseries.common.fx.FXWindow;
 import org.lmelaia.iseries.common.fx.RegisterFXWindow;
 
@@ -34,6 +35,7 @@ public class SettingsWindow extends FXWindow<SettingsWindowController> {
      */
     @Override
     protected void onInitialization() {
+        this.getIcons().add(new Image("/images/iseries-32.png"));
         this.setTitle("I-Series Settings");
     }
 

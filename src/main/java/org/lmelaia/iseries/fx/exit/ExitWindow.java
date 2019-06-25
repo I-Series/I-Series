@@ -16,6 +16,7 @@
  */
 package org.lmelaia.iseries.fx.exit;
 
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.lmelaia.iseries.common.fx.FXWindow;
 import org.lmelaia.iseries.common.fx.FXWindowsManager;
@@ -37,6 +38,7 @@ public class ExitWindow extends FXWindow<ExitWindowController> {
     @Override
     protected void onInitialization() {
         this.setResizable(false);
+        this.getIcons().add(new Image("/images/iseries-32.png"));
     }
 
     /**
