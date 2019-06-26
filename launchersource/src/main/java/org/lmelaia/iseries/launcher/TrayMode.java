@@ -39,7 +39,6 @@ import java.util.Objects;
  * of being activated multiple times without any
  * re-initialization.
  */
-//TODO: Grey-Out any go-into-tray-mode buttons when tray mode is not available.
 public class TrayMode {
 
     /**

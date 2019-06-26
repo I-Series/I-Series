@@ -16,9 +16,9 @@
                <items>
                    <MenuItem fx:id="menuItemSettings" mnemonicParsing="false" style="-fx-width: 100;" text="Settings"/>
                    <SeparatorMenuItem mnemonicParsing="false"/>
-                   <MenuItem mnemonicParsing="false" text="Show Quit Dialog"/>
+                   <MenuItem fx:id="menuItemQuitDialog" mnemonicParsing="false" text="Show Quit Dialog"/>
                    <SeparatorMenuItem mnemonicParsing="false"/>
-                   <MenuItem mnemonicParsing="false" text="Minimize"/>
+                   <MenuItem fx:id="menuItemMinimize" mnemonicParsing="false" text="Minimize"/>
                    <MenuItem fx:id="menuItemTray" mnemonicParsing="false" text="Move to tray"/>
                    <MenuItem fx:id="menuItemRestart" mnemonicParsing="false" text="Restart"/>
                    <MenuItem fx:id="menuItemQuit" mnemonicParsing="false" text="Quit"/>

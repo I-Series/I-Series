@@ -3,9 +3,13 @@ package org.lmelaia.iseries.fx.main;
 import javafx.event.ActionEvent;
 import javafx.scene.control.MenuItem;
 import org.lmelaia.iseries.App;
+import org.lmelaia.iseries.Settings;
 import org.lmelaia.iseries.common.system.ExitCode;
 import org.lmelaia.iseries.fx.about.AboutWindow;
+import org.lmelaia.iseries.fx.exit.ExitWindow;
 import org.lmelaia.iseries.fx.settings.SettingsWindow;
+
+import java.awt.*;
 
 /**
  * Sub-controller class that handles the menu bar on
@@ -44,6 +48,16 @@ class MenuBarControl implements SubControl {
     private final MenuItem tray;
 
     /**
+     * File->Minimize.
+     */
+    private final MenuItem minimize;
+
+    /**
+     * File->Show Quit Dialog.
+     */
+    private final MenuItem showQuitDialog;
+
+    /**
      * Constructor.
      *
      * @param window     The main windows controller class instance.
@@ -56,6 +70,8 @@ class MenuBarControl implements SubControl {
         this.restart = (MenuItem) components[2];
         this.about = (MenuItem) components[3];
         this.tray = (MenuItem) components[4];
+        this.minimize = (MenuItem) components[5];
+        this.showQuitDialog = (MenuItem) components[6];
     }
 
     /**
@@ -68,6 +84,11 @@ class MenuBarControl implements SubControl {
         restart.setOnAction(this::onRestart);
         about.setOnAction(this::onAbout);
         tray.setOnAction(this::onTray);
+        minimize.setOnAction(this::onMinimize);
+        showQuitDialog.setOnAction(this::onShowQuitDialog);
+
+        if (!SystemTray.isSupported())
+            tray.setDisable(true);
     }
 
     /**
@@ -131,4 +152,29 @@ class MenuBarControl implements SubControl {
         App.getInstance().exit(ExitCode.TRAY);
     }
 
+    /**
+     * Called when the minimize menu item is pressed.
+     *
+     * @param e action event.
+     */
+    private void onMinimize(ActionEvent e) {
+        window.getWindow().setIconified(true);
+    }
+
+    /**
+     * Called when the show quit dialog menu item is pressed.
+     *
+     * @param e action event.
+     */
+    private void onShowQuitDialog(ActionEvent e) {
+        ExitWindow.Result result = ExitWindow.present();
+        if (result.remember())
+            Settings.WINDOW_CLOSE_PREFERENCE.changeValue(result.getOption().value);
+
+        if (result.getOption() == ExitWindow.ResultOption.QUIT)
+            App.getInstance().exit(ExitCode.NORMAL);
+
+        if (result.getOption() == ExitWindow.ResultOption.TRAY)
+            App.getInstance().exit(ExitCode.TRAY);
+    }
 }

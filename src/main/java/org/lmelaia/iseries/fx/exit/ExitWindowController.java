@@ -21,6 +21,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import org.lmelaia.iseries.common.fx.FXController;
 
+import java.awt.*;
+
 /**
  * Quit confirmation dialog controller.
  */
@@ -70,6 +72,10 @@ public class ExitWindowController extends FXController {
             result = ExitWindow.ResultOption.CANCEL;
             this.getWindow().close();
         });
+
+        if (!SystemTray.isSupported()) {
+            btnTray.setDisable(true);
+        }
 
         this.getWindow().focusedProperty().addListener(l -> {
             if (!this.getWindow().isFocused()) {
