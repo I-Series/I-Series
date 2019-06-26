@@ -20,12 +20,15 @@ import org.apache.commons.io.FileUtils
 apply plugin: 'java'
 apply plugin: 'application'
 
+//noinspection GroovyUnusedAssignment
 sourceCompatibility = '1.8'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 //Gradle run arguments.
+//noinspection GroovyUnusedAssignment
 applicationDefaultJvmArgs = ["-Dprism.vsync=false"]
 //Main class definition.
+//noinspection GroovyUnusedAssignment
 mainClassName = "org.lmelaia.iseries.Main"
 
 /**
@@ -211,10 +214,12 @@ void runLauncher(){
             System.getProperty("user.dir")).getAbsolutePath() +
             File.separator + "run"))
 
+    //noinspection GroovyAssignabilityCheck
     Thread t = new Thread(new Runnable() {
         @Override
         void run() {
             String line
+            //noinspection GroovyAssignabilityCheck
             BufferedReader inn = new BufferedReader(
                     new InputStreamReader(appProcess.getInputStream()))
 
@@ -230,6 +235,7 @@ void runLauncher(){
     t.setDaemon(true)
     t.start()
 
+    //noinspection GroovyAssignabilityCheck
     System.out.println("\nRESULT: " + appProcess.waitFor())
 }
 

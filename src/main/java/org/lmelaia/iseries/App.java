@@ -108,7 +108,9 @@ public class App extends AppBase {
         this.manageThread(Thread.currentThread());
         INSTANCE = this;
         try {
-            this.library = new Library(new File(Settings.LIBRARY_PATH.getValue()), NamedEntrySorter.NAMED_ENTRY_SORTER);
+            this.library = new Library(
+                    new File(Settings.LIBRARY_PATH.getValue()), NamedEntrySorter.NAMED_ENTRY_SORTER
+            );
         } catch (LibraryException.LibraryFetchException e) {
             //TODO: Add dialogs to deal with this problem.
             throw e;

@@ -9,3 +9,6 @@
 /.gradle/
 /.idea/
 /heapdumps/
+.nps
+.nphd
+.ref

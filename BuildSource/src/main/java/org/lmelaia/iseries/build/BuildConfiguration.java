@@ -147,6 +147,10 @@ public class BuildConfiguration {
      */
     private static final String BUILD_VERSION_CID = "build.version";
     /**
+     * Hard coded I-Series environment build version.
+     */
+    private static final String BUILD_VERSION = "0.0.1-Aplha";
+    /**
      * The name of the application.
      */
     private static final String APPLICATION_NAME = "I-Series";
@@ -165,14 +169,14 @@ public class BuildConfiguration {
             .forward(
                     APPLICATION_NAME
                     + " v"
-                    + BUILD_PROPERTIES.getProperty(BUILD_VERSION_CID)
+                            + BUILD_VERSION
                     + " Windows.zip");
     /**
      * The cross-platform distribution zip file.
      */
     public static final SmartFile SCROSSPLATFORM_ZIP_FILE = SDISTRIBUTION_FOLDER
             .forward(APPLICATION_NAME
-                    + " v" + BUILD_PROPERTIES.getProperty(BUILD_VERSION_CID)
+                    + " v" + BUILD_VERSION
                     + " Cross-platform.zip");
 
     /**
