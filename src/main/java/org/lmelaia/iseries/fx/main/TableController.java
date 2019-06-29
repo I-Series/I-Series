@@ -9,6 +9,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.apache.logging.log4j.Logger;
+import org.lmelaia.iseries.App;
 import org.lmelaia.iseries.common.system.AppLogger;
 import org.lmelaia.iseries.ilibrary.ITableEntry;
 
@@ -105,7 +106,12 @@ class TableController implements SubControl {
     @Override
     public void init() {
         this.table.getSelectionModel().selectedItemProperty().addListener(this::onItemSelected);
-        this.table.getSelectionModel().selectedItemProperty().addListener(this::onItemSelected);
+
+        App.getInstance().addLibraryInitListener((library -> {
+            library.linkTable(table);
+            TableStateStorer.load(table);
+            table.sort();
+        }));
     }
 
     /**
@@ -121,8 +127,7 @@ class TableController implements SubControl {
      */
     @Override
     public void loadState() {
-        TableStateStorer.load(table);
-        table.sort();
+
     }
 
     /**
@@ -275,7 +280,8 @@ class TableController implements SubControl {
                         //noinspection deprecation
                         column.impl_setWidth(jColumn.get("width").getAsDouble());
 
-                    tableView.getColumns().add(column);
+                    if (!tableView.getColumns().contains(column))
+                        tableView.getColumns().add(column);
                 }));
             } catch (IOException e) {
                 LOG.error("Failed to read table.json", e);

@@ -23,6 +23,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import org.lmelaia.iseries.App;
 import org.lmelaia.iseries.common.fx.FXController;
+import org.lmelaia.iseries.fx.main.MainWindow;
 import org.lmelaia.iseries.ilibrary.IEntry;
 import org.lmelaia.iseries.library.LibraryException;
 
@@ -78,6 +79,7 @@ public class EntryWindowController extends FXController {
             throw new RuntimeException(e1);//TODO: fix
         }
 
+        App.getInstance().getWindowsManager().getWindow(MainWindow.class).getController().clearSearch();
         this.getWindow().close();
     }
 

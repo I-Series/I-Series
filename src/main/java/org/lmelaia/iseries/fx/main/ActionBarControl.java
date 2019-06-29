@@ -49,6 +49,11 @@ class ActionBarControl implements SubControl {
     private final TextField input;
 
     /**
+     * The clear search button in the search bar.
+     */
+    private final Button clearInput;
+
+    /**
      * Constructor.
      *
      * @param window   the main windows controller class.
@@ -61,6 +66,7 @@ class ActionBarControl implements SubControl {
         this.delete = (Button) controls[2];
         this.input = (TextField) controls[3];
         this.unindex = (Button) controls[4];
+        this.clearInput = (Button) controls[5];
     }
 
     /**
@@ -73,10 +79,24 @@ class ActionBarControl implements SubControl {
         delete.setOnAction(this::onDeletePressed);
         input.setOnAction(this::onInputEntered);
         unindex.setOnAction(this::onUnindexPressed);
+        clearInput.setOnAction(e -> {
+            this.input.clear();
+            this.clearInput.setVisible(false);
+            App.getInstance().getILibrary().clearSearchFilter();
+        });
+
+        //Handles showing/hiding the clear text button.
+        input.setOnKeyTyped((event) -> {
+            if (!input.getText().equals(""))
+                this.clearInput.setVisible(true);
+            else
+                this.clearInput.setVisible(false);
+        });
 
         edit.setDisable(true);
         delete.setDisable(true);
         unindex.setDisable(true);
+        clearInput.setVisible(false);
     }
 
     /**
@@ -93,6 +113,14 @@ class ActionBarControl implements SubControl {
     @Override
     public void loadState() {
 
+    }
+
+    /**
+     * Clears the users search input
+     * and clears the table filter.
+     */
+    public void clearSearch() {
+        this.clearInput.fire();
     }
 
     /**
@@ -173,7 +201,11 @@ class ActionBarControl implements SubControl {
      * @param e action event.
      */
     private void onInputEntered(ActionEvent e) {
+        App.getInstance().getILibrary().setSearchFilter((entry ->
+                entry.getName().toLowerCase().contains(input.getText().toLowerCase())
+        ));
 
+        this.input.selectAll();
     }
 
     // *************

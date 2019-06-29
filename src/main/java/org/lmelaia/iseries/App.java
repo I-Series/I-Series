@@ -26,12 +26,14 @@ import org.lmelaia.iseries.common.system.ExitCode;
 import org.lmelaia.iseries.fx.library.LibraryWindow;
 import org.lmelaia.iseries.fx.main.MainWindow;
 import org.lmelaia.iseries.ilibrary.ILibrary;
+import org.lmelaia.iseries.ilibrary.LibraryInitializedListener;
 import org.lmelaia.iseries.library.Library;
 import org.lmelaia.iseries.library.LibraryException;
 import org.lmelaia.iseries.library.NamedEntrySorter;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -49,6 +51,12 @@ public class App extends AppBase {
      * Global instance of this class.
      */
     private static App INSTANCE;
+
+    /**
+     * List of listeners waiting to be notified as to when
+     * the Library & ILibrary are initialized/loaded.
+     */
+    private final List<LibraryInitializedListener> libraryInitializedListeners = new ArrayList<>();
 
     /**
      * The timer responsible for running the {@link App.PingClientTask}.
@@ -129,6 +137,25 @@ public class App extends AppBase {
     }
 
     /**
+     * Adds a listener that will be notified when the Library
+     * & ILibrary are initialized/loaded.
+     *
+     * @param listener the listener to register.
+     */
+    public void addLibraryInitListener(LibraryInitializedListener listener) {
+        this.libraryInitializedListeners.add(listener);
+    }
+
+    /**
+     * Removes a registered LibraryInitListener.
+     *
+     * @param listener the registered listener to unregister.
+     */
+    public void removeLibraryInitListener(LibraryInitializedListener listener) {
+        this.libraryInitializedListeners.remove(listener);
+    }
+
+    /**
      * @return the global window manager.
      */
     public FXWindowsManager getWindowsManager() {
@@ -199,9 +226,9 @@ public class App extends AppBase {
         }
 
         this.iLibrary = new ILibrary(library);
-        iLibrary.linkTable(
-                getWindowsManager().getWindow(MainWindow.class).getController().getEntryTable()
-        );
+
+        for (LibraryInitializedListener listener : libraryInitializedListeners)
+            listener.onInitialized(iLibrary);
     }
 
     /**

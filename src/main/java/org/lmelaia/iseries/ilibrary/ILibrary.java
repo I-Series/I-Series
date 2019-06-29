@@ -8,6 +8,7 @@ import org.lmelaia.iseries.library.LibraryEntry;
 import org.lmelaia.iseries.library.LibraryException;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -133,8 +134,17 @@ public class ILibrary {
      */
     public void linkTable(TableView<ITableEntry> table) {
         this.linkedTable = table;
-        table.setItems(tableHandler.observable);
+        table.setItems(tableHandler.display);
     }
+
+    public void setSearchFilter(TableEntryFilter filter) {
+        tableHandler.setSearchFilter(filter);
+    }
+
+    public void clearSearchFilter() {
+        tableHandler.clearSearchFilter();
+    }
+
 
     // *********
     // INTERNALS
@@ -174,12 +184,39 @@ public class ILibrary {
          * Map of table entries to their uuid (a table entry takes
          * the uuid of the entry it represents).
          */
-        private final HashMap<UUID, ITableEntry> map = new HashMap<>();
+        private final HashMap<UUID, ITableEntry> source = new HashMap<>();
 
         /**
          * List of table entries to display in the table.
          */
-        private final ObservableList<ITableEntry> observable = FXCollections.observableArrayList();
+        private final ObservableList<ITableEntry> display = FXCollections.observableArrayList();
+
+        private TableEntryFilter searchFilter;
+
+        public void setSearchFilter(TableEntryFilter filter) {
+            this.searchFilter = filter;
+            filterDisplay();
+            forceRefresh(null);
+        }
+
+        public void clearSearchFilter() {
+            searchFilter = null;
+            filterDisplay();
+            forceRefresh(null);
+        }
+
+        private void filterDisplay() {
+            display.clear();
+
+            for (Map.Entry<UUID, ITableEntry> entry : source.entrySet()) {
+                if (canAdd(entry.getValue()))
+                    display.add(entry.getValue());
+            }
+        }
+
+        private boolean canAdd(ITableEntry entry) {
+            return (searchFilter == null) || searchFilter.accept(entry);
+        }
 
         /**
          * Adds a table entry under the given uuid.
@@ -189,9 +226,10 @@ public class ILibrary {
          */
         public void put(String uuid, ITableEntry entry) {
             UUID uuid1 = UUID.fromString(uuid);
-            observable.remove(map.remove(uuid1));
-            map.put(uuid1, entry);
-            observable.add(entry);
+            display.remove(source.remove(uuid1));
+            source.put(uuid1, entry);
+            if (canAdd(entry))
+                display.add(entry);
 
             forceRefresh(entry);
         }
@@ -201,7 +239,7 @@ public class ILibrary {
          * @return the table entry under the given uuid.
          */
         public ITableEntry get(String uuid) {
-            return map.get(UUID.fromString(uuid));
+            return source.get(UUID.fromString(uuid));
         }
 
         /**
@@ -211,7 +249,7 @@ public class ILibrary {
          * @param uuid the given uuid.
          */
         public void remove(String uuid) {
-            observable.remove(map.remove(UUID.fromString(uuid)));
+            display.remove(source.remove(UUID.fromString(uuid)));
             forceRefresh(null);
         }
 

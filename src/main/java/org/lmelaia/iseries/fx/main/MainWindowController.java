@@ -32,6 +32,8 @@ public class MainWindowController extends FXController {
     @FXML
     private TextField controlInputField;
 
+    @FXML
+    private Button controlBtnClearSearch;
 
     //Media Player
 
@@ -150,7 +152,8 @@ public class MainWindowController extends FXController {
     public void init() {
         //Consider initialing from a list
         controlBar = new ActionBarControl(this, new Object[]{
-                controlButtonAdd, controlButtonEdit, controlButtonDelete, controlInputField, controlButtonUnindex
+                controlButtonAdd, controlButtonEdit, controlButtonDelete, controlInputField, controlButtonUnindex,
+                controlBtnClearSearch
         });
 
         this.mediaPlayer = new MediaPlayerControl(this, new Object[]{
@@ -209,5 +212,13 @@ public class MainWindowController extends FXController {
      */
     public TableView<ITableEntry> getEntryTable() {
         return this.entryTable;
+    }
+
+    /**
+     * Clears the users search input
+     * and clears the table filter.
+     */
+    public void clearSearch() {
+        controlBar.clearSearch();
     }
 }
