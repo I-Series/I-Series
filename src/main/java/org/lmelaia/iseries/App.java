@@ -17,11 +17,13 @@
 
 package org.lmelaia.iseries;
 
+import javafx.application.Platform;
 import org.apache.logging.log4j.Logger;
 import org.lmelaia.iseries.common.fx.FXWindowsManager;
 import org.lmelaia.iseries.common.system.AppBase;
 import org.lmelaia.iseries.common.system.AppLogger;
 import org.lmelaia.iseries.common.system.ExitCode;
+import org.lmelaia.iseries.fx.library.LibraryWindow;
 import org.lmelaia.iseries.fx.main.MainWindow;
 import org.lmelaia.iseries.ilibrary.ILibrary;
 import org.lmelaia.iseries.library.Library;
@@ -56,13 +58,13 @@ public class App extends AppBase {
     /**
      * The global library instance.
      */
-    private final Library library;
+    private Library library;
 
     /**
      * The global ILibrary instance. Used
      * instead of {@link #library}.
      */
-    private final ILibrary iLibrary;
+    private ILibrary iLibrary;
 
     /**
      * The port on which the launchers
@@ -104,22 +106,11 @@ public class App extends AppBase {
     /**
      * Constructor.
      */
-    App() throws LibraryException.LibraryFetchException, LibraryException.LibraryCreationException {
+    App() {
+        super();
+
         this.manageThread(Thread.currentThread());
         INSTANCE = this;
-        try {
-            this.library = new Library(
-                    new File(Settings.LIBRARY_PATH.getValue()), NamedEntrySorter.NAMED_ENTRY_SORTER
-            );
-        } catch (LibraryException.LibraryFetchException e) {
-            //TODO: Add dialogs to deal with this problem.
-            throw e;
-        } catch (LibraryException.LibraryCreationException e) {
-            //TODO: Add dialogs to deal with this problem.
-            throw e;
-        }
-
-        this.iLibrary = new ILibrary(library);
     }
 
     /**
@@ -175,10 +166,51 @@ public class App extends AppBase {
     }
 
     /**
+     * Initialize the Library & ILibrary.
+     * Will request library path from user if the value
+     * cannot be found in settings.xml.
+     *
+     * @throws LibraryException.LibraryCreationException -
+     * @throws LibraryException.LibraryFetchException    -
+     */
+    private void initLibrary() throws LibraryException.LibraryCreationException,
+            LibraryException.LibraryFetchException {
+
+        String libraryLocation = Settings.LIBRARY_PATH.getValue();
+        while (libraryLocation.equals("")) {
+            Platform.runLater(() -> LibraryWindow.present(true));
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            this.library = new Library(
+                    new File(Settings.LIBRARY_PATH.getValue()), NamedEntrySorter.NAMED_ENTRY_SORTER
+            );
+        } catch (LibraryException.LibraryFetchException e) {
+            //TODO: Add dialogs to deal with this problem.
+            throw e;
+        } catch (LibraryException.LibraryCreationException e) {
+            //TODO: Add dialogs to deal with this problem.
+            throw e;
+        }
+
+        this.iLibrary = new ILibrary(library);
+        iLibrary.linkTable(
+                getWindowsManager().getWindow(MainWindow.class).getController().getEntryTable()
+        );
+    }
+
+    /**
      * Initializes and starts the application.
      */
     @Override
-    protected void start() {
+    protected void start() throws LibraryException.LibraryCreationException, LibraryException.LibraryFetchException {
+        initLibrary();
+
         postInitIPC();
         registerArgumentReceiver();
         FXWindowsManager.getInstance().showWindow(MainWindow.class);

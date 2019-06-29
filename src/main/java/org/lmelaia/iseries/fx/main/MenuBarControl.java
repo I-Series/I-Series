@@ -7,6 +7,7 @@ import org.lmelaia.iseries.Settings;
 import org.lmelaia.iseries.common.system.ExitCode;
 import org.lmelaia.iseries.fx.about.AboutWindow;
 import org.lmelaia.iseries.fx.exit.ExitWindow;
+import org.lmelaia.iseries.fx.library.LibraryWindow;
 import org.lmelaia.iseries.fx.settings.SettingsWindow;
 
 import java.awt.*;
@@ -58,6 +59,11 @@ class MenuBarControl implements SubControl {
     private final MenuItem showQuitDialog;
 
     /**
+     * Library->Change library location.
+     */
+    private final MenuItem changeLibrary;
+
+    /**
      * Constructor.
      *
      * @param window     The main windows controller class instance.
@@ -72,6 +78,7 @@ class MenuBarControl implements SubControl {
         this.tray = (MenuItem) components[4];
         this.minimize = (MenuItem) components[5];
         this.showQuitDialog = (MenuItem) components[6];
+        this.changeLibrary = (MenuItem) components[7];
     }
 
     /**
@@ -86,6 +93,7 @@ class MenuBarControl implements SubControl {
         tray.setOnAction(this::onTray);
         minimize.setOnAction(this::onMinimize);
         showQuitDialog.setOnAction(this::onShowQuitDialog);
+        changeLibrary.setOnAction(this::onChangeLibrary);
 
         if (!SystemTray.isSupported())
             tray.setDisable(true);
@@ -176,5 +184,14 @@ class MenuBarControl implements SubControl {
 
         if (result.getOption() == ExitWindow.ResultOption.TRAY)
             App.getInstance().exit(ExitCode.TRAY);
+    }
+
+    /**
+     * Called when the change library menu item is pressed.
+     *
+     * @param e action event.
+     */
+    private void onChangeLibrary(ActionEvent e) {
+        LibraryWindow.present(false);
     }
 }

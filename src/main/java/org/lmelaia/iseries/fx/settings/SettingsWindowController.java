@@ -27,6 +27,7 @@ import org.lmelaia.iseries.common.fx.FXController;
 import org.lmelaia.iseries.common.system.ExitCode;
 
 import java.io.File;
+import java.util.Objects;
 
 /**
  * Controller class for the Settings window.
@@ -127,10 +128,10 @@ public class SettingsWindowController extends FXController {
 
             File newLibrary = new File(newLibraryPath);
 
-            if (newLibrary.list().length != 0) {
+            if (Objects.requireNonNull(newLibrary.list()).length != 0) {
                 boolean foundIndex = false;
 
-                for (String file : newLibrary.list()) {
+                for (String file : Objects.requireNonNull(newLibrary.list())) {
                     if (file.endsWith("index.json")) {
                         foundIndex = true;
 

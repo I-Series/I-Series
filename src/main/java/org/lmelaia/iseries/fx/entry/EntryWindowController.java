@@ -136,7 +136,9 @@ public class EntryWindowController extends FXController {
         this.fieldName.setText("");
     }
 
-    // PUBLIC
+    // **********
+    // PUBLIC API
+    // **********
 
     /**
      * Sets this window instance to add
@@ -145,6 +147,7 @@ public class EntryWindowController extends FXController {
     public void addMode() {
         setWorkingEntry(null);
         this.btnAdd.setText("Add");
+        this.btnRefresh.setVisible(true);
     }
 
     /**
@@ -155,5 +158,6 @@ public class EntryWindowController extends FXController {
         setWorkingEntry(entry);
         populateFromEntry();
         this.btnAdd.setText("Update");
+        this.btnRefresh.setVisible(false);
     }
 }

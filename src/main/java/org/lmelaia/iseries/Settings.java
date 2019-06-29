@@ -53,7 +53,7 @@ public enum Settings {
     WINDOW_CLOSE_PREFERENCE("window_close_preference", 0,
             "What to do when the user closes the main window."),
 
-    LIBRARY_PATH("library_path", System.getProperty("user.home") + "/I-Series-Library/",
+    LIBRARY_PATH("library_path", "",
             "The file path to the I-Series Library.");
 
     /*

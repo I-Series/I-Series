@@ -9,7 +9,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.apache.logging.log4j.Logger;
-import org.lmelaia.iseries.App;
 import org.lmelaia.iseries.common.system.AppLogger;
 import org.lmelaia.iseries.ilibrary.ITableEntry;
 
@@ -24,7 +23,7 @@ import java.util.Map;
  * Sub-control class that handles the table
  * part of the main window.
  */
-public class TableController implements SubControl {
+class TableController implements SubControl {
 
     /**
      * Logger instance.
@@ -107,9 +106,6 @@ public class TableController implements SubControl {
     public void init() {
         this.table.getSelectionModel().selectedItemProperty().addListener(this::onItemSelected);
         this.table.getSelectionModel().selectedItemProperty().addListener(this::onItemSelected);
-
-        App.getInstance().getILibrary().linkTable(table);
-
     }
 
     /**

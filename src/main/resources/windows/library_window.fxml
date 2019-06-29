@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<AnchorPane prefHeight="210.0" prefWidth="600.0" style="-fx-background-color: ##f3f3f3;"
+            xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
+    <Button fx:id="btnContinue" layoutX="534.0" layoutY="361.0" mnemonicParsing="false" prefHeight="19.0"
+            prefWidth="105.0" text="Continue" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
+        <padding>
+            <Insets bottom="1.0" top="1.0"/>
+        </padding>
+    </Button>
+    <Button fx:id="btnCancel" layoutX="378.0" layoutY="377.0" mnemonicParsing="false" prefHeight="19.0"
+            prefWidth="105.0" text="Cancel" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="117.0">
+        <padding>
+            <Insets bottom="1.0" top="1.0"/>
+        </padding>
+    </Button>
+    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="14.0" layoutY="14.0" prefHeight="17.0"
+           prefWidth="575.0" text="Select the location of the I-Series Library you want to open/create"
+           textAlignment="CENTER" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0"
+           AnchorPane.topAnchor="5.0">
+        <font>
+            <Font name="System Bold" size="12.0"/>
+        </font>
+    </Label>
+    <TextField fx:id="textFieldLocation" layoutX="5.0" layoutY="57.0" prefHeight="21.0" prefWidth="541.0"
+               AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="44.0" AnchorPane.topAnchor="57.0">
+        <padding>
+            <Insets bottom="2.0" top="2.0"/>
+        </padding>
+    </TextField>
+    <Label layoutX="5.0" layoutY="40.0" text="Location:" AnchorPane.leftAnchor="15.0"/>
+    <Button fx:id="btnBrowse" layoutX="574.0" layoutY="57.0" mnemonicParsing="false" prefHeight="21.0"
+            prefWidth="25.0" AnchorPane.rightAnchor="15.0">
+        <padding>
+            <Insets bottom="2.0" top="2.0"/>
+        </padding>
+        <graphic>
+            <ImageView fitHeight="14.0" fitWidth="14.0" pickOnBounds="true" preserveRatio="true">
+                <Image url="@../images/img_browse.png"/>
+            </ImageView>
+        </graphic>
+    </Button>
+    <Label layoutX="15.0" layoutY="113.0" prefHeight="17.0" prefWidth="570.0"
+           text="Please select the location of the new I-Series Library to be created or select the location of an existing"
+           AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0"/>
+    <Label layoutX="15.0" layoutY="130.0" prefHeight="17.0" prefWidth="570.0"
+           text="I-Series Library to open. Please note that the Library location should NOT be in a protected folder (such as"/>
+    <Label layoutX="15.0" layoutY="147.0" prefHeight="17.0" prefWidth="570.0"
+           text="C:\Program Files or C:\Windows)"/>
+    <Label fx:id="labelWarning" alignment="CENTER" layoutX="286.0" layoutY="88.0" prefHeight="17.0"
+           prefWidth="293.0"
+           text="It appears this is your first time using I-Series (or settings.xml has been damaged)"
+           textFill="RED" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="88.0"/>
+</AnchorPane>

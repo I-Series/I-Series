@@ -107,6 +107,9 @@ public class MainWindowController extends FXController {
     @FXML
     private MenuItem menuItemQuitDialog;
 
+    @FXML
+    private MenuItem menuItemChangeLibrary;
+
     //*******
     //* END *
     //*******
@@ -161,7 +164,7 @@ public class MainWindowController extends FXController {
 
         this.menuBar = new MenuBarControl(this, new Object[]{
                 menuItemQuit, menuItemSettings, menuItemRestart, menuItemAbout, menuItemTray, menuItemMinimize,
-                menuItemQuitDialog
+                menuItemQuitDialog, menuItemChangeLibrary
         });
 
         this.tableController = new TableController(this, entryTable);
@@ -195,5 +198,16 @@ public class MainWindowController extends FXController {
         navigator.loadState();
         menuBar.loadState();
         tableController.loadState();
+    }
+
+    // **********
+    // PUBLIC API
+    // **********
+
+    /**
+     * @return the TableView on the main window.
+     */
+    public TableView<ITableEntry> getEntryTable() {
+        return this.entryTable;
     }
 }
