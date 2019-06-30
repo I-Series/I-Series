@@ -44,6 +44,11 @@ class NavigatorControl implements SubControl {
     private final Button episodes;
 
     /**
+     * Button that switches to the statistics tab.
+     */
+    private final Button statistics;
+
+    /**
      * Navigator tree view (library).
      */
     private TreeView<String> navigatorTree;
@@ -65,6 +70,7 @@ class NavigatorControl implements SubControl {
         this.navigator = (Button) comps[1];
         this.information = (Button) comps[2];
         this.episodes = (Button) comps[3];
+        this.statistics = (Button) comps[4];
 
         navTreeRoot = new TreeItem<>("Library");
         navigatorTree = new TreeView<>(navTreeRoot);
@@ -86,6 +92,7 @@ class NavigatorControl implements SubControl {
         navigator.setOnAction(this::onNavigatorBtnPress);
         information.setOnAction(this::onInformationBtnPress);
         episodes.setOnAction(this::onEpisodesBtnPress);
+        statistics.setOnAction(this::onStatisticsBtnPress);
 
         changeToNavigator();
     }
@@ -135,6 +142,15 @@ class NavigatorControl implements SubControl {
     }
 
     /**
+     * Switches to the statistics tab.
+     */
+    public void changeToStatistics() {
+        resetNavButtons();
+        ControlUtil.setBackgroundColor(statistics, "lightblue");
+        displayPane.getChildren().clear();
+    }
+
+    /**
      * Resets the navigation buttons background colors.
      */
     private void resetNavButtons() {
@@ -142,6 +158,7 @@ class NavigatorControl implements SubControl {
         ControlUtil.setBackgroundColor(navigator, color);
         ControlUtil.setBackgroundColor(information, color);
         ControlUtil.setBackgroundColor(episodes, color);
+        ControlUtil.setBackgroundColor(statistics, color);
     }
 
     /**
@@ -169,5 +186,14 @@ class NavigatorControl implements SubControl {
      */
     private void onEpisodesBtnPress(ActionEvent e) {
         this.changeToEpisodes();
+    }
+
+    /**
+     * Called when the statistics button is pressed.
+     *
+     * @param e action event.
+     */
+    private void onStatisticsBtnPress(ActionEvent e) {
+        this.changeToStatistics();
     }
 }

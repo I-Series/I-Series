@@ -75,6 +75,9 @@ public class MainWindowController extends FXController {
     private Button navButtonEpisodes;
 
     @FXML
+    private Button navButtonStatistics;
+
+    @FXML
     private AnchorPane navDisplayPane;
 
     //Window controls and table
@@ -174,7 +177,7 @@ public class MainWindowController extends FXController {
         });
 
         navigator = new NavigatorControl(this, new Object[]{
-                navDisplayPane, navButtonNavigator, navButtonInformation, navButtonEpisodes
+                navDisplayPane, navButtonNavigator, navButtonInformation, navButtonEpisodes, navButtonStatistics
         });
 
         this.menuBar = new MenuBarControl(this, new Object[]{

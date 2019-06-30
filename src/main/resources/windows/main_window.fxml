@@ -202,6 +202,8 @@
                                              mnemonicParsing="false" styleClass="grey_background" text="Information"/>
                                      <Button id="nav_btn_episodes" fx:id="navButtonEpisodes" mnemonicParsing="false"
                                              styleClass="grey_background" text="Episodes"/>
+                                     <Button fx:id="navButtonStatistics" mnemonicParsing="false"
+                                             styleClass="grey_background" text="Statistics"/>
                                      <Region prefHeight="32.0" prefWidth="0.0" HBox.hgrow="ALWAYS"/>
                                  </children>
                                  <padding>
@@ -301,7 +303,7 @@
                                <TextField id="control_search_bar" fx:id="controlInputField" layoutX="3.0" layoutY="8.0"
                                           prefHeight="25.0" prefWidth="265.0" promptText="Search">
                                  <padding>
-                                     <Insets bottom="4.0" left="25.0" top="4.0"/>
+                                     <Insets bottom="4.0" left="25.0" right="25.0" top="4.0"/>
                                  </padding>
                               </TextField>
                                <Button fx:id="controlBtnClearSearch" layoutX="242.0" layoutY="8.0"
