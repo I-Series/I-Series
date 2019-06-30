@@ -18,11 +18,13 @@
 package org.lmelaia.iseries;
 
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import org.apache.logging.log4j.Logger;
 import org.lmelaia.iseries.common.fx.FXWindowsManager;
 import org.lmelaia.iseries.common.system.AppBase;
 import org.lmelaia.iseries.common.system.AppLogger;
 import org.lmelaia.iseries.common.system.ExitCode;
+import org.lmelaia.iseries.fx.components.TextProgressBar;
 import org.lmelaia.iseries.fx.library.LibraryWindow;
 import org.lmelaia.iseries.fx.main.MainWindow;
 import org.lmelaia.iseries.ilibrary.ILibrary;
@@ -30,6 +32,7 @@ import org.lmelaia.iseries.ilibrary.LibraryInitializedListener;
 import org.lmelaia.iseries.library.Library;
 import org.lmelaia.iseries.library.LibraryException;
 import org.lmelaia.iseries.library.NamedEntrySorter;
+import org.lmelaia.iseries.library.ProgressTracker;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -116,6 +119,7 @@ public class App extends AppBase {
      */
     App() {
         super();
+        this.library = new Library();
 
         this.manageThread(Thread.currentThread());
         INSTANCE = this;
@@ -193,16 +197,67 @@ public class App extends AppBase {
     }
 
     /**
-     * Initialize the Library & ILibrary.
-     * Will request library path from user if the value
-     * cannot be found in settings.xml.
-     *
-     * @throws LibraryException.LibraryCreationException -
-     * @throws LibraryException.LibraryFetchException    -
+     * Task responsible for loading the Library/ILibrary
+     * and updating the main windows progress bar to
+     * reflect the progress of the library loading.
      */
-    private void initLibrary() throws LibraryException.LibraryCreationException,
-            LibraryException.LibraryFetchException {
+    private final Task loadLibrary = new Task() {
 
+        /**
+         * Tracks the progress of the Library load and updates
+         * the main window progress to reflect the load.
+         */
+        ProgressTracker tracker = new ProgressTracker() {
+            @Override
+            public void onProgressChange(double percentage, int pos, int max) {
+                updateProgress(pos, max);
+                updateMessage("Loading Library... " + pos + " of " + max);
+            }
+
+            @Override
+            public void onCompletion() {
+                updateProgress(1, 1);
+                updateMessage("Library Loaded");
+            }
+        };
+
+        /**
+         * Loads the library from file and notifies
+         * registered listeners.
+         *
+         * @return {@code null}
+         */
+        @Override
+        protected Object call() throws Exception {
+            //Actual Initialization.
+            try {
+                App.this.library.load(
+                        new File(Settings.LIBRARY_PATH.getValue()), NamedEntrySorter.NAMED_ENTRY_SORTER,
+                        tracker
+                );
+            } catch (LibraryException.LibraryFetchException e) {
+                //TODO: Add dialogs to deal with this problem.
+                throw e;
+            } catch (LibraryException.LibraryCreationException e) {
+                //TODO: Add dialogs to deal with this problem.
+                throw e;
+            }
+
+            App.this.iLibrary = new ILibrary(library);
+
+            for (LibraryInitializedListener listener : libraryInitializedListeners)
+                listener.onInitialized(iLibrary);
+
+            return null;
+        }
+    };
+
+    /**
+     * Loads the Library from file in a separate task and
+     * initializes the ILibrary.
+     */
+    private void initLibrary() {
+        //Get path from user if no path exists.
         String libraryLocation = Settings.LIBRARY_PATH.getValue();
         while (libraryLocation.equals("")) {
             Platform.runLater(() -> LibraryWindow.present(true));
@@ -213,34 +268,26 @@ public class App extends AppBase {
             }
         }
 
-        try {
-            this.library = new Library(
-                    new File(Settings.LIBRARY_PATH.getValue()), NamedEntrySorter.NAMED_ENTRY_SORTER
-            );
-        } catch (LibraryException.LibraryFetchException e) {
-            //TODO: Add dialogs to deal with this problem.
-            throw e;
-        } catch (LibraryException.LibraryCreationException e) {
-            //TODO: Add dialogs to deal with this problem.
-            throw e;
-        }
+        TextProgressBar progressBar
+                = getWindowsManager().getWindow(MainWindow.class).getController().getProgressBar();
 
-        this.iLibrary = new ILibrary(library);
+        progressBar.progressProperty().bind(loadLibrary.progressProperty());
+        progressBar.textProperty().bind(loadLibrary.messageProperty());
 
-        for (LibraryInitializedListener listener : libraryInitializedListeners)
-            listener.onInitialized(iLibrary);
+        new Thread(loadLibrary).start();
     }
 
     /**
      * Initializes and starts the application.
      */
     @Override
-    protected void start() throws LibraryException.LibraryCreationException, LibraryException.LibraryFetchException {
-        initLibrary();
-
+    protected void start() {
         postInitIPC();
         registerArgumentReceiver();
+
         FXWindowsManager.getInstance().showWindow(MainWindow.class);
+
+        initLibrary();
     }
 
     /**

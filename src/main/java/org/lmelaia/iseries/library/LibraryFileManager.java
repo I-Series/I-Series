@@ -121,7 +121,7 @@ class LibraryFileManager {
      * @throws LibraryFetchException    if the library
      *                                  could not be read from file or written to memory.
      */
-    LibraryFileManager(File path, EntrySorter sorter, Library lib)
+    LibraryFileManager(File path, EntrySorter sorter, Library lib, ProgressTracker progressTracker)
             throws LibraryCreationException, LibraryFetchException {
         this.path = path;
         indexFile = new File(path.getAbsolutePath() + "/index.json");
@@ -137,7 +137,7 @@ class LibraryFileManager {
         }
 
         try {
-            this.writeToLibrary(lib);
+            this.writeToLibrary(lib, progressTracker);
         } catch (IOException | JsonSyntaxException e) {
             LOG.error("Failed to load library " + path.getAbsolutePath(), e);
             throw new LibraryFetchException("Could not load library ", e);
@@ -267,9 +267,9 @@ class LibraryFileManager {
      * @throws IOException if the index cannot be
      *                     read or modified.
      */
-    private void writeToLibrary(Library library) throws IOException {
+    private void writeToLibrary(Library library, ProgressTracker progressTracker) throws IOException {
         this.library = library;
-        writeToLibrary();
+        writeToLibrary(progressTracker);
     }
 
     /**
@@ -344,14 +344,23 @@ class LibraryFileManager {
      * @throws IOException if the index or an entry
      *                     cannot be read from file.
      */
-    private void writeToLibrary() throws IOException {
+    private void writeToLibrary(ProgressTracker progressTracker) throws IOException {
         readIndex();
 
         ArrayList<String> missingKeys = new ArrayList<>();
         ArrayList<String> corruptedKeys = new ArrayList<>();
 
+        progressTracker.setMax(index.values().size());
+        progressTracker.setPosition(1);
+
+        int entriesRead = 0;
+
         for (File entryFile : index.values()) {
             try {
+                LOG.debug(
+                        "Reading entry " + ++entriesRead + " of " + index.size() + ": " + entryFile.getAbsolutePath()
+                );
+
                 LibraryEntry entry = get(entryFile);
                 library.getMapping().put(entry.getUUID(), entry);
                 entry.setOwner(library);
@@ -377,6 +386,7 @@ class LibraryFileManager {
                     }
                 }
             }
+            progressTracker.increment();
         }
 
         for (String key : missingKeys) {
@@ -388,6 +398,7 @@ class LibraryFileManager {
         }
 
         writeIndex();
+        progressTracker.complete();
     }
 
     /**

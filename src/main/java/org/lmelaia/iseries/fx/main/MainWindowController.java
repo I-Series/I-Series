@@ -3,7 +3,9 @@ package org.lmelaia.iseries.fx.main;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import org.lmelaia.iseries.common.fx.FXController;
+import org.lmelaia.iseries.fx.components.TextProgressBar;
 import org.lmelaia.iseries.ilibrary.ITableEntry;
 
 /**
@@ -112,6 +114,11 @@ public class MainWindowController extends FXController {
     @FXML
     private MenuItem menuItemChangeLibrary;
 
+    // OTHER
+
+    @FXML
+    private HBox hBoxProgress;
+
     //*******
     //* END *
     //*******
@@ -146,6 +153,11 @@ public class MainWindowController extends FXController {
     protected TableController tableController;
 
     /**
+     * Handles the progress bar.
+     */
+    protected ProgressControl progressControl;
+
+    /**
      * Initializes sub components.
      */
     @Override
@@ -172,11 +184,14 @@ public class MainWindowController extends FXController {
 
         this.tableController = new TableController(this, entryTable);
 
+        this.progressControl = new ProgressControl(hBoxProgress);
+
         controlBar.init();
         mediaPlayer.init();
         navigator.init();
         menuBar.init();
         tableController.init();
+        progressControl.init();
     }
 
     /**
@@ -189,6 +204,7 @@ public class MainWindowController extends FXController {
         navigator.saveState();
         menuBar.saveState();
         tableController.saveState();
+        progressControl.saveState();
     }
 
     /**
@@ -201,6 +217,7 @@ public class MainWindowController extends FXController {
         navigator.loadState();
         menuBar.loadState();
         tableController.loadState();
+        progressControl.loadState();
     }
 
     // **********
@@ -220,5 +237,12 @@ public class MainWindowController extends FXController {
      */
     public void clearSearch() {
         controlBar.clearSearch();
+    }
+
+    /**
+     * @return the {@link TextProgressBar} on the main window.
+     */
+    public TextProgressBar getProgressBar() {
+        return progressControl.getProgressBar();
     }
 }

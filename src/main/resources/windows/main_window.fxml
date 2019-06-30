@@ -211,13 +211,12 @@
                                      <Insets/>
                                  </opaqueInsets>
                               </HBox>
-                               <HBox layoutY="99.0" prefHeight="14.0" prefWidth="400.0"
-                                     style="-fx-background-color: rgb(234, 234, 234);" AnchorPane.bottomAnchor="0.0"
-                                     AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                               <HBox fx:id="hBoxProgress" layoutY="99.0" maxHeight="14.0" prefHeight="14.0"
+                                     prefWidth="414.0" style="-fx-background-color: rgb(234, 234, 234);"
+                                     AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                     AnchorPane.rightAnchor="0.0">
                                  <children>
-                                     <Region prefHeight="17.0" prefWidth="0.0" HBox.hgrow="ALWAYS"/>
                                      <Label id="status_label" fx:id="statusLabel"/>
-                                     <Region prefHeight="35.0" prefWidth="0.0" HBox.hgrow="ALWAYS"/>
                                  </children>
                               </HBox>
                            </children>

@@ -64,10 +64,16 @@ public class Library {
     /**
      * Handles the library files on disk.
      */
-    private final LibraryFileManager fileManager;
+    private LibraryFileManager fileManager;
 
     /**
-     * Constructs a new library. This will create a new
+     * Constructs a new library.
+     */
+    public Library() {
+    }
+
+    /**
+     * Loads the library from file. This will create a new
      * library file structure if one does not exist.
      *
      * @param libraryPath the path of the library on disk.
@@ -78,10 +84,11 @@ public class Library {
      * @throws LibraryCreationException if the library is non-existent
      *                                  and could not be created.
      */
-    public Library(File libraryPath, EntrySorter sorter) throws LibraryFetchException, LibraryCreationException {
+    public void load(File libraryPath, EntrySorter sorter, ProgressTracker progressTracker)
+            throws LibraryCreationException, LibraryFetchException {
         Objects.requireNonNull(libraryPath);
         Objects.requireNonNull(sorter);
-        this.fileManager = new LibraryFileManager(libraryPath, sorter, this);
+        this.fileManager = new LibraryFileManager(libraryPath, sorter, this, progressTracker);
     }
 
     /**
@@ -96,6 +103,7 @@ public class Library {
      */
     @SuppressWarnings("WeakerAccess")
     public void add(LibraryEntry entry, ProgressTracker tracker) throws EntryModificationException {
+        checkFileManager();
         Objects.requireNonNull(entry);
         try {
             fileManager.add(entry, tracker);
@@ -128,6 +136,7 @@ public class Library {
      * exists.
      */
     public LibraryEntry get(String UUID) {
+        checkFileManager();
         return mapping.get(UUID);
     }
 
@@ -140,6 +149,7 @@ public class Library {
      *                             file could not be read.
      */
     public void reload(String UUID) throws EntryFetchException {
+        checkFileManager();
         try {
             this.mapping.put(UUID, fileManager.get(UUID));
         } catch (IOException e) {
@@ -152,6 +162,7 @@ public class Library {
      * within the the index.
      */
     public LibraryEntry[] getAll() {
+        checkFileManager();
         return mapping.values().toArray(new LibraryEntry[0]);
     }
 
@@ -166,6 +177,7 @@ public class Library {
      */
     @SuppressWarnings("WeakerAccess")
     public void unindex(LibraryEntry entry) throws EntryModificationException {
+        checkFileManager();
         try {
             fileManager.unindex(entry);
             mapping.remove(entry.getUUID());
@@ -188,6 +200,7 @@ public class Library {
      */
     @SuppressWarnings("WeakerAccess")
     public void delete(LibraryEntry entry, ProgressTracker tracker) throws EntryModificationException {
+        checkFileManager();
         try {
             fileManager.delete(entry, tracker);
             mapping.remove(entry.getUUID());
@@ -208,6 +221,7 @@ public class Library {
      *                                    or it's files could not be deleted.
      */
     public void delete(LibraryEntry entry) throws EntryModificationException {
+        checkFileManager();
         delete(entry, ProgressTracker.getUnboundTracker());
     }
 
@@ -219,6 +233,7 @@ public class Library {
      * These entries are removed from the index.
      */
     public boolean hasMissingEntries() {
+        checkFileManager();
         return missingEntries.size() != 0;
     }
 
@@ -230,6 +245,7 @@ public class Library {
      * These entries are removed from the index.
      */
     public String[] getMissingEntries() {
+        checkFileManager();
         return missingEntries.toArray(new String[0]);
     }
 
@@ -241,6 +257,7 @@ public class Library {
      * These entries are removed from the index.
      */
     public boolean hasCorruptedEntries() {
+        checkFileManager();
         return corruptedEntries.size() != 0;
     }
 
@@ -252,6 +269,7 @@ public class Library {
      * These entries are removed from the index.
      */
     public String[] getCorruptedEntries() {
+        checkFileManager();
         return corruptedEntries.toArray(new String[0]);
     }
 
@@ -260,6 +278,7 @@ public class Library {
      * in the index.
      */
     public int getNumberOfEntries() {
+        checkFileManager();
         return mapping.size();
     }
 
@@ -267,6 +286,7 @@ public class Library {
      * @return the size of the library on file in bytes.
      */
     public long getLibrarySize() {
+        checkFileManager();
         return fileManager.getLibrarySize();
     }
 
@@ -295,5 +315,15 @@ public class Library {
      */
     void addCorruptedEntry(String path) {
         corruptedEntries.add(path);
+    }
+
+    /**
+     * Ensures the file manager is initialized.
+     *
+     * @throws IllegalStateException if the file manager is not initialized.
+     */
+    private void checkFileManager() {
+        if (fileManager == null)
+            throw new IllegalStateException("Library not yet loaded");
     }
 }
