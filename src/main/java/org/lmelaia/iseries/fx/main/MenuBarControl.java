@@ -64,6 +64,26 @@ class MenuBarControl implements SubControl {
     private final MenuItem changeLibrary;
 
     /**
+     * Entry->Add New Entry.
+     */
+    private final MenuItem addEntry;
+
+    /**
+     * Entry->Edit.
+     */
+    private final MenuItem editEntry;
+
+    /**
+     * Entry->Delete.
+     */
+    private final MenuItem deleteEntry;
+
+    /**
+     * Entry->Unindex.
+     */
+    private final MenuItem unindexEntry;
+
+    /**
      * Constructor.
      *
      * @param window     The main windows controller class instance.
@@ -79,6 +99,10 @@ class MenuBarControl implements SubControl {
         this.minimize = (MenuItem) components[5];
         this.showQuitDialog = (MenuItem) components[6];
         this.changeLibrary = (MenuItem) components[7];
+        this.addEntry = (MenuItem) components[8];
+        this.editEntry = (MenuItem) components[9];
+        this.deleteEntry = (MenuItem) components[10];
+        this.unindexEntry = (MenuItem) components[11];
     }
 
     /**
@@ -94,9 +118,29 @@ class MenuBarControl implements SubControl {
         minimize.setOnAction(this::onMinimize);
         showQuitDialog.setOnAction(this::onShowQuitDialog);
         changeLibrary.setOnAction(this::onChangeLibrary);
+        addEntry.setOnAction(this::onAddEntry);
+        editEntry.setOnAction(this::onEditEntry);
+        deleteEntry.setOnAction(this::onDeleteEntry);
+        unindexEntry.setOnAction(this::onUnindexEntry);
 
         if (!SystemTray.isSupported())
             tray.setDisable(true);
+
+        this.editEntry.setDisable(true);
+        this.deleteEntry.setDisable(true);
+        this.unindexEntry.setDisable(true);
+
+        window.tableController.addSelectionListener(((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                this.editEntry.setDisable(false);
+                this.deleteEntry.setDisable(false);
+                this.unindexEntry.setDisable(false);
+            } else {
+                this.editEntry.setDisable(true);
+                this.deleteEntry.setDisable(true);
+                this.unindexEntry.setDisable(true);
+            }
+        }));
     }
 
     /**
@@ -193,5 +237,41 @@ class MenuBarControl implements SubControl {
      */
     private void onChangeLibrary(ActionEvent e) {
         LibraryWindow.present(false);
+    }
+
+    /**
+     * Called when add new entry menu item is pressed.
+     *
+     * @param e action event.
+     */
+    private void onAddEntry(ActionEvent e) {
+        window.controlBar.addEntry();
+    }
+
+    /**
+     * Called when the edit entry menu item is pressed.
+     *
+     * @param e action event.
+     */
+    private void onEditEntry(ActionEvent e) {
+        window.controlBar.editSelectedEntry();
+    }
+
+    /**
+     * Called when the delete entry menu item is pressed.
+     *
+     * @param e action event.
+     */
+    private void onDeleteEntry(ActionEvent e) {
+        window.controlBar.deleteSelectedEntry();
+    }
+
+    /**
+     * Called when the unindex entry menu item is pressed.
+     *
+     * @param e action event.
+     */
+    private void onUnindexEntry(ActionEvent e) {
+        window.controlBar.unindexSelectedEntry();
     }
 }

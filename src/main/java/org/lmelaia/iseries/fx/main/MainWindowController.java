@@ -117,6 +117,18 @@ public class MainWindowController extends FXController {
     @FXML
     private MenuItem menuItemChangeLibrary;
 
+    @FXML
+    private MenuItem menuItemAddEntry;
+
+    @FXML
+    private MenuItem menuItemEditEntry;
+
+    @FXML
+    private MenuItem menuItemDeleteEntry;
+
+    @FXML
+    private MenuItem menuItemUnindexEntry;
+
     // OTHER
 
     @FXML
@@ -182,7 +194,8 @@ public class MainWindowController extends FXController {
 
         this.menuBar = new MenuBarControl(this, new Object[]{
                 menuItemQuit, menuItemSettings, menuItemRestart, menuItemAbout, menuItemTray, menuItemMinimize,
-                menuItemQuitDialog, menuItemChangeLibrary
+                menuItemQuitDialog, menuItemChangeLibrary, menuItemAddEntry, menuItemEditEntry, menuItemDeleteEntry,
+                menuItemUnindexEntry
         });
 
         this.tableController = new TableController(this, entryTable);
@@ -226,13 +239,6 @@ public class MainWindowController extends FXController {
     // **********
     // PUBLIC API
     // **********
-
-    /**
-     * @return the TableView on the main window.
-     */
-    public TableView<ITableEntry> getEntryTable() {
-        return this.entryTable;
-    }
 
     /**
      * Clears the users search input

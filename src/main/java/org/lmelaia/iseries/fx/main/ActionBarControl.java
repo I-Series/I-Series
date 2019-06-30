@@ -137,12 +137,7 @@ class ActionBarControl implements SubControl {
      * @param e action event.
      */
     private void onAddPressed(ActionEvent e) {
-        EntryWindow entryWindow = FXWindowsManager.getInstance().getWindow(EntryWindow.class);
-        EntryWindowController entryWindowController = entryWindow.getController();
-
-        entryWindowController.addMode();
-
-        FXWindowsManager.getInstance().showWindowAndWait(entryWindow, window.getWindow());
+        addEntry();
     }
 
     /**
@@ -152,12 +147,7 @@ class ActionBarControl implements SubControl {
      * @param e action event.
      */
     private void onEditPressed(ActionEvent e) {
-        EntryWindow entryWindow = FXWindowsManager.getInstance().getWindow(EntryWindow.class);
-        EntryWindowController entryWindowController = entryWindow.getController();
-
-        entryWindowController.editMode(window.tableController.getSelectedEntry().getEntry());
-
-        FXWindowsManager.getInstance().showWindowAndWait(entryWindow, window.getWindow());
+        editSelectedEntry();
     }
 
     /**
@@ -167,17 +157,7 @@ class ActionBarControl implements SubControl {
      * @param e action event.
      */
     private void onDeletePressed(ActionEvent e) {
-        ITableEntry tableEntry = window.tableController.getSelectedEntry();
-        if (tableEntry == null) return;
-
-        IEntry entry = tableEntry.getEntry();
-
-        try {
-            App.getInstance().getILibrary().delete(entry);
-        } catch (LibraryException.EntryModificationException ex) {
-            //TODO: Dialog
-            ex.printStackTrace();
-        }
+        deleteSelectedEntry();
     }
 
     /**
@@ -189,17 +169,7 @@ class ActionBarControl implements SubControl {
      * @param e action event.
      */
     private void onUnindexPressed(ActionEvent e) {
-        ITableEntry tableEntry = window.tableController.getSelectedEntry();
-        if (tableEntry == null) return;
-
-        IEntry entry = tableEntry.getEntry();
-
-        try {
-            App.getInstance().getILibrary().unindex(entry);
-        } catch (LibraryException.EntryModificationException ex) {
-            //TODO: Dialog
-            ex.printStackTrace();
-        }
+        unindexSelectedEntry();
     }
 
     /**
@@ -237,5 +207,63 @@ class ActionBarControl implements SubControl {
         this.edit.setDisable(true);
         this.delete.setDisable(true);
         this.unindex.setDisable(true);
+    }
+
+    /**
+     * Opens the entry window in add mode.
+     */
+    protected void addEntry() {
+        EntryWindow entryWindow = FXWindowsManager.getInstance().getWindow(EntryWindow.class);
+        EntryWindowController entryWindowController = entryWindow.getController();
+
+        entryWindowController.addMode();
+
+        FXWindowsManager.getInstance().showWindowAndWait(entryWindow, window.getWindow());
+    }
+
+    /**
+     * Opens the selected entry in the entry window.
+     */
+    protected void editSelectedEntry() {
+        EntryWindow entryWindow = FXWindowsManager.getInstance().getWindow(EntryWindow.class);
+        EntryWindowController entryWindowController = entryWindow.getController();
+
+        entryWindowController.editMode(window.tableController.getSelectedEntry().getEntry());
+
+        FXWindowsManager.getInstance().showWindowAndWait(entryWindow, window.getWindow());
+    }
+
+    /**
+     * Deletes the selected entry in the table from the Library.
+     */
+    protected void deleteSelectedEntry() {
+        ITableEntry tableEntry = window.tableController.getSelectedEntry();
+        if (tableEntry == null) return;
+
+        IEntry entry = tableEntry.getEntry();
+
+        try {
+            App.getInstance().getILibrary().delete(entry);
+        } catch (LibraryException.EntryModificationException ex) {
+            //TODO: Dialog
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Unindexes the selected entry in the table from the Library.
+     */
+    protected void unindexSelectedEntry() {
+        ITableEntry tableEntry = window.tableController.getSelectedEntry();
+        if (tableEntry == null) return;
+
+        IEntry entry = tableEntry.getEntry();
+
+        try {
+            App.getInstance().getILibrary().unindex(entry);
+        } catch (LibraryException.EntryModificationException ex) {
+            //TODO: Dialog
+            ex.printStackTrace();
+        }
     }
 }
