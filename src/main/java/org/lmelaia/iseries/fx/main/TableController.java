@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -139,6 +140,16 @@ class TableController implements SubControl {
     }
 
     /**
+     * Adds a listener to be notified when the selected
+     * entry in the table changes.
+     *
+     * @param listener the listener to add.
+     */
+    protected void addSelectionListener(ChangeListener<? super ITableEntry> listener) {
+        table.getSelectionModel().selectedItemProperty().addListener(listener);
+    }
+
+    /**
      * @return the TableEntry in the table at the given index.
      */
     private ITableEntry get(int index) {
@@ -156,11 +167,6 @@ class TableController implements SubControl {
     private void onItemSelected(ObservableValue<? extends ITableEntry> observable,
                                 ITableEntry oldValue, ITableEntry newValue) {
         this.selectedEntry = newValue;
-
-        if (selectedEntry != null)
-            window.controlBar.enableModificationButtons();
-        else
-            window.controlBar.disableModificationButtons();
     }
 
     /**

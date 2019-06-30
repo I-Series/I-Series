@@ -97,6 +97,13 @@ class ActionBarControl implements SubControl {
         delete.setDisable(true);
         unindex.setDisable(true);
         clearInput.setVisible(false);
+
+        window.tableController.addSelectionListener((observable, oldValue, newValue) -> {
+            if (newValue != null)
+                window.controlBar.enableModificationButtons();
+            else
+                window.controlBar.disableModificationButtons();
+        });
     }
 
     /**
