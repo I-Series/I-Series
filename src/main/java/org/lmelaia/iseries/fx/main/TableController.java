@@ -43,6 +43,11 @@ class TableController implements SubControl {
     private static class Columns {
 
         /**
+         * Context menu that allows enabling/disabling columns.
+         */
+        private static final TableColumnContentMenu COLUMN_CONTEXT_MENU;
+
+        /**
          * Column to display the name of the entry.
          */
         public static final TableColumn<ITableEntry, ITableEntry> name = new TableColumn<>("Name");
@@ -68,7 +73,13 @@ class TableController implements SubControl {
          * Initializes the columns.
          */
         static {
+            COLUMN_CONTEXT_MENU = new TableColumnContentMenu(new TableColumn[]{
+                    name
+            });
+
+            //Name
             name.setCellValueFactory(new PropertyValueFactory<>("name"));
+            name.setContextMenu(COLUMN_CONTEXT_MENU);
             columnMap.put(name.getText(), name);
         }
 
@@ -117,6 +128,8 @@ class TableController implements SubControl {
     @Override
     public void init() {
         this.table.getSelectionModel().selectedItemProperty().addListener(this::onItemSelected);
+
+        Columns.COLUMN_CONTEXT_MENU.setTable(table);
 
         App.getInstance().addLibraryInitListener((library -> {
             library.linkTable(table);
@@ -288,13 +301,16 @@ class TableController implements SubControl {
          */
         @SuppressWarnings("unchecked")
         public static void load(TableView<ITableEntry> tableView) {
+            //Add defaults if no save exists.
             if (!SAVE_FILE.exists()) {
                 for (TableColumn column : Columns.DEFAULTS) {
                     tableView.getColumns().add((TableColumn<ITableEntry, ITableEntry>) column);
+                    Columns.COLUMN_CONTEXT_MENU.checkItem(column);
                 }
             }
 
             try {
+                //Read
                 FileReader reader = new FileReader(SAVE_FILE);
 
                 StringBuilder contents = new StringBuilder();
@@ -307,10 +323,9 @@ class TableController implements SubControl {
 
                 array.forEach((jsonElement -> {
                     JsonObject jColumn = jsonElement.getAsJsonObject();
+                    TableColumn<ITableEntry, ITableEntry> column = Columns.get(jColumn.get("value").getAsString());
 
-                    TableColumn<ITableEntry, ITableEntry> column
-                            = Columns.get(jColumn.get("value").getAsString());
-
+                    //Sort Type
                     if (jColumn.has("sort"))
                         switch (jColumn.get("sort").getAsInt()) {
                             case 0:
@@ -325,17 +340,25 @@ class TableController implements SubControl {
                                 break;
                         }
 
+                    //Width
                     if (jColumn.has("width"))
                         //noinspection deprecation
                         column.impl_setWidth(jColumn.get("width").getAsDouble());
 
-                    if (!tableView.getColumns().contains(column))
+                    //Add to table
+                    if (!tableView.getColumns().contains(column)) {
                         tableView.getColumns().add(column);
+                        Columns.COLUMN_CONTEXT_MENU.checkItem(column);
+                    }
+
                 }));
             } catch (IOException e) {
                 LOG.error("Failed to read table.json", e);
             }
-        }
 
+            //Always make sure this column gets added.
+            if (!tableView.getColumns().contains(Columns.name))
+                tableView.getColumns().add(Columns.name);
+        }
     }
 }
