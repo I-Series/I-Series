@@ -4,9 +4,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.apache.logging.log4j.Logger;
@@ -87,6 +91,12 @@ class TableController implements SubControl {
     private final TableView<ITableEntry> table;
 
     /**
+     * Context menu given when right-clicking
+     * on an entry in the table.
+     */
+    private TableContextMenu contextMenu;
+
+    /**
      * The selected entry in the table.
      * CAN BE NULL.
      */
@@ -113,6 +123,39 @@ class TableController implements SubControl {
             TableStateStorer.load(table);
             table.sort();
         }));
+
+        contextMenu = new TableContextMenu() {
+
+            @Override
+            protected void onAdd(ActionEvent e) {
+                window.controlBar.addEntry();
+            }
+
+            @Override
+            protected void onEdit(ActionEvent e) {
+                window.controlBar.editSelectedEntry();
+            }
+
+            @Override
+            protected void onDelete(ActionEvent e) {
+                window.controlBar.deleteSelectedEntry();
+            }
+
+            @Override
+            protected void onUnindex(ActionEvent e) {
+                window.controlBar.unindexSelectedEntry();
+            }
+        };
+
+        table.setRowFactory(param -> {
+            final TableRow row = new TableRow();
+
+            row.contextMenuProperty().bind(
+                    Bindings.when(row.emptyProperty()).then((ContextMenu) null).otherwise(contextMenu));
+
+            //noinspection unchecked
+            return row;
+        });
     }
 
     /**
