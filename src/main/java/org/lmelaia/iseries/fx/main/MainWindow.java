@@ -111,8 +111,14 @@ public class MainWindow extends FXWindow<MainWindowController> {
     protected void loadLastState() {
         this.controller.mediaPlayer.getVolumeSlider().setValue(Settings.MEDIA_PLAYER_VOLUME.getValueAsDouble());
 
-        this.setX(Settings.WINDOW_X.getValueAsDouble());
-        this.setY(Settings.WINDOW_Y.getValueAsDouble());
+        double x = Settings.WINDOW_X.getValueAsDouble();
+        double y = Settings.WINDOW_Y.getValueAsDouble();
+
+        if (x == 0 && y == 0)
+            this.setMaximized(true);
+
+        this.setX(x);
+        this.setY(y);
 
         this.setWidth(Settings.WINDOW_WIDTH.getValueAsDouble());
         this.setHeight(Settings.WINDOW_HEIGHT.getValueAsDouble());

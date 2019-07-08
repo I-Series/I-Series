@@ -1,7 +1,7 @@
 package org.lmelaia.iseries.ilibrary;
 
 /**
- * List of property keys used to information
+ * List of json keys used to store information
  * in {@link org.lmelaia.iseries.library.LibraryEntry}s.
  */
 enum EntryProperties {

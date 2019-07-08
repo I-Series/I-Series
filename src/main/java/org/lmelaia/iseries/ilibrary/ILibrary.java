@@ -13,11 +13,13 @@ import java.util.UUID;
 
 /**
  * A wrapper library for a {@link Library} that makes the original
- * implementation more suited to the I-Series application. This includes:
- * adding an {@link LibraryEntry} with named getters & setters that
+ * implementation more suited to the I-Series application.
+ *
+ * This includes: adding an {@link LibraryEntry} with named getters & setters that
  * relate to the application, rather than a {@link com.google.gson.JsonObject};
- * As well as providing a hook for {@link TableView}s to see & respond to
- * changes in the Library.
+ * A hook for {@link TableView}s to see & respond to changes in the Library;
+ * Filters to filter entries based on playlists and search queries; A playlist
+ * system.
  */
 public class ILibrary {
 
@@ -137,12 +139,44 @@ public class ILibrary {
         table.setItems(tableHandler.display);
     }
 
+    /**
+     * Sets the search filter to the list of displayed table
+     * entries. A search filter is much the same as a normal
+     * filter {@link #setFilter(TableEntryFilter)}, the only
+     * difference being this filter is used specifically for
+     * filtering entries based on a search query.
+     *
+     * @param filter the search filter to apply.
+     */
     public void setSearchFilter(TableEntryFilter filter) {
         tableHandler.setSearchFilter(filter);
     }
 
+    /**
+     * Clears any set table search filter & updates the table.
+     */
     public void clearSearchFilter() {
         tableHandler.clearSearchFilter();
+    }
+
+    /**
+     * Sets the filter to the list of displayed table entries
+     * that can filter out entries from being shown.
+     * This is normally used with playlists and other
+     * navigation items. Setting the filter will clear
+     * the previous filter & update the table.
+     *
+     * @param filter the filter to apply.
+     */
+    public void setFilter(TableEntryFilter filter) {
+        tableHandler.setFilter(filter);
+    }
+
+    /**
+     * Clears any set table filter & updates the table.
+     */
+    public void clearFilter() {
+        tableHandler.clearFilter();
     }
 
 
@@ -191,20 +225,70 @@ public class ILibrary {
          */
         private final ObservableList<ITableEntry> display = FXCollections.observableArrayList();
 
+        /**
+         * Entry filter used to filter entries based on a search
+         * query.
+         */
         private TableEntryFilter searchFilter;
 
+        /**
+         * General entry filter.
+         */
+        private TableEntryFilter filter;
+
+        /**
+         * Sets the search filter to the list of displayed table
+         * entries. A search filter is much the same as a normal
+         * filter {@link #setFilter(TableEntryFilter)}, the only
+         * difference being this filter is used specifically for
+         * filtering entries based on a search query.
+         *
+         * @param filter the search filter to apply.
+         */
         public void setSearchFilter(TableEntryFilter filter) {
             this.searchFilter = filter;
             filterDisplay();
             forceRefresh(null);
         }
 
+        /**
+         * Sets the filter to the list of displayed table entries
+         * that can filter out entries from being shown.
+         * This is normally used with playlists and other
+         * navigation items. Setting the filter will clear
+         * the previous filter & update the table.
+         *
+         * @param filter the filter to apply.
+         */
+        public void setFilter(TableEntryFilter filter) {
+            this.filter = filter;
+            filterDisplay();
+            forceRefresh(null);
+        }
+
+        /**
+         * Clears any set table filter & updates the table.
+         */
+        public void clearFilter() {
+            this.filter = null;
+            filterDisplay();
+            forceRefresh(null);
+        }
+
+        /**
+         * Clears any set table search filter & updates the table.
+         */
         public void clearSearchFilter() {
             searchFilter = null;
             filterDisplay();
             forceRefresh(null);
         }
 
+        /**
+         * Filters out any entries in the table
+         * that aren't allowed through by the
+         * {@link #filter} & {@link #searchFilter}.
+         */
         private void filterDisplay() {
             display.clear();
 
@@ -214,8 +298,24 @@ public class ILibrary {
             }
         }
 
+        /**
+         * @param entry a given entry.
+         * @return {@code true} if and only if
+         * the given entry is accepted
+         * ({@link TableEntryFilter#accept(ITableEntry)})
+         * by both the {@link #filter} & {@link #searchFilter}.
+         */
         private boolean canAdd(ITableEntry entry) {
-            return (searchFilter == null) || searchFilter.accept(entry);
+            if (filter != null) {
+                if (!filter.accept(entry))
+                    return false;
+            }
+
+            if (searchFilter != null) {
+                return searchFilter.accept(entry);
+            }
+
+            return true;
         }
 
         /**

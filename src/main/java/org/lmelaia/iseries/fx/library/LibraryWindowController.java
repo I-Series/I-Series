@@ -73,9 +73,11 @@ public class LibraryWindowController extends FXController {
         if (required) {
             this.labelWarning.setVisible(true);
             this.btnCancel.setDisable(true);
+            this.btnCancel.setVisible(false);
         } else {
             this.labelWarning.setVisible(false);
             this.btnCancel.setDisable(false);
+            this.btnCancel.setVisible(true);
         }
     }
 

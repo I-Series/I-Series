@@ -8,11 +8,15 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import org.apache.logging.log4j.Logger;
 import org.lmelaia.iseries.App;
 import org.lmelaia.iseries.common.system.AppLogger;
@@ -169,6 +173,8 @@ class TableController implements SubControl {
             //noinspection unchecked
             return row;
         });
+
+        table.setPlaceholder(new Placeholder());
     }
 
     /**
@@ -359,6 +365,84 @@ class TableController implements SubControl {
             //Always make sure this column gets added.
             if (!tableView.getColumns().contains(Columns.name))
                 tableView.getColumns().add(Columns.name);
+        }
+    }
+
+    /**
+     * Placeholder node displayed on the table when no entries
+     * are available. This placeholder directs the user to the
+     * add entry window & help documentation as well as displaying
+     * the no entries available message.
+     */
+    private class Placeholder extends AnchorPane {
+
+        /**
+         * Constructs the placeholder.
+         */
+        public Placeholder() {
+            //Create entry button
+            ImageView addEntryButtonImage = new ImageView("/images/img_add.png");
+            addEntryButtonImage.setFitWidth(16);
+            addEntryButtonImage.setFitHeight(16);
+
+            Button addEntryButton = new Button("", addEntryButtonImage);
+            addEntryButton.setStyle("-fx-background-color: transparent;");
+            addEntryButton.setOnAction((actionEvent) -> window.controlBar.addEntry());
+
+            //No Entries text
+            Label noEntriesText = new Label("No Entries to display");
+            noEntriesText.setFont(Font.font(25));
+            noEntriesText.setTextAlignment(TextAlignment.CENTER);
+            noEntriesText.setAlignment(Pos.CENTER);
+            noEntriesText.setUnderline(true);
+            setAnchors(noEntriesText, 0, 5, 5, 5);
+
+            //Add Entry text
+            Label addEntryText = new Label("To add an entry to the table, press");
+            addEntryText.setFont(Font.font(15));
+            addEntryText.setTextAlignment(TextAlignment.CENTER);
+            HBox addEntryRow = new HBox();
+            addEntryRow.setAlignment(Pos.CENTER);
+            setAnchors(addEntryRow, 70, 5, 5, 5);
+
+            addEntryRow.getChildren().addAll(addEntryText, addEntryButton);
+
+            //
+            Hyperlink viewHelpLink = new Hyperlink("Documentation");
+            viewHelpLink.setOnAction((actionEvent) -> {
+                //TODO: Make and open doc window.
+            });
+
+            Label viewHelpText = new Label("To view the Help menu, go to Help,");
+            viewHelpText.setFont(Font.font(15));
+            viewHelpText.setTextAlignment(TextAlignment.CENTER);
+            viewHelpLink.setFont(Font.font(15));
+            viewHelpLink.setTextAlignment(TextAlignment.CENTER);
+            HBox viewHelpRow = new HBox();
+            viewHelpRow.setAlignment(Pos.CENTER);
+            setAnchors(viewHelpRow, 120, 5, 5, 5);
+
+            viewHelpRow.getChildren().addAll(viewHelpText, viewHelpLink);
+
+
+            this.getChildren().addAll(noEntriesText, addEntryRow, viewHelpRow);
+        }
+
+        /**
+         * Sets a given nodes anchor constraints
+         * (e.g. {@link AnchorPane#setTopAnchor(Node, Double)}).
+         *
+         * @param node   the node.
+         * @param top    -
+         * @param bottom -
+         * @param left   -
+         * @param right  -
+         */
+        private void setAnchors(Node node, double top, double bottom, double left, double right) {
+            AnchorPane.setBottomAnchor(node, bottom);
+            AnchorPane.setTopAnchor(node, top);
+            AnchorPane.setLeftAnchor(node, left);
+            AnchorPane.setRightAnchor(node, right);
         }
     }
 }

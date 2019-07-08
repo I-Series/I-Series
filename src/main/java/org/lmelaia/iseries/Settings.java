@@ -40,9 +40,9 @@ public enum Settings {
     LAUNCHER_PING_FREQUENCY("launcher_ping_frequency", 1000,
             "The frequency in milliseconds between pings to the launcher."),
 
-    WINDOW_X("window_x", 600D, "X position of the main window."),
+    WINDOW_X("window_x", 0, "X position of the main window."),
 
-    WINDOW_Y("window_y", 600D, "Y position of the main window"),
+    WINDOW_Y("window_y", 0, "Y position of the main window"),
 
     WINDOW_WIDTH("window_width", 0.5D, "Width of the main window"),
 

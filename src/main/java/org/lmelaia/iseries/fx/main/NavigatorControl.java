@@ -2,8 +2,6 @@ package org.lmelaia.iseries.fx.main;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import org.lmelaia.iseries.fx.util.ControlUtil;
 
@@ -48,15 +46,12 @@ class NavigatorControl implements SubControl {
      */
     private final Button statistics;
 
-    /**
-     * Navigator tree view (library).
-     */
-    private TreeView<String> navigatorTree;
+    // Switchable Components.
 
     /**
-     * Navigator tree view root node.
+     * The navigator tree component.
      */
-    private TreeItem<String> navTreeRoot;
+    private final NavigatorComponent navigatorComponent;
 
     /**
      * Constructor.
@@ -72,8 +67,7 @@ class NavigatorControl implements SubControl {
         this.episodes = (Button) comps[3];
         this.statistics = (Button) comps[4];
 
-        navTreeRoot = new TreeItem<>("Library");
-        navigatorTree = new TreeView<>(navTreeRoot);
+        this.navigatorComponent = new NavigatorComponent(this);
     }
 
     /**
@@ -81,13 +75,12 @@ class NavigatorControl implements SubControl {
      */
     @Override
     public void init() {
-        navTreeRoot.setGraphic(ControlUtil.getImageView("/images/img_library_24.png"));
-        navigatorTree.getSelectionModel().selectFirst();
+        navigatorComponent.init();
 
-        AnchorPane.setRightAnchor(navigatorTree, 0D);
-        AnchorPane.setLeftAnchor(navigatorTree, 0D);
-        AnchorPane.setTopAnchor(navigatorTree, 0D);
-        AnchorPane.setBottomAnchor(navigatorTree, 0D);
+        AnchorPane.setRightAnchor(navigatorComponent, 0D);
+        AnchorPane.setLeftAnchor(navigatorComponent, 0D);
+        AnchorPane.setTopAnchor(navigatorComponent, 0D);
+        AnchorPane.setBottomAnchor(navigatorComponent, 0D);
 
         navigator.setOnAction(this::onNavigatorBtnPress);
         information.setOnAction(this::onInformationBtnPress);
@@ -120,7 +113,7 @@ class NavigatorControl implements SubControl {
         resetNavButtons();
         ControlUtil.setBackgroundColor(navigator, "lightblue");
         displayPane.getChildren().clear();
-        displayPane.getChildren().add(navigatorTree);
+        displayPane.getChildren().add(navigatorComponent);
     }
 
     /**
