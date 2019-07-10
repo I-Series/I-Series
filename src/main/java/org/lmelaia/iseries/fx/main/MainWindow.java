@@ -29,7 +29,7 @@ import org.lmelaia.iseries.fx.exit.ExitWindow;
  */
 @RegisterFXWindow(
         fxmlFileName = "windows/main_window.fxml",
-        cssFileName = "windows/main_window.css",
+        cssFileName = "windows/css/main_window.css",
         controllerClass = MainWindowController.class
 )
 public class MainWindow extends FXWindow<MainWindowController> {

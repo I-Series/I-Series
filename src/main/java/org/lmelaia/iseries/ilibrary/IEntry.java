@@ -104,6 +104,13 @@ public class IEntry {
         this.owner.add(this);
     }
 
+    /**
+     * @return The name and uuid of this entry.
+     */
+    public String toString() {
+        return this.getName() + " (" + this.getUUID() + ")";
+    }
+
     // *********
     // ILibrary
     // *********

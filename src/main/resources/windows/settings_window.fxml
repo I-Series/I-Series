@@ -7,70 +7,59 @@
 <?import javafx.scene.layout.*?>
 <AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: white;"
             xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
-    <children>
-        <TabPane prefHeight="358.0" prefWidth="600.0" side="LEFT" tabClosingPolicy="UNAVAILABLE"
-                 AnchorPane.bottomAnchor="42.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                 AnchorPane.topAnchor="0.0">
-            <tabs>
-                <Tab style="-fx-background-color: white;" text="General">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="364.0" prefWidth="571.0">
-                            <children>
-                                <Label layoutX="14.0" layoutY="14.0" text="Library Path:" AnchorPane.leftAnchor="14.0"
-                                       AnchorPane.topAnchor="14.0"/>
-                                <TextField fx:id="fieldLibraryPath" layoutX="14.0" layoutY="31.0" prefHeight="21.0"
-                                           prefWidth="514.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="43.0"
-                                           AnchorPane.topAnchor="31.0">
-                                    <padding>
-                                        <Insets bottom="2.0" left="5.0" top="2.0"/>
-                                    </padding>
-                                </TextField>
-                                <Button fx:id="btnBrowse" layoutX="534.0" layoutY="31.0" mnemonicParsing="false"
-                                        prefHeight="21.0" prefWidth="23.0" AnchorPane.rightAnchor="14.0"
-                                        AnchorPane.topAnchor="31.0">
-                                    <graphic>
-                                        <ImageView fitHeight="14.0" fitWidth="14.0" pickOnBounds="true"
-                                                   preserveRatio="true">
-                                            <image>
-                                                <Image url="@../images/img_browse.png"/>
-                                            </image>
-                                        </ImageView>
-                                    </graphic>
-                                    <padding>
-                                        <Insets bottom="2.0" top="2.0"/>
-                                    </padding>
-                                </Button>
-                                <Label layoutX="14.0" layoutY="59.0" text="On I-Series Close:"/>
-                                <ChoiceBox fx:id="choiceOnClose" layoutX="14.0" layoutY="76.0" prefHeight="25.0"
-                                           prefWidth="208.0"/>
-                            </children>
-                        </AnchorPane>
-                    </content>
-                </Tab>
-                <Tab closable="false" style="-fx-background-color: white;" text="Advanced">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                            <children>
-                                <Label layoutX="14.0" layoutY="14.0" text="Laucher Ping Frequency:"/>
-                                <Spinner fx:id="spinnerLauncherFrequency" editable="true" layoutX="14.0" layoutY="31.0"
-                                         prefHeight="25.0" prefWidth="218.0"/>
-                            </children>
-                        </AnchorPane>
-                    </content>
-                </Tab>
-            </tabs>
-        </TabPane>
-        <Button fx:id="btnApply" layoutX="534.0" layoutY="374.0" mnemonicParsing="false" prefHeight="5.0"
-                prefWidth="111.0" text="Apply" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="14.0">
-            <padding>
-                <Insets bottom="1.0" top="1.0"/>
-            </padding>
-        </Button>
-        <Button fx:id="btnCancel" layoutX="357.0" layoutY="369.0" mnemonicParsing="false" prefHeight="0.0"
-                prefWidth="111.0" text="Cancel" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="132.0">
-            <padding>
-                <Insets bottom="1.0" top="1.0"/>
-            </padding>
-        </Button>
-    </children>
+    <TabPane prefHeight="358.0" prefWidth="600.0" side="LEFT" tabClosingPolicy="UNAVAILABLE"
+             AnchorPane.bottomAnchor="42.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+             AnchorPane.topAnchor="0.0">
+        <Tab style="-fx-background-color: white;" text="General">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="364.0" prefWidth="571.0">
+                <Label layoutX="14.0" layoutY="14.0" text="Library Path:" AnchorPane.leftAnchor="14.0"
+                       AnchorPane.topAnchor="14.0"/>
+                <TextField fx:id="fieldLibraryPath" layoutX="14.0" layoutY="31.0" prefHeight="21.0"
+                           prefWidth="514.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="43.0"
+                           AnchorPane.topAnchor="31.0">
+                    <padding>
+                        <Insets bottom="2.0" left="5.0" top="2.0"/>
+                    </padding>
+                </TextField>
+                <Button fx:id="btnBrowse" layoutX="534.0" layoutY="31.0" mnemonicParsing="false"
+                        prefHeight="21.0" prefWidth="23.0" AnchorPane.rightAnchor="14.0"
+                        AnchorPane.topAnchor="31.0">
+                    <graphic>
+                        <ImageView fitHeight="14.0" fitWidth="14.0" pickOnBounds="true"
+                                   preserveRatio="true">
+                            <Image url="@../images/img_browse.png"/>
+                        </ImageView>
+                    </graphic>
+                    <padding>
+                        <Insets bottom="2.0" top="2.0"/>
+                    </padding>
+                </Button>
+                <Label layoutX="14.0" layoutY="59.0" text="On I-Series Close:"/>
+                <ChoiceBox fx:id="choiceOnClose" layoutX="14.0" layoutY="76.0" prefHeight="25.0"
+                           prefWidth="208.0" AnchorPane.leftAnchor="14.0"/>
+                <CheckBox fx:id="checkBoxUnindexWithoutConfirmation" layoutX="233.0" layoutY="80.0"
+                          mnemonicParsing="false" prefHeight="17.0" prefWidth="227.0"
+                          text="Unindex entries without confirmation." AnchorPane.leftAnchor="233.0"/>
+            </AnchorPane>
+        </Tab>
+        <Tab closable="false" style="-fx-background-color: white;" text="Advanced">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                <Label layoutX="14.0" layoutY="14.0" text="Laucher Ping Frequency:"/>
+                <Spinner fx:id="spinnerLauncherFrequency" editable="true" layoutX="14.0" layoutY="31.0"
+                         prefHeight="25.0" prefWidth="218.0"/>
+            </AnchorPane>
+        </Tab>
+    </TabPane>
+    <Button fx:id="btnApply" layoutX="534.0" layoutY="374.0" mnemonicParsing="false" prefHeight="5.0"
+            prefWidth="111.0" text="Apply" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="14.0">
+        <padding>
+            <Insets bottom="1.0" top="1.0"/>
+        </padding>
+    </Button>
+    <Button fx:id="btnCancel" layoutX="357.0" layoutY="369.0" mnemonicParsing="false" prefHeight="0.0"
+            prefWidth="111.0" text="Cancel" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="132.0">
+        <padding>
+            <Insets bottom="1.0" top="1.0"/>
+        </padding>
+    </Button>
 </AnchorPane>

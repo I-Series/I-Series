@@ -52,6 +52,9 @@ public class SettingsWindowController extends FXController {
     @FXML
     private Button btnCancel;
 
+    @FXML
+    private CheckBox checkBoxUnindexWithoutConfirmation;//Mouth full...
+
     private DirectoryChooser directoryChooser;
 
     /**
@@ -91,6 +94,8 @@ public class SettingsWindowController extends FXController {
                 choiceOnClose.getSelectionModel().clearAndSelect(0);
         }
 
+        this.checkBoxUnindexWithoutConfirmation.setSelected(Settings.ALWAYS_UNINDEX.getValueAsBoolean());
+
         this.fieldLibraryPath.setText(Settings.LIBRARY_PATH.getValue());
 
         this.spinnerLauncherFrequency.getValueFactory().setValue(Settings.LAUNCHER_PING_FREQUENCY.getValueAsInt());
@@ -119,13 +124,14 @@ public class SettingsWindowController extends FXController {
                 choiceOnClose.getSelectionModel().getSelectedIndex()
         );
 
+        Settings.ALWAYS_UNINDEX.changeValue(checkBoxUnindexWithoutConfirmation.isSelected());
+
+        //Library. Must be done last.
         String libraryPath = Settings.LIBRARY_PATH.getValue();
         String newLibraryPath = this.fieldLibraryPath.getText();
 
-        //Must be done last
         if (!new File(libraryPath).getAbsolutePath().equals(new File(newLibraryPath).getAbsolutePath())) {
             //Library change
-
             File newLibrary = new File(newLibraryPath);
 
             if (Objects.requireNonNull(newLibrary.list()).length != 0) {

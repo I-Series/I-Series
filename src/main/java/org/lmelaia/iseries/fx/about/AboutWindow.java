@@ -9,7 +9,7 @@ import org.lmelaia.iseries.common.fx.RegisterFXWindow;
  */
 @RegisterFXWindow(
         fxmlFileName = "windows/about_window.fxml",
-        cssFileName = "windows/about_window.css",
+        cssFileName = "windows/css/about_window.css",
         controllerClass = AboutWindowController.class
 )
 public class AboutWindow extends FXWindow<AboutWindowController> {

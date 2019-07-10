@@ -25,7 +25,7 @@ import org.lmelaia.iseries.common.fx.RegisterFXWindow;
  */
 @RegisterFXWindow(
         fxmlFileName = "windows/settings_window.fxml",
-        cssFileName = "windows/settings_window.css",
+        cssFileName = "windows/css/settings_window.css",
         controllerClass = SettingsWindowController.class
 )
 public class SettingsWindow extends FXWindow<SettingsWindowController> {

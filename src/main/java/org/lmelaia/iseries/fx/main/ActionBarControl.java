@@ -5,12 +5,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import org.lmelaia.iseries.App;
 import org.lmelaia.iseries.common.fx.FXWindowsManager;
+import org.lmelaia.iseries.fx.delete.DeleteWindow;
 import org.lmelaia.iseries.fx.entry.EntryWindow;
 import org.lmelaia.iseries.fx.entry.EntryWindowController;
-import org.lmelaia.iseries.ilibrary.IEntry;
+import org.lmelaia.iseries.fx.unindex.UnindexWindow;
 import org.lmelaia.iseries.ilibrary.ITableEntry;
 import org.lmelaia.iseries.library.LibraryEntry;
-import org.lmelaia.iseries.library.LibraryException;
 
 /**
  * Sub-control class that handles the toolbar
@@ -234,36 +234,27 @@ class ActionBarControl implements SubControl {
     }
 
     /**
-     * Deletes the selected entry in the table from the Library.
+     * Opens the {@link DeleteWindow} confirmation dialog linked
+     * to the selected entry in the table, which will then delete
+     * the entry if user confirms the delete.
      */
     protected void deleteSelectedEntry() {
         ITableEntry tableEntry = window.tableController.getSelectedEntry();
         if (tableEntry == null) return;
 
-        IEntry entry = tableEntry.getEntry();
-
-        try {
-            App.getInstance().getILibrary().delete(entry);
-        } catch (LibraryException.EntryModificationException ex) {
-            //TODO: Dialog
-            ex.printStackTrace();
-        }
+        DeleteWindow.present(tableEntry.getEntry());
     }
 
     /**
-     * Unindexes the selected entry in the table from the Library.
+     * Opens the {@link UnindexWindow} confirmation dialog linked
+     * to the selected entry in the table, which will then unindex
+     * the entry if user confirms the unindex, or just unindex the entry
+     * if the user has requested entries be unindexed without confirmation.
      */
     protected void unindexSelectedEntry() {
         ITableEntry tableEntry = window.tableController.getSelectedEntry();
         if (tableEntry == null) return;
 
-        IEntry entry = tableEntry.getEntry();
-
-        try {
-            App.getInstance().getILibrary().unindex(entry);
-        } catch (LibraryException.EntryModificationException ex) {
-            //TODO: Dialog
-            ex.printStackTrace();
-        }
+        UnindexWindow.present(tableEntry.getEntry());
     }
 }

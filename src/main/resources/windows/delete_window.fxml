@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<AnchorPane prefHeight="303.0" prefWidth="626.0" xmlns="http://javafx.com/javafx/8.0.172-ea"
+            xmlns:fx="http://javafx.com/fxml/1">
+    <AnchorPane prefHeight="60.0" prefWidth="472.0" style="-fx-background-color: #ededed;"
+                AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <ImageView fitHeight="32.0" fitWidth="32.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true"
+                   preserveRatio="true">
+            <Image url="@../images/img_delete.png"/>
+        </ImageView>
+        <Label layoutX="69.0" layoutY="13.0" text="Delete Selected Entry?">
+            <font>
+                <Font size="24.0"/>
+            </font>
+        </Label>
+    </AnchorPane>
+    <Button fx:id="btnDelete" layoutX="534.0" layoutY="361.0" mnemonicParsing="false" prefHeight="21.0"
+            prefWidth="105.0" text="Delete" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0">
+        <padding>
+            <Insets bottom="2.0" top="2.0"/>
+        </padding>
+    </Button>
+    <Button fx:id="btnUnindex" layoutX="241.0" layoutY="259.0" mnemonicParsing="false" prefWidth="105.0"
+            text="Unindex" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="126.0">
+        <padding>
+            <Insets bottom="2.0" top="2.0"/>
+        </padding>
+    </Button>
+    <Button fx:id="btnCancel" layoutX="131.0" layoutY="259.0" mnemonicParsing="false" prefWidth="105.0"
+            text="Cancel" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="236.0">
+        <padding>
+            <Insets bottom="2.0" top="2.0"/>
+        </padding>
+    </Button>
+    <Label layoutX="14.0" layoutY="69.0" text="Are you sure you want to delete: " AnchorPane.leftAnchor="14.0">
+        <font>
+            <Font size="14.0"/>
+        </font>
+    </Label>
+    <Label fx:id="labelEntryName" layoutX="221.0" layoutY="69.0" prefHeight="20.0" prefWidth="399.0"
+           textFill="#001bff" AnchorPane.leftAnchor="221.0" AnchorPane.rightAnchor="6.0">
+        <font>
+            <Font size="14.0"/>
+        </font>
+    </Label>
+    <Label layoutX="14.0" layoutY="113.0" text="This action cannot be undone." textFill="RED" underline="true"
+           AnchorPane.leftAnchor="14.0">
+        <font>
+            <Font size="14.0"/>
+        </font>
+    </Label>
+    <Label layoutX="14.0" layoutY="139.0" text="All files and data created or used by this entry will be deleted."
+           textFill="RED" underline="true" AnchorPane.leftAnchor="14.0">
+        <font>
+            <Font size="14.0"/>
+        </font>
+    </Label>
+    <Label layoutX="14.0" layoutY="182.0" text="It is recommended you unindex the entry instead."
+           AnchorPane.leftAnchor="14.0">
+        <font>
+            <Font size="14.0"/>
+        </font>
+    </Label>
+    <Label layoutX="14.0" layoutY="202.0"
+           text="Which will remove it from I-Series but still keep any files and data."
+           AnchorPane.leftAnchor="14.0">
+        <font>
+            <Font size="14.0"/>
+        </font>
+    </Label>
+    <Label layoutX="14.0" layoutY="222.0" text="An unindexed entry can be added again later if you choose.">
+        <font>
+            <Font size="14.0"/>
+        </font>
+    </Label>
+</AnchorPane>

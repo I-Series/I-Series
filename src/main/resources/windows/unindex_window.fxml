@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<AnchorPane prefHeight="224.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea"
+            xmlns:fx="http://javafx.com/fxml/1">
+    <AnchorPane prefHeight="60.0" prefWidth="472.0" style="-fx-background-color: #ededed;"
+                AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <ImageView fitHeight="32.0" fitWidth="32.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true"
+                   preserveRatio="true">
+            <Image url="@../images/img_unindex.png"/>
+        </ImageView>
+        <Label layoutX="69.0" layoutY="13.0" text="Unindex Selected Entry?">
+            <font>
+                <Font size="24.0"/>
+            </font>
+        </Label>
+    </AnchorPane>
+    <Button fx:id="btnUnindex" layoutX="481.0" layoutY="365.0" mnemonicParsing="false" prefWidth="105.0"
+            text="Unindex" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0">
+        <padding>
+            <Insets bottom="2.0" top="2.0"/>
+        </padding>
+    </Button>
+    <Button fx:id="btnCancel" layoutX="370.0" layoutY="365.0" mnemonicParsing="false" prefWidth="105.0"
+            text="Cancel" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="125.0">
+        <padding>
+            <Insets bottom="2.0" top="2.0"/>
+        </padding>
+    </Button>
+    <Label layoutX="14.0" layoutY="73.0" text="Are you sure you want to unindex: " AnchorPane.leftAnchor="14.0">
+        <font>
+            <Font size="14.0"/>
+        </font>
+    </Label>
+    <Label fx:id="labelEntryName" layoutX="229.0" layoutY="73.0" prefHeight="20.0" prefWidth="357.0"
+           textFill="#001bff" AnchorPane.leftAnchor="229.0" AnchorPane.rightAnchor="14.0">
+        <font>
+            <Font size="14.0"/>
+        </font>
+    </Label>
+    <CheckBox fx:id="checkBoxDontAsk" layoutX="14.0" layoutY="367.0" mnemonicParsing="false" prefHeight="17.0"
+              prefWidth="156.0" text="Don't Ask Again" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0"/>
+    <Label layoutX="14.0" layoutY="106.0"
+           text="This will remove the entry from I-Series, however, all files and data will be kept.">
+        <font>
+            <Font size="14.0"/>
+        </font>
+    </Label>
+    <Label layoutX="14.0" layoutY="126.0"
+           text="Any unindex entry can be added back to I-Series again later if you decide.">
+        <font>
+            <Font size="14.0"/>
+        </font>
+    </Label>
+</AnchorPane>

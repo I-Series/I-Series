@@ -10,7 +10,7 @@ import org.lmelaia.iseries.common.fx.RegisterFXWindow;
  */
 @RegisterFXWindow(
         fxmlFileName = "windows/library_window.fxml",
-        cssFileName = "windows/library_window.css",
+        cssFileName = "windows/css/library_window.css",
         controllerClass = LibraryWindowController.class
 )
 public class LibraryWindow extends FXWindow<LibraryWindowController> {

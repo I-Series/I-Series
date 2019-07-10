@@ -25,7 +25,7 @@ import org.lmelaia.iseries.common.fx.RegisterFXWindow;
  */
 @RegisterFXWindow(
         fxmlFileName = "windows/entry_window.fxml",
-        cssFileName = "windows/entry_window.css",
+        cssFileName = "windows/css/entry_window.css",
         controllerClass = EntryWindowController.class
 )
 public class EntryWindow extends FXWindow<EntryWindowController> {

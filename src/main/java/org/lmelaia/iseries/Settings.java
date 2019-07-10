@@ -54,7 +54,10 @@ public enum Settings {
             "What to do when the user closes the main window."),
 
     LIBRARY_PATH("library_path", "",
-            "The file path to the I-Series Library.");
+            "The file path to the I-Series Library."),
+
+    ALWAYS_UNINDEX("always_unindex_entry", false, "Whether or not to unindex an entry" +
+            " in the table without presenting the unindex confirmation dialog.");
 
     /*
      * Initializes the {@link SettingsStore}
