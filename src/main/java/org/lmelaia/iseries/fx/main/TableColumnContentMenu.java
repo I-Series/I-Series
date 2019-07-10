@@ -42,7 +42,7 @@ class TableColumnContentMenu extends ContextMenu {
                 if (table == null)
                     return;
 
-                if (item.isSelected())
+                if (!item.isSelected())
                     table.getColumns().remove(column);
                 else
                     //noinspection unchecked

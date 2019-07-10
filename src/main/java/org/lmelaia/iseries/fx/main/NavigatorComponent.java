@@ -187,8 +187,13 @@ class NavigatorComponent extends StackPane {
 
             this.setOnShowing((value) -> {
                 if (navigator.navigatorTree.getSelectionModel().getSelectedItem() != null) {
-                    NavigatorTreeItem selectedItem =
-                            (NavigatorTreeItem) navigator.navigatorTree.getSelectionModel().getSelectedItem();
+
+                    Object si = navigator.navigatorTree.getSelectionModel().getSelectedItem();
+                    //Just make sure we have the right class.
+                    if (!(si instanceof NavigatorTreeItem))
+                        return;
+
+                    NavigatorTreeItem selectedItem = (NavigatorTreeItem) si;
 
                     if (selectedItem.getParent() == navigator.library) {
 

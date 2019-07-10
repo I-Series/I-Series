@@ -36,6 +36,13 @@ public class ITableEntry {
         return this.entry.getName();
     }
 
+    /**
+     * @return the UUID of the entry.
+     */
+    public String getUUID() {
+        return this.entry.getUUID();
+    }
+
     // ***********
     // END GETTERS
     // ***********

@@ -56,6 +56,11 @@ class TableController implements SubControl {
          */
         public static final TableColumn<ITableEntry, ITableEntry> name = new TableColumn<>("Name");
 
+        /**
+         * Column to display the UUID of the entry.
+         */
+        public static final TableColumn<ITableEntry, ITableEntry> uuid = new TableColumn<>("UUID");
+
         // *******
         // HELPERS
         // *******
@@ -78,13 +83,18 @@ class TableController implements SubControl {
          */
         static {
             COLUMN_CONTEXT_MENU = new TableColumnContentMenu(new TableColumn[]{
-                    name
+                    name, uuid
             });
 
             //Name
             name.setCellValueFactory(new PropertyValueFactory<>("name"));
             name.setContextMenu(COLUMN_CONTEXT_MENU);
             columnMap.put(name.getText(), name);
+
+            //UUID
+            uuid.setCellValueFactory(new PropertyValueFactory<>("UUID"));
+            uuid.setContextMenu(COLUMN_CONTEXT_MENU);
+            columnMap.put(uuid.getText(), uuid);
         }
 
         /**
@@ -110,6 +120,16 @@ class TableController implements SubControl {
      * on an entry in the table.
      */
     private TableContextMenu contextMenu;
+
+    /**
+     * Context menu presented when the {@link #contextMenu} cannot
+     * be given (i.e. when no entry is selected).
+     * <p>
+     * Simple context menu that allows users to add a new entry by
+     * clicking anywhere within the table (provided it's not on an
+     * entry within the table).
+     */
+    private DefaultContextMenu defaultContextMenu;
 
     /**
      * The selected entry in the table.
@@ -141,6 +161,8 @@ class TableController implements SubControl {
             table.sort();
         }));
 
+        defaultContextMenu = new DefaultContextMenu();
+
         contextMenu = new TableContextMenu() {
 
             @Override
@@ -168,7 +190,7 @@ class TableController implements SubControl {
             final TableRow row = new TableRow();
 
             row.contextMenuProperty().bind(
-                    Bindings.when(row.emptyProperty()).then((ContextMenu) null).otherwise(contextMenu));
+                    Bindings.when(row.emptyProperty()).then((ContextMenu) defaultContextMenu).otherwise(contextMenu));
 
             //noinspection unchecked
             return row;
@@ -377,6 +399,11 @@ class TableController implements SubControl {
     private class Placeholder extends AnchorPane {
 
         /**
+         * Context menu given when this node is right-clicked.
+         */
+        private final ContextMenu contextMenu = new DefaultContextMenu();
+
+        /**
          * Constructs the placeholder.
          */
         public Placeholder() {
@@ -401,13 +428,18 @@ class TableController implements SubControl {
             Label addEntryText = new Label("To add an entry to the table, press");
             addEntryText.setFont(Font.font(15));
             addEntryText.setTextAlignment(TextAlignment.CENTER);
+
+            Label addEntryText2 = new Label("or right-click anywhere in the table.");
+            addEntryText2.setFont(Font.font(15));
+            addEntryText2.setTextAlignment(TextAlignment.CENTER);
+
             HBox addEntryRow = new HBox();
             addEntryRow.setAlignment(Pos.CENTER);
             setAnchors(addEntryRow, 70, 5, 5, 5);
 
-            addEntryRow.getChildren().addAll(addEntryText, addEntryButton);
+            addEntryRow.getChildren().addAll(addEntryText, addEntryButton, addEntryText2);
 
-            //
+            //View Help
             Hyperlink viewHelpLink = new Hyperlink("Documentation");
             viewHelpLink.setOnAction((actionEvent) -> {
                 //TODO: Make and open doc window.
@@ -418,12 +450,15 @@ class TableController implements SubControl {
             viewHelpText.setTextAlignment(TextAlignment.CENTER);
             viewHelpLink.setFont(Font.font(15));
             viewHelpLink.setTextAlignment(TextAlignment.CENTER);
+
             HBox viewHelpRow = new HBox();
             viewHelpRow.setAlignment(Pos.CENTER);
             setAnchors(viewHelpRow, 120, 5, 5, 5);
 
             viewHelpRow.getChildren().addAll(viewHelpText, viewHelpLink);
 
+            this.setOnContextMenuRequested((contextMenuEvent) ->
+                    contextMenu.show(window.getWindow(), contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY()));
 
             this.getChildren().addAll(noEntriesText, addEntryRow, viewHelpRow);
         }
@@ -443,6 +478,27 @@ class TableController implements SubControl {
             AnchorPane.setTopAnchor(node, top);
             AnchorPane.setLeftAnchor(node, left);
             AnchorPane.setRightAnchor(node, right);
+        }
+    }
+
+    /**
+     * Simple context menu that allows users to add a new entry by
+     * right-clicking anywhere within the table (provided it's not on an
+     * entry within the table).
+     */
+    private class DefaultContextMenu extends ContextMenu {
+
+        /**
+         * Constructs the context menu.
+         */
+        public DefaultContextMenu() {
+            ImageView imageAdd = new ImageView("/images/img_add.png");
+            imageAdd.setFitHeight(16);
+            imageAdd.setFitWidth(16);
+
+            MenuItem menuItemAdd = new MenuItem("Add New Entry", imageAdd);
+            menuItemAdd.setOnAction((event -> window.controlBar.addEntry()));
+            this.getItems().add(menuItemAdd);
         }
     }
 }

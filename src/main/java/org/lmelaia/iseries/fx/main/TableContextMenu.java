@@ -47,7 +47,7 @@ abstract class TableContextMenu extends ContextMenu {
      * Initializes menu items.
      */
     public TableContextMenu() {
-        MenuItem add = new MenuItem("Add", imageAdd);
+        MenuItem add = new MenuItem("Add New Entry", imageAdd);
         add.setOnAction(this::onAdd);
 
         MenuItem edit = new MenuItem("Edit", imageEdit);
