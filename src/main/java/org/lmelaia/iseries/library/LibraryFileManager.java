@@ -58,7 +58,7 @@ class LibraryFileManager {
      * The name of the file which holds the json data
      * of an entry.
      */
-    private static final String METADATA_FILE_NAME = "/metadata.json";
+    private static final String ENTRY_FILE_NAME = "/entry.json";
 
     /**
      * Gson instance used to convert json objects
@@ -170,7 +170,7 @@ class LibraryFileManager {
      *                     created/updated or the index cannot be
      *                     updated.
      */
-    void add(LibraryEntry entry, ProgressTracker pt) throws IOException {
+    void add(LibraryEntryBase entry, ProgressTracker pt) throws IOException {
         File oldPath = index.get(entry.getUUID());
         File newPath = getPathFromEntry(entry);
 
@@ -183,7 +183,7 @@ class LibraryFileManager {
 
         pt.setMax(2);
 
-        File datafile = new File(oldPath.getAbsolutePath() + METADATA_FILE_NAME);
+        File datafile = new File(oldPath.getAbsolutePath() + ENTRY_FILE_NAME);
         entry.setPath(newPath);
 
         write(entry.getMetadata(), datafile);
@@ -211,7 +211,7 @@ class LibraryFileManager {
      * @throws IOException if the entry files
      *                     cannot be read from file.
      */
-    LibraryEntry get(String UUID) throws IOException {
+    LibraryEntryBase get(String UUID) throws IOException {
         return get(index.get(UUID));
     }
 
@@ -223,7 +223,7 @@ class LibraryFileManager {
      * @return the path the entry files are located in.
      * @throws IOException if the index cannot be modified.
      */
-    File unindex(LibraryEntry entry) throws IOException {
+    File unindex(LibraryEntryBase entry) throws IOException {
         LOG.debug("Removal of entry: " + index.get(entry.getUUID()));
         File f = index.remove(entry.getUUID());
         writeIndex();
@@ -241,11 +241,15 @@ class LibraryFileManager {
      * @throws IOException if the files cannot be deleted
      *                     or the index cannot be modified.
      */
-    File delete(LibraryEntry entry, ProgressTracker tracker) throws IOException {
+    File delete(LibraryEntryBase entry, ProgressTracker tracker) throws IOException {
         LOG.debug("Deletion of entry: " + index.get(entry.getUUID()));
         File f = deleteFolder(index.remove(entry.getUUID()), tracker);
         writeIndex();
         return f;
+    }
+
+    String getPath() {
+        return path.getPath();
     }
 
     /**
@@ -319,7 +323,7 @@ class LibraryFileManager {
      * @param entry the entry to create a path from.
      * @return the relative path for the entry.
      */
-    private File getPathFromEntry(LibraryEntry entry) {
+    private File getPathFromEntry(LibraryEntryBase entry) {
         String givenFolderName = entrySorter.getRelativeFilePath(entry, path);
         File givenFolder;
 
@@ -361,7 +365,15 @@ class LibraryFileManager {
                         "Reading entry " + ++entriesRead + " of " + index.size() + ": " + entryFile.getAbsolutePath()
                 );
 
-                LibraryEntry entry = get(entryFile);
+                LibraryEntryBase entry = get(entryFile);
+
+                //Corrupted Entry
+                if (entry == null) {
+                    LOG.warn("Corrupted entry: " + entryFile.getAbsolutePath());
+                    library.addCorruptedEntry(entryFile.getAbsolutePath());
+                    continue;
+                }
+
                 library.getMapping().put(entry.getUUID(), entry);
                 entry.setOwner(library);
                 entry.setPath(index.get(entry.getUUID()));
@@ -410,9 +422,20 @@ class LibraryFileManager {
      * @throws IOException if the metadata file cannot
      *                     be read.
      */
-    private LibraryEntry get(File entryFolder) throws IOException {
-        JsonObject data = read(new File(entryFolder.getAbsolutePath() + METADATA_FILE_NAME));
-        return new LibraryEntry(data);
+    private LibraryEntryBase get(File entryFolder) throws IOException {
+        JsonObject data = read(new File(entryFolder.getAbsolutePath() + ENTRY_FILE_NAME));
+
+        //Has no type. Invalid entry.
+        if (!data.has("type"))
+            return null;
+
+        String type = data.get("type").getAsString();
+
+        if (type.equals(LibraryEntry.TYPE))
+            return new LibraryEntry(data);
+        else if (type.equals(NamedLibraryEntry.TYPE))
+            return new NamedLibraryEntry(data);
+        else return null;
     }
 
     /**

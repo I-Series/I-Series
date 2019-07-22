@@ -57,7 +57,10 @@ public enum Settings {
             "The file path to the I-Series Library."),
 
     ALWAYS_UNINDEX("always_unindex_entry", false, "Whether or not to unindex an entry" +
-            " in the table without presenting the unindex confirmation dialog.");
+            " in the table without presenting the unindex confirmation dialog."),
+
+    LAST_PLAYLIST("last_selected_playlist", null, "The last playlist or navigation entry " +
+            "the user selected.");
 
     /*
      * Initializes the {@link SettingsStore}

@@ -2,17 +2,13 @@ package org.lmelaia.iseries.fx.main;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
+import org.lmelaia.iseries.Settings;
 
 /**
  * Sub-controller class for handling the media player
  * part of the main window.
  */
-class MediaPlayerControl implements SubControl {
-
-    /**
-     * The main windows controller class instance.
-     */
-    private final MainWindowController window;
+public class MediaPlayerController extends SubControl {
 
     /**
      * Media player previous media button
@@ -55,8 +51,8 @@ class MediaPlayerControl implements SubControl {
      * @param window the main windows controller class instance.
      * @param comps  array of components this class handles.
      */
-    public MediaPlayerControl(MainWindowController window, Object[] comps) {
-        this.window = window;
+    MediaPlayerController(MainWindowController window, Object[] comps) {
+        super(window);
         this.previous = (Button) comps[0];
         this.back = (Button) comps[1];
         this.play = (Button) comps[2];
@@ -70,7 +66,7 @@ class MediaPlayerControl implements SubControl {
      * Sets up this classes components.
      */
     @Override
-    public void init() {
+    void init() {
         previous.setDisable(true);
         back.setDisable(true);
         play.setDisable(true);
@@ -83,22 +79,15 @@ class MediaPlayerControl implements SubControl {
      * {@inheritDoc}
      */
     @Override
-    public void saveState() {
-
+    void saveState() {
+        Settings.MEDIA_PLAYER_VOLUME.changeValue(volume.getValue());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void loadState() {
-
-    }
-
-    /**
-     * @return the volume slider control.
-     */
-    public Slider getVolumeSlider() {
-        return volume;
+    void loadState() {
+        volume.setValue(Settings.MEDIA_PLAYER_VOLUME.getValueAsDouble());
     }
 }

@@ -28,14 +28,6 @@ package org.lmelaia.iseries.common.system;
 public enum ExitCode {
 
     /**
-     * Termination caused by the user forcibly terminating
-     * the application through the os (e.g. through task
-     * managers 'end task' on windows), a crash in the jvm
-     * or an instance not being able to start (eg. jar not found).
-     */
-    FORCED_EXIT(1, "An instance was forcibly closed, crashed or could not be started.", true),
-
-    /**
      * Exit code used for testing.
      */
     TEST_EXIT(10, "Test exit.", true),
@@ -44,7 +36,9 @@ public enum ExitCode {
      * An exception went uncaught and propagated to
      * the uncaught exception handler.
      */
-    UNEXPECTED_ERROR(11, "An unexpected error occurred preventing the application from continuing.", true),
+    UNEXPECTED_ERROR(
+            11, "An unexpected error occurred preventing the application from continuing.", true
+    ),
 
     /**
      * The launcher is not responding to messages and/or pings.
@@ -76,12 +70,25 @@ public enum ExitCode {
      */
     TRAY_MODE_FAILURE(17, "Could not start Tray Mode", true),
 
+    /**
+     * Thrown when the playlist system failed to initialize.
+     */
+    PLAYLIST_INITIALIZATION_FAILURE(18, "Could not initialize playlists.", true),
+
     //Special Codes
 
     /**
      * Normal termination.
      */
     NORMAL(0, "Normal exit.", false),
+
+    /**
+     * Termination caused by the user forcibly terminating
+     * the application through the os (e.g. through task
+     * managers 'end task' on windows), a crash in the jvm
+     * or an instance not being able to start (eg. jar not found).
+     */
+    FORCED_EXIT(1, "An instance was forcibly closed, crashed or could not be started.", true),
 
     /**
      * Used in place where the exit code wasn't specified in any

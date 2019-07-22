@@ -10,18 +10,13 @@ import org.lmelaia.iseries.fx.entry.EntryWindow;
 import org.lmelaia.iseries.fx.entry.EntryWindowController;
 import org.lmelaia.iseries.fx.unindex.UnindexWindow;
 import org.lmelaia.iseries.ilibrary.ITableEntry;
-import org.lmelaia.iseries.library.LibraryEntry;
+import org.lmelaia.iseries.library.LibraryEntryBase;
 
 /**
- * Sub-control class that handles the toolbar
+ * Sub-controller class that handles the toolbar
  * part of the main window.
  */
-class ActionBarControl implements SubControl {
-
-    /**
-     * The main windows controller class.
-     */
-    private final MainWindowController window;
+public class ActionBarController extends SubControl {
 
     /**
      * The add-entry button on the main window.
@@ -59,8 +54,8 @@ class ActionBarControl implements SubControl {
      * @param window   the main windows controller class.
      * @param controls an array of all the controls this class handles.
      */
-    ActionBarControl(MainWindowController window, Object[] controls) {
-        this.window = window;
+    ActionBarController(MainWindowController window, Object[] controls) {
+        super(window);
         this.add = (Button) controls[0];
         this.edit = (Button) controls[1];
         this.delete = (Button) controls[2];
@@ -73,7 +68,7 @@ class ActionBarControl implements SubControl {
      * Sets up this classes components.
      */
     @Override
-    public void init() {
+    void init() {
         add.setOnAction(this::onAddPressed);
         edit.setOnAction(this::onEditPressed);
         delete.setOnAction(this::onDeletePressed);
@@ -98,36 +93,12 @@ class ActionBarControl implements SubControl {
         unindex.setDisable(true);
         clearInput.setVisible(false);
 
-        window.tableController.addSelectionListener((observable, oldValue, newValue) -> {
+        getMainWindow().getTable().addSelectionListener((observable, oldValue, newValue) -> {
             if (newValue != null)
-                window.controlBar.enableModificationButtons();
+                getMainWindow().getActionBar().enableModificationButtons();
             else
-                window.controlBar.disableModificationButtons();
+                getMainWindow().getActionBar().disableModificationButtons();
         });
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void saveState() {
-
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void loadState() {
-
-    }
-
-    /**
-     * Clears the users search input
-     * and clears the table filter.
-     */
-    public void clearSearch() {
-        this.clearInput.fire();
     }
 
     /**
@@ -164,7 +135,7 @@ class ActionBarControl implements SubControl {
      * Called when the unindex button is pressed.
      * Removes the entry selected in the table
      * from the library index. See
-     * {@link org.lmelaia.iseries.library.Library#unindex(LibraryEntry)}.
+     * {@link org.lmelaia.iseries.library.Library#unindex(LibraryEntryBase)}.
      *
      * @param e action event.
      */
@@ -185,15 +156,11 @@ class ActionBarControl implements SubControl {
         this.input.selectAll();
     }
 
-    // *************
-    // Inter Control
-    // *************
-
     /**
      * Enables any toolbar buttons
      * that require a selected entry.
      */
-    protected void enableModificationButtons() {
+    private void enableModificationButtons() {
         this.edit.setDisable(false);
         this.delete.setDisable(false);
         this.unindex.setDisable(false);
@@ -203,11 +170,15 @@ class ActionBarControl implements SubControl {
      * Disables any toolbar buttons
      * that require a selected entry.
      */
-    protected void disableModificationButtons() {
+    private void disableModificationButtons() {
         this.edit.setDisable(true);
         this.delete.setDisable(true);
         this.unindex.setDisable(true);
     }
+
+    // *************
+    // Inter Control
+    // *************
 
     /**
      * Opens the entry window in add mode.
@@ -218,7 +189,7 @@ class ActionBarControl implements SubControl {
 
         entryWindowController.addMode();
 
-        FXWindowsManager.getInstance().showWindowAndWait(entryWindow, window.getWindow());
+        FXWindowsManager.getInstance().showWindowAndWait(entryWindow, getMainWindow().getWindow());
     }
 
     /**
@@ -228,9 +199,9 @@ class ActionBarControl implements SubControl {
         EntryWindow entryWindow = FXWindowsManager.getInstance().getWindow(EntryWindow.class);
         EntryWindowController entryWindowController = entryWindow.getController();
 
-        entryWindowController.editMode(window.tableController.getSelectedEntry().getEntry());
+        entryWindowController.editMode(getMainWindow().getTable().getSelectedEntry().getEntry());
 
-        FXWindowsManager.getInstance().showWindowAndWait(entryWindow, window.getWindow());
+        FXWindowsManager.getInstance().showWindowAndWait(entryWindow, getMainWindow().getWindow());
     }
 
     /**
@@ -239,7 +210,7 @@ class ActionBarControl implements SubControl {
      * the entry if user confirms the delete.
      */
     protected void deleteSelectedEntry() {
-        ITableEntry tableEntry = window.tableController.getSelectedEntry();
+        ITableEntry tableEntry = getMainWindow().getTable().getSelectedEntry();
         if (tableEntry == null) return;
 
         DeleteWindow.present(tableEntry.getEntry());
@@ -252,9 +223,22 @@ class ActionBarControl implements SubControl {
      * if the user has requested entries be unindexed without confirmation.
      */
     protected void unindexSelectedEntry() {
-        ITableEntry tableEntry = window.tableController.getSelectedEntry();
+        ITableEntry tableEntry = getMainWindow().getTable().getSelectedEntry();
         if (tableEntry == null) return;
 
         UnindexWindow.present(tableEntry.getEntry());
+    }
+
+    // **********
+    // PUBLIC API
+    // **********
+
+    /**
+     * Clears the users search input
+     * and clears the search filter
+     * applied to the table.
+     */
+    public void clearSearch() {
+        this.clearInput.fire();
     }
 }

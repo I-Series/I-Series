@@ -36,13 +36,11 @@ public abstract class FXController {
     /**
      * Called on initialization of window controllers.
      */
-    @SuppressWarnings("EmptyMethod")
     public abstract void init();
 
     /**
      * @return the window instance this controller belongs to.
      */
-    @SuppressWarnings("WeakerAccess")
     public FXWindow getWindow() {
         return this.window;
     }

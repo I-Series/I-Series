@@ -96,7 +96,6 @@ public class MainWindow extends FXWindow<MainWindowController> {
      * Saves the users window preferences (e.g. window size and position).
      */
     protected void saveState() {
-        Settings.MEDIA_PLAYER_VOLUME.changeValue(controller.mediaPlayer.getVolumeSlider().getValue());
         Settings.WINDOW_X.changeValue(this.getX());
         Settings.WINDOW_Y.changeValue(this.getY());
         Settings.WINDOW_WIDTH.changeValue(this.getWidth());
@@ -109,8 +108,6 @@ public class MainWindow extends FXWindow<MainWindowController> {
      * Loads the users window preferences from file.
      */
     protected void loadLastState() {
-        this.controller.mediaPlayer.getVolumeSlider().setValue(Settings.MEDIA_PLAYER_VOLUME.getValueAsDouble());
-
         double x = Settings.WINDOW_X.getValueAsDouble();
         double y = Settings.WINDOW_Y.getValueAsDouble();
 

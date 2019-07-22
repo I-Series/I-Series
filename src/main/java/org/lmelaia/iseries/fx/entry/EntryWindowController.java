@@ -24,6 +24,7 @@ import javafx.scene.control.TextField;
 import org.lmelaia.iseries.App;
 import org.lmelaia.iseries.common.fx.FXController;
 import org.lmelaia.iseries.fx.main.MainWindow;
+import org.lmelaia.iseries.fx.util.AlertUtil;
 import org.lmelaia.iseries.ilibrary.IEntry;
 import org.lmelaia.iseries.library.LibraryException;
 
@@ -76,10 +77,10 @@ public class EntryWindowController extends FXController {
         try {
             App.getInstance().getILibrary().add(workingEntry);
         } catch (LibraryException.EntryModificationException e1) {
-            throw new RuntimeException(e1);//TODO: fix
+            AlertUtil.showErrorDialog("Failed to add entry", e1.getClass().getName());
         }
 
-        App.getInstance().getWindowsManager().getWindow(MainWindow.class).getController().clearSearch();
+        App.getInstance().getWindowsManager().getWindow(MainWindow.class).getController().getActionBar().clearSearch();
         this.getWindow().close();
     }
 

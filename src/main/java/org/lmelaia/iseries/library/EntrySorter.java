@@ -31,5 +31,5 @@ public interface EntrySorter {
      * @return the relative path
      * the entry will be sorted in.
      */
-    String getRelativeFilePath(LibraryEntry entry, File libraryPath);
+    String getRelativeFilePath(LibraryEntryBase entry, File libraryPath);
 }

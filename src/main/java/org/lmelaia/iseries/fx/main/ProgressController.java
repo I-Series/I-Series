@@ -7,7 +7,7 @@ import org.lmelaia.iseries.fx.components.TextProgressBar;
 /**
  * Handles the progress bar on the main window.
  */
-class ProgressControl implements SubControl {
+public class ProgressController extends SubControl {
 
     /**
      * Container.
@@ -24,7 +24,8 @@ class ProgressControl implements SubControl {
      *
      * @param container container.
      */
-    protected ProgressControl(HBox container) {
+    ProgressController(MainWindowController window, HBox container) {
+        super(window);
         this.container = container;
         progressBar = new TextProgressBar(0, "");
     }
@@ -33,30 +34,16 @@ class ProgressControl implements SubControl {
      * {@inheritDoc}
      */
     @Override
-    public void init() {
+    void init() {
         HBox.setHgrow(progressBar, Priority.ALWAYS);
         progressBar.setMaxHeight(5);
 
         this.container.getChildren().add(progressBar);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void saveState() {
-
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void loadState() {
-
-    }
-
+    // **********
     // PUBLIC API
+    // **********
 
     /**
      * Updates the progress bar on the main window
@@ -97,7 +84,7 @@ class ProgressControl implements SubControl {
     /**
      * @return the TextProgressBar on the main window.
      */
-    protected TextProgressBar getProgressBar() {
+    public TextProgressBar getProgressBar() {
         return this.progressBar;
     }
 }

@@ -3,13 +3,12 @@ package org.lmelaia.iseries.ilibrary;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableView;
-import org.lmelaia.iseries.library.Library;
-import org.lmelaia.iseries.library.LibraryEntry;
-import org.lmelaia.iseries.library.LibraryException;
+import org.lmelaia.iseries.App;
+import org.lmelaia.iseries.common.system.AppLogger;
+import org.lmelaia.iseries.common.system.ExitCode;
+import org.lmelaia.iseries.library.*;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * A wrapper library for a {@link Library} that makes the original
@@ -41,6 +40,12 @@ public class ILibrary {
     private TableView<ITableEntry> linkedTable;
 
     /**
+     * The playlist object that holds all
+     * the playlist references.
+     */
+    private IPlaylists playlists;
+
+    /**
      * Creates a new ILibrary object wrapping a
      * Library object with ITableEntries already
      * initialized.
@@ -51,6 +56,7 @@ public class ILibrary {
         this.tableHandler = new TableItemHandler();
         this.backingLibrary = backingLibrary;
         populateILibrary();
+        initPlaylists();
     }
 
     // **********
@@ -81,14 +87,18 @@ public class ILibrary {
      * exists.
      */
     public IEntry get(String uuid) {
-        LibraryEntry entry = backingLibrary.get(uuid);
+        LibraryEntryBase base = backingLibrary.get(uuid);
 
-        if (entry == null)
-            return null;
+        //We only store IEntries as LibraryEntries.
+        if (base instanceof LibraryEntry) {
+            LibraryEntry entry = (LibraryEntry) base;
 
-        IEntry iEntry = new IEntry(entry, tableHandler.get(uuid));
-        iEntry.setOwner(this);
-        return iEntry;
+            IEntry iEntry = new IEntry(entry, tableHandler.get(uuid));
+            iEntry.setOwner(this);
+            return iEntry;
+        }
+
+        return null;
     }
 
     /**
@@ -179,18 +189,69 @@ public class ILibrary {
         tableHandler.clearFilter();
     }
 
+    /**
+     * @return the playlists container object.
+     */
+    public IPlaylists playlists() {
+        return this.playlists;
+    }
+
+    /**
+     * @return a list of all the {@link IEntry}s
+     * within this library.
+     */
+    public IEntry[] getEntries() {
+        List<IEntry> entries = new ArrayList<>();
+
+        for (LibraryEntryBase entryBase : backingLibrary.getAll()) {
+            if (entryBase instanceof LibraryEntry)
+                entries.add(get(entryBase.getUUID()));
+        }
+
+        return entries.toArray(new IEntry[0]);
+    }
+
+    /**
+     * @return the path, on disk, to this
+     * library.
+     */
+    public String getPath() {
+        return backingLibrary.getPath();
+    }
 
     // *********
     // INTERNALS
     // *********
+
+    private void initPlaylists() {
+        LibraryEntryBase entry = backingLibrary.get(IPlaylists.UID);
+
+        //Doesn't exist (it must) or it's invalid (we overwrite it).
+        if (!(entry instanceof NamedLibraryEntry)) {
+            entry = new NamedLibraryEntry(IPlaylists.UID);
+            try {
+                backingLibrary.add(entry);
+            } catch (LibraryException.EntryModificationException e) {
+                //We wanna crash here.
+                AppLogger.getLogger().fatal("Failed to initialize playlists.", e);
+                App.getInstance().exit(ExitCode.PLAYLIST_INITIALIZATION_FAILURE);
+            }
+        }
+
+        this.playlists = new IPlaylists((NamedLibraryEntry) entry);
+    }
 
     /**
      * Creates ITableEntries for LibraryEntries
      * created from file.
      */
     private void populateILibrary() {
-        for (LibraryEntry entry : backingLibrary.getAll())
-            addTableEntry(new IEntry(entry));
+        for (LibraryEntryBase entry : backingLibrary.getAll()) {
+            //Only add normal LibraryEntries as IEntries are
+            //only stored as LibraryEntries.
+            if (entry instanceof LibraryEntry)
+                addTableEntry(new IEntry((LibraryEntry) entry));
+        }
     }
 
     /**

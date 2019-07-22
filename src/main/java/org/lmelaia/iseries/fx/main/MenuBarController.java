@@ -16,12 +16,7 @@ import java.awt.*;
  * Sub-controller class that handles the menu bar on
  * the main window.
  */
-class MenuBarControl implements SubControl {
-
-    /**
-     * The main windows controller class instance.
-     */
-    private final MainWindowController window;
+public class MenuBarController extends SubControl {
 
     /**
      * File->Quit menu item.
@@ -89,8 +84,8 @@ class MenuBarControl implements SubControl {
      * @param window     The main windows controller class instance.
      * @param components array of components this class handles.
      */
-    public MenuBarControl(MainWindowController window, Object[] components) {
-        this.window = window;
+    MenuBarController(MainWindowController window, Object[] components) {
+        super(window);
         this.quit = (MenuItem) components[0];
         this.settings = (MenuItem) components[1];
         this.restart = (MenuItem) components[2];
@@ -109,7 +104,7 @@ class MenuBarControl implements SubControl {
      * {@inheritDoc}
      */
     @Override
-    public void init() {
+    void init() {
         quit.setOnAction(this::onQuit);
         settings.setOnAction(this::onSettings);
         restart.setOnAction(this::onRestart);
@@ -130,7 +125,7 @@ class MenuBarControl implements SubControl {
         this.deleteEntry.setDisable(true);
         this.unindexEntry.setDisable(true);
 
-        window.tableController.addSelectionListener(((observable, oldValue, newValue) -> {
+        getMainWindow().getTable().addSelectionListener(((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 this.editEntry.setDisable(false);
                 this.deleteEntry.setDisable(false);
@@ -143,21 +138,9 @@ class MenuBarControl implements SubControl {
         }));
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void saveState() {
-
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void loadState() {
-
-    }
+    // *************
+    // Action Events
+    // *************
 
     /**
      * Called when the quit menu item is pressed.
@@ -174,7 +157,7 @@ class MenuBarControl implements SubControl {
      * @param e action event.
      */
     private void onSettings(ActionEvent e) {
-        App.getInstance().getWindowsManager().showWindowAndWait(SettingsWindow.class, window.getWindow());
+        App.getInstance().getWindowsManager().showWindowAndWait(SettingsWindow.class, getMainWindow().getWindow());
     }
 
     /**
@@ -210,7 +193,7 @@ class MenuBarControl implements SubControl {
      * @param e action event.
      */
     private void onMinimize(ActionEvent e) {
-        window.getWindow().setIconified(true);
+        getMainWindow().getWindow().setIconified(true);
     }
 
     /**
@@ -245,7 +228,7 @@ class MenuBarControl implements SubControl {
      * @param e action event.
      */
     private void onAddEntry(ActionEvent e) {
-        window.controlBar.addEntry();
+        getMainWindow().getActionBar().addEntry();
     }
 
     /**
@@ -254,7 +237,7 @@ class MenuBarControl implements SubControl {
      * @param e action event.
      */
     private void onEditEntry(ActionEvent e) {
-        window.controlBar.editSelectedEntry();
+        getMainWindow().getActionBar().editSelectedEntry();
     }
 
     /**
@@ -263,7 +246,7 @@ class MenuBarControl implements SubControl {
      * @param e action event.
      */
     private void onDeleteEntry(ActionEvent e) {
-        window.controlBar.deleteSelectedEntry();
+        getMainWindow().getActionBar().deleteSelectedEntry();
     }
 
     /**
@@ -272,6 +255,6 @@ class MenuBarControl implements SubControl {
      * @param e action event.
      */
     private void onUnindexEntry(ActionEvent e) {
-        window.controlBar.unindexSelectedEntry();
+        getMainWindow().getActionBar().unindexSelectedEntry();
     }
 }

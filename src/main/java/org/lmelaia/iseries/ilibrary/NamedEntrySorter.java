@@ -14,7 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.lmelaia.iseries.library;
+package org.lmelaia.iseries.ilibrary;
+
+import org.lmelaia.iseries.library.EntrySorter;
+import org.lmelaia.iseries.library.LibraryEntryBase;
+import org.lmelaia.iseries.util.StringUtil;
 
 import java.io.File;
 
@@ -51,17 +55,13 @@ public class NamedEntrySorter implements EntrySorter {
      * @return {@inheritDoc}
      */
     @Override
-    public String getRelativeFilePath(LibraryEntry entry, File libraryPath) {
+    public String getRelativeFilePath(LibraryEntryBase entry, File libraryPath) {
+        //Works for NamedLibraryEntry's as well.
         if (entry.getInformation().get("name") == null)
             return entry.getUUID();
 
         String name = entry.getInformation().get("name").getAsString();
-        name = name
-                .replace("?", "")
-                .replace("/", "")
-                .replace("\\", "")
-                .replace(":", "");
-
+        name = StringUtil.toAlphanumeric(name);
         File entryFolder = new File(libraryPath + "/" + name);
 
         if (entryFolder.exists())

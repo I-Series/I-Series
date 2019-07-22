@@ -1,6 +1,7 @@
 package org.lmelaia.iseries.fx.unindex;
 
 import javafx.scene.image.Image;
+import javafx.stage.StageStyle;
 import org.lmelaia.iseries.App;
 import org.lmelaia.iseries.Settings;
 import org.lmelaia.iseries.common.fx.FXWindow;
@@ -47,6 +48,7 @@ public class UnindexWindow extends FXWindow<UnindexWindowController> {
         this.setTitle("Unindex Entry?");
         this.getIcons().add(new Image("/images/iseries-32.png"));
         this.setResizable(false);
+        this.initStyle(StageStyle.UTILITY);
     }
 
     /**

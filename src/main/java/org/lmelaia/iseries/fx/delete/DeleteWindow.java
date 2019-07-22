@@ -1,6 +1,7 @@
 package org.lmelaia.iseries.fx.delete;
 
 import javafx.scene.image.Image;
+import javafx.stage.StageStyle;
 import org.lmelaia.iseries.App;
 import org.lmelaia.iseries.common.fx.FXWindow;
 import org.lmelaia.iseries.common.fx.RegisterFXWindow;
@@ -37,6 +38,7 @@ public class DeleteWindow extends FXWindow<DeleteWindowController> {
         this.setTitle("Delete Entry?");
         this.getIcons().add(new Image("/images/iseries-32.png"));
         this.setResizable(false);
+        this.initStyle(StageStyle.UTILITY);
     }
 
     /**

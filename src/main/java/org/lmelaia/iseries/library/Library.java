@@ -43,7 +43,7 @@ public class Library {
     /**
      * Maps each library entry to it's UUID.
      */
-    private final Map<String, LibraryEntry> mapping = new HashMap<>();
+    private final Map<String, LibraryEntryBase> mapping = new HashMap<>();
 
     /**
      * A list of entries that were not found on disk but are listed in the index.
@@ -102,7 +102,7 @@ public class Library {
      *                                    be stores on file.
      */
     @SuppressWarnings("WeakerAccess")
-    public void add(LibraryEntry entry, ProgressTracker tracker) throws EntryModificationException {
+    public void add(LibraryEntryBase entry, ProgressTracker tracker) throws EntryModificationException {
         checkFileManager();
         Objects.requireNonNull(entry);
         try {
@@ -122,7 +122,7 @@ public class Library {
      * @throws EntryModificationException if the entry could not
      *                                    be stores on file.
      */
-    public void add(LibraryEntry entry) throws EntryModificationException {
+    public void add(LibraryEntryBase entry) throws EntryModificationException {
         add(entry, ProgressTracker.getUnboundTracker());
     }
 
@@ -135,7 +135,7 @@ public class Library {
      * if no entry with a matching UUID
      * exists.
      */
-    public LibraryEntry get(String UUID) {
+    public LibraryEntryBase get(String UUID) {
         checkFileManager();
         return mapping.get(UUID);
     }
@@ -161,9 +161,9 @@ public class Library {
      * @return an array of all the entries
      * within the the index.
      */
-    public LibraryEntry[] getAll() {
+    public LibraryEntryBase[] getAll() {
         checkFileManager();
-        return mapping.values().toArray(new LibraryEntry[0]);
+        return mapping.values().toArray(new LibraryEntryBase[0]);
     }
 
     /**
@@ -176,7 +176,7 @@ public class Library {
      *                                    could not be removed from the index.
      */
     @SuppressWarnings("WeakerAccess")
-    public void unindex(LibraryEntry entry) throws EntryModificationException {
+    public void unindex(LibraryEntryBase entry) throws EntryModificationException {
         checkFileManager();
         try {
             fileManager.unindex(entry);
@@ -199,7 +199,7 @@ public class Library {
      *                                    or it's files could not be deleted.
      */
     @SuppressWarnings("WeakerAccess")
-    public void delete(LibraryEntry entry, ProgressTracker tracker) throws EntryModificationException {
+    public void delete(LibraryEntryBase entry, ProgressTracker tracker) throws EntryModificationException {
         checkFileManager();
         try {
             fileManager.delete(entry, tracker);
@@ -220,7 +220,7 @@ public class Library {
      *                                    could not be removed from the index
      *                                    or it's files could not be deleted.
      */
-    public void delete(LibraryEntry entry) throws EntryModificationException {
+    public void delete(LibraryEntryBase entry) throws EntryModificationException {
         checkFileManager();
         delete(entry, ProgressTracker.getUnboundTracker());
     }
@@ -282,6 +282,10 @@ public class Library {
         return mapping.size();
     }
 
+    public String getPath() {
+        return fileManager.getPath();
+    }
+
     /**
      * @return the size of the library on file in bytes.
      */
@@ -293,7 +297,7 @@ public class Library {
     /**
      * @return the map used as an index.
      */
-    Map<String, LibraryEntry> getMapping() {
+    Map<String, LibraryEntryBase> getMapping() {
         return mapping;
     }
 

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<AnchorPane prefHeight="171.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea"
+            xmlns:fx="http://javafx.com/fxml/1">
+    <AnchorPane prefHeight="52.0" prefWidth="600.0" style="-fx-background-color: #ededed;"
+                AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <Label layoutX="53.0" layoutY="13.0" prefHeight="27.0" prefWidth="533.0" text="Enter New Playlist Name"
+               AnchorPane.leftAnchor="53.0" AnchorPane.rightAnchor="14.0">
+            <font>
+                <Font size="18.0"/>
+            </font>
+        </Label>
+        <ImageView fitHeight="40.0" fitWidth="36.0" layoutX="14.0" layoutY="8.0" pickOnBounds="true"
+                   preserveRatio="true">
+            <Image url="@../images/img_playlist_modify.png"/>
+        </ImageView>
+    </AnchorPane>
+    <Label layoutX="14.0" layoutY="60.0"
+           text="Enter a name for the playlist. Remember: the playlist name should be unique among all playlists."
+           AnchorPane.leftAnchor="14.0"/>
+    <TextField fx:id="textFieldPlaylistName" layoutX="14.0" layoutY="86.0" prefHeight="21.0" prefWidth="573.0"
+               promptText="New Playlist Name" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0">
+        <padding>
+            <Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
+        </padding>
+    </TextField>
+    <Button fx:id="btnCancel" layoutX="300.0" layoutY="136.0" mnemonicParsing="false" prefHeight="21.0"
+            prefWidth="140.0" text="Cancel" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="160.0">
+        <padding>
+            <Insets bottom="2.0" top="2.0"/>
+        </padding>
+    </Button>
+    <Button fx:id="btnRename" layoutX="440.0" layoutY="136.0" mnemonicParsing="false" prefHeight="21.0"
+            prefWidth="140.0" text="Rename" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0">
+        <padding>
+            <Insets bottom="2.0" top="2.0"/>
+        </padding>
+    </Button>
+</AnchorPane>

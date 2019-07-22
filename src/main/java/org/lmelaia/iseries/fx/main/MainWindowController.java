@@ -5,11 +5,14 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import org.lmelaia.iseries.common.fx.FXController;
-import org.lmelaia.iseries.fx.components.TextProgressBar;
 import org.lmelaia.iseries.ilibrary.ITableEntry;
 
 /**
  * The controller class for the main window.
+ * <p/>
+ * Due to the size and complexity of the main window.
+ * It is split up into sub classes that each handle
+ * a small portion of the window.
  */
 public class MainWindowController extends FXController {
 
@@ -142,72 +145,72 @@ public class MainWindowController extends FXController {
      * Handles the Toolbar part of the main
      * window.
      */
-    protected ActionBarControl controlBar;
+    private ActionBarController actionBar;
 
     /**
      * Handles the media player part of the main
      * window.
      */
-    protected MediaPlayerControl mediaPlayer;
+    private MediaPlayerController mediaPlayer;
 
     /**
      * Handles the navigator part of the main
      * window.
      */
-    protected NavigatorControl navigator;
+    private NavigatorController navigator;
 
     /**
      * Handles the menu bar part of the main
      * window.
      */
-    protected MenuBarControl menuBar;
+    private MenuBarController menuBar;
 
     /**
      * Handles the table in the main window.
      */
-    protected TableController tableController;
+    private TableController table;
 
     /**
      * Handles the progress bar.
      */
-    protected ProgressControl progressControl;
+    private ProgressController progress;
+
+    /**
+     * List of all the sub controls. Used to
+     * save/load/init the controls in a loop.
+     */
+    private SubControl[] subControls;
 
     /**
      * Initializes sub components.
      */
     @Override
     public void init() {
-        //Consider initialing from a list
-        controlBar = new ActionBarControl(this, new Object[]{
-                controlButtonAdd, controlButtonEdit, controlButtonDelete, controlInputField, controlButtonUnindex,
-                controlBtnClearSearch
-        });
+        subControls = new SubControl[]{
+                //Init sub controls within the list to easily group them.
+                actionBar = new ActionBarController(this, new Object[]{
+                        controlButtonAdd, controlButtonEdit, controlButtonDelete, controlInputField,
+                        controlButtonUnindex, controlBtnClearSearch
+                }),
+                mediaPlayer = new MediaPlayerController(this, new Object[]{
+                        mediaButtonPrevious, mediaButtonBack, mediaButtonPlay, mediaButtonForward,
+                        mediaButtonNext, mediaButtonEnlarge, mediaSliderVolume
+                }),
+                navigator = new NavigatorController(this, new Object[]{
+                        navDisplayPane, navButtonNavigator, navButtonInformation, navButtonEpisodes,
+                        navButtonStatistics
+                }),
+                menuBar = new MenuBarController(this, new Object[]{
+                        menuItemQuit, menuItemSettings, menuItemRestart, menuItemAbout, menuItemTray,
+                        menuItemMinimize, menuItemQuitDialog, menuItemChangeLibrary, menuItemAddEntry,
+                        menuItemEditEntry, menuItemDeleteEntry, menuItemUnindexEntry
+                }),
+                table = new TableController(this, entryTable),
+                progress = new ProgressController(this, hBoxProgress)
+        };
 
-        this.mediaPlayer = new MediaPlayerControl(this, new Object[]{
-                mediaButtonPrevious, mediaButtonBack, mediaButtonPlay, mediaButtonForward,
-                mediaButtonNext, mediaButtonEnlarge, mediaSliderVolume
-        });
-
-        navigator = new NavigatorControl(this, new Object[]{
-                navDisplayPane, navButtonNavigator, navButtonInformation, navButtonEpisodes, navButtonStatistics
-        });
-
-        this.menuBar = new MenuBarControl(this, new Object[]{
-                menuItemQuit, menuItemSettings, menuItemRestart, menuItemAbout, menuItemTray, menuItemMinimize,
-                menuItemQuitDialog, menuItemChangeLibrary, menuItemAddEntry, menuItemEditEntry, menuItemDeleteEntry,
-                menuItemUnindexEntry
-        });
-
-        this.tableController = new TableController(this, entryTable);
-
-        this.progressControl = new ProgressControl(hBoxProgress);
-
-        controlBar.init();
-        mediaPlayer.init();
-        navigator.init();
-        menuBar.init();
-        tableController.init();
-        progressControl.init();
+        for (SubControl control : subControls)
+            control.init();
     }
 
     /**
@@ -215,12 +218,8 @@ public class MainWindowController extends FXController {
      * of each sub-controller.
      */
     protected void saveState() {
-        controlBar.saveState();
-        mediaPlayer.saveState();
-        navigator.saveState();
-        menuBar.saveState();
-        tableController.saveState();
-        progressControl.saveState();
+        for (SubControl control : subControls)
+            control.saveState();
     }
 
     /**
@@ -228,12 +227,8 @@ public class MainWindowController extends FXController {
      * of each sub-controller.
      */
     protected void loadState() {
-        controlBar.loadState();
-        mediaPlayer.loadState();
-        navigator.loadState();
-        menuBar.loadState();
-        tableController.loadState();
-        progressControl.loadState();
+        for (SubControl control : subControls)
+            control.loadState();
     }
 
     // **********
@@ -241,17 +236,45 @@ public class MainWindowController extends FXController {
     // **********
 
     /**
-     * Clears the users search input
-     * and clears the table filter.
+     * @return the {@link ActionBarController} sub control instance.
      */
-    public void clearSearch() {
-        controlBar.clearSearch();
+    public ActionBarController getActionBar() {
+        return actionBar;
     }
 
     /**
-     * @return the {@link TextProgressBar} on the main window.
+     * @return the {@link MediaPlayerController} sub control instance.
      */
-    public TextProgressBar getProgressBar() {
-        return progressControl.getProgressBar();
+    public MediaPlayerController getMediaPlayer() {
+        return mediaPlayer;
     }
+
+    /**
+     * @return the {@link ActionBarController} sub control instance.
+     */
+    public NavigatorController getNavigator() {
+        return navigator;
+    }
+
+    /**
+     * @return the {@link MenuBarController} sub control instance.
+     */
+    public MenuBarController getMenuBar() {
+        return menuBar;
+    }
+
+    /**
+     * @return the {@link TableController} sub control instance.
+     */
+    public TableController getTable() {
+        return table;
+    }
+
+    /**
+     * @return the {@link ProgressController} sub control instance.
+     */
+    public ProgressController getProgress() {
+        return progress;
+    }
+
 }

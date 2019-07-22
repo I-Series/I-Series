@@ -29,9 +29,9 @@ import org.lmelaia.iseries.fx.library.LibraryWindow;
 import org.lmelaia.iseries.fx.main.MainWindow;
 import org.lmelaia.iseries.ilibrary.ILibrary;
 import org.lmelaia.iseries.ilibrary.LibraryInitializedListener;
+import org.lmelaia.iseries.ilibrary.NamedEntrySorter;
 import org.lmelaia.iseries.library.Library;
 import org.lmelaia.iseries.library.LibraryException;
-import org.lmelaia.iseries.library.NamedEntrySorter;
 import org.lmelaia.iseries.library.ProgressTracker;
 
 import java.io.File;
@@ -269,7 +269,7 @@ public class App extends AppBase {
         }
 
         TextProgressBar progressBar
-                = getWindowsManager().getWindow(MainWindow.class).getController().getProgressBar();
+                = getWindowsManager().getWindow(MainWindow.class).getController().getProgress().getProgressBar();
 
         progressBar.progressProperty().bind(loadLibrary.progressProperty());
         progressBar.textProperty().bind(loadLibrary.messageProperty());

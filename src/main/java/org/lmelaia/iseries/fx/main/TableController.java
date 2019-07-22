@@ -20,6 +20,9 @@ import javafx.scene.text.TextAlignment;
 import org.apache.logging.log4j.Logger;
 import org.lmelaia.iseries.App;
 import org.lmelaia.iseries.common.system.AppLogger;
+import org.lmelaia.iseries.fx.playlist.PlaylistCreatorWindow;
+import org.lmelaia.iseries.fx.util.AlertUtil;
+import org.lmelaia.iseries.ilibrary.IPlaylists;
 import org.lmelaia.iseries.ilibrary.ITableEntry;
 
 import java.io.File;
@@ -33,12 +36,16 @@ import java.util.Map;
  * Sub-control class that handles the table
  * part of the main window.
  */
-class TableController implements SubControl {
+public class TableController extends SubControl {
 
     /**
      * Logger instance.
      */
     private static final Logger LOG = AppLogger.getLogger();
+
+    // *******
+    // Columns
+    // *******
 
     /**
      * List of columns that can be put
@@ -106,11 +113,6 @@ class TableController implements SubControl {
     }
 
     /**
-     * The main windows controller class.
-     */
-    private final MainWindowController window;
-
-    /**
      * The table we're controlling.
      */
     private final TableView<ITableEntry> table;
@@ -138,11 +140,10 @@ class TableController implements SubControl {
     private ITableEntry selectedEntry;
 
     /**
-     * @param window the controller class for the main window.
      * @param table  the table to control.
      */
-    public TableController(MainWindowController window, TableView<ITableEntry> table) {
-        this.window = window;
+    TableController(MainWindowController window, TableView<ITableEntry> table) {
+        super(window);
         this.table = table;
     }
 
@@ -150,7 +151,7 @@ class TableController implements SubControl {
      * Initializes components.
      */
     @Override
-    public void init() {
+    void init() {
         this.table.getSelectionModel().selectedItemProperty().addListener(this::onItemSelected);
 
         Columns.COLUMN_CONTEXT_MENU.setTable(table);
@@ -163,28 +164,7 @@ class TableController implements SubControl {
 
         defaultContextMenu = new DefaultContextMenu();
 
-        contextMenu = new TableContextMenu() {
-
-            @Override
-            protected void onAdd(ActionEvent e) {
-                window.controlBar.addEntry();
-            }
-
-            @Override
-            protected void onEdit(ActionEvent e) {
-                window.controlBar.editSelectedEntry();
-            }
-
-            @Override
-            protected void onDelete(ActionEvent e) {
-                window.controlBar.deleteSelectedEntry();
-            }
-
-            @Override
-            protected void onUnindex(ActionEvent e) {
-                window.controlBar.unindexSelectedEntry();
-            }
-        };
+        contextMenu = new TableContextMenu(getMainWindow());
 
         table.setRowFactory(param -> {
             final TableRow row = new TableRow();
@@ -203,34 +183,8 @@ class TableController implements SubControl {
      * {@inheritDoc}
      */
     @Override
-    public void saveState() {
+    void saveState() {
         TableStateStorer.save(table);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void loadState() {
-
-    }
-
-    /**
-     * @return The selected entry in the table.
-     * CAN BE NULL.
-     */
-    protected ITableEntry getSelectedEntry() {
-        return this.selectedEntry;
-    }
-
-    /**
-     * Adds a listener to be notified when the selected
-     * entry in the table changes.
-     *
-     * @param listener the listener to add.
-     */
-    protected void addSelectionListener(ChangeListener<? super ITableEntry> listener) {
-        table.getSelectionModel().selectedItemProperty().addListener(listener);
     }
 
     /**
@@ -252,6 +206,32 @@ class TableController implements SubControl {
                                 ITableEntry oldValue, ITableEntry newValue) {
         this.selectedEntry = newValue;
     }
+
+    // *************
+    // PROTECTED API
+    // *************
+
+    /**
+     * @return The selected entry in the table.
+     * CAN BE NULL if a TreeNode in the library node is selected                                                                    .
+     */
+    protected ITableEntry getSelectedEntry() {
+        return this.selectedEntry;
+    }
+
+    /**
+     * Adds a listener to be notified when the selected
+     * entry in the table changes.
+     *
+     * @param listener the listener to add.
+     */
+    protected void addSelectionListener(ChangeListener<? super ITableEntry> listener) {
+        table.getSelectionModel().selectedItemProperty().addListener(listener);
+    }
+
+    // **************
+    // NESTED CLASSES
+    // **************
 
     /**
      * Handles saving state state of the table on application
@@ -414,7 +394,7 @@ class TableController implements SubControl {
 
             Button addEntryButton = new Button("", addEntryButtonImage);
             addEntryButton.setStyle("-fx-background-color: transparent;");
-            addEntryButton.setOnAction((actionEvent) -> window.controlBar.addEntry());
+            addEntryButton.setOnAction((actionEvent) -> getMainWindow().getActionBar().addEntry());
 
             //No Entries text
             Label noEntriesText = new Label("No Entries to display");
@@ -458,7 +438,10 @@ class TableController implements SubControl {
             viewHelpRow.getChildren().addAll(viewHelpText, viewHelpLink);
 
             this.setOnContextMenuRequested((contextMenuEvent) ->
-                    contextMenu.show(window.getWindow(), contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY()));
+                    contextMenu.show(
+                            getMainWindow().getWindow(), contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY()
+                    )
+            );
 
             this.getChildren().addAll(noEntriesText, addEntryRow, viewHelpRow);
         }
@@ -497,8 +480,283 @@ class TableController implements SubControl {
             imageAdd.setFitWidth(16);
 
             MenuItem menuItemAdd = new MenuItem("Add New Entry", imageAdd);
-            menuItemAdd.setOnAction((event -> window.controlBar.addEntry()));
+            menuItemAdd.setOnAction((event -> getMainWindow().getActionBar().addEntry()));
             this.getItems().add(menuItemAdd);
+        }
+    }
+
+    /**
+     * Context menu that allows enabling/disabling
+     * a given array of TableColumns.
+     */
+    private static class TableColumnContentMenu extends ContextMenu {
+
+        /**
+         * The table to add/remove the columns from.
+         * CAN BE NULL.
+         */
+        private TableView table;
+
+        /**
+         * Creates a new table column context menu
+         * with menu items for the given table columns.
+         *
+         * @param columns array of columns to add menu items for.
+         */
+        public TableColumnContentMenu(TableColumn[] columns) {
+            createMenuItems(columns);
+        }
+
+        /**
+         * Creates the menu items from the given
+         * columns.
+         *
+         * @param columns the given columns.
+         */
+        private void createMenuItems(TableColumn[] columns) {
+            for (TableColumn column : columns) {
+                CheckMenuItem item = new CheckMenuItem(column.getText());
+
+                //We always want this one shown.
+                if (column.getText().toLowerCase().equals("name"))
+                    item.setDisable(true);
+
+                item.setOnAction(event -> {
+                    if (table == null)
+                        return;
+
+                    if (!item.isSelected())
+                        table.getColumns().remove(column);
+                    else
+                        //noinspection unchecked
+                        table.getColumns().add(column);
+                });
+
+                this.getItems().add(item);
+            }
+        }
+
+        /**
+         * Check a menu item with the same name as the
+         * given column.
+         *
+         * @param column the given column.
+         */
+        protected void checkItem(TableColumn column) {
+            for (MenuItem item : this.getItems())
+                if (item.getText().equals(column.getText()))
+                    ((CheckMenuItem) item).setSelected(true);
+        }
+
+        /**
+         * Sets the table view instance that columns will be
+         * added to/removed from.
+         *
+         * @param table the table view columns will be
+         *              added to/removed from.
+         */
+        protected void setTable(TableView table) {
+            this.table = table;
+        }
+    }
+
+    /**
+     * Context menu added to the main windows table view. This context
+     * menu gives shortcut actions for the select entry in the table.
+     * This context menu will only be shown when right-clicking on a table entry.
+     */
+    private static class TableContextMenu extends ContextMenu {
+
+        /**
+         * Image shown on the Add menu item.
+         */
+        private static final ImageView imageAdd = new ImageView("/images/img_add.png");
+
+        /**
+         * Image shown on the Edit menu item.
+         */
+        private static final ImageView imageEdit = new ImageView("/images/img_edit.png");
+
+        /**
+         * Image shown on the Delete menu item.
+         */
+        private static final ImageView imageDelete = new ImageView("/images/img_delete.png");
+
+        /**
+         * Image shown on the Unindex menu item.
+         */
+        private static final ImageView imageUnindex = new ImageView("/images/img_unindex.png");
+
+        /**
+         * Image shown on the Add To Index menu item.
+         */
+        private static final ImageView imageAddToPlaylist = new ImageView("/images/img_playlist_add.png");
+
+        /**
+         * Image shown on the Create New Playlist menu item.
+         */
+        private static final ImageView imageCreateNewPlaylist = new ImageView("/images/img_playlist_add.png");
+
+        /**
+         * Images shown on the Remove From Playlist menu item.
+         */
+        private static final ImageView imageRemoveFromPlaylist = new ImageView("/images/img_playlist_remove.png");
+
+        /**
+         * Reference to the main window instance.
+         */
+        private final MainWindowController window;
+
+        /*
+            Resizes images to fit the context menu.
+         */
+        static {
+            set16x16(imageAdd);
+            set16x16(imageEdit);
+            set16x16(imageDelete);
+            set16x16(imageUnindex);
+            set16x16(imageAddToPlaylist);
+            set16x16(imageCreateNewPlaylist);
+            set16x16(imageRemoveFromPlaylist);
+        }
+
+        /**
+         * Initializes menu items.
+         */
+        TableContextMenu(MainWindowController mainWindowController) {
+            this.window = mainWindowController;
+
+            MenuItem add = new MenuItem("Add New Entry", imageAdd);
+            add.setOnAction(this::onAdd);
+
+            MenuItem edit = new MenuItem("Edit", imageEdit);
+            edit.setOnAction(this::onEdit);
+
+            MenuItem delete = new MenuItem("Delete", imageDelete);
+            delete.setOnAction(this::onDelete);
+
+            MenuItem unindex = new MenuItem("Unindex", imageUnindex);
+            unindex.setOnAction(this::onUnindex);
+
+            Menu playlist = new Menu("Add to Playlist", imageAddToPlaylist);
+
+            MenuItem removeFromPlaylist = new MenuItem("Remove from Playlist", imageRemoveFromPlaylist);
+            removeFromPlaylist.setOnAction(this::onRemoveFromPlaylist);
+
+            MenuItem newPlaylist = new MenuItem("Create New Playlist", imageCreateNewPlaylist);
+            newPlaylist.setOnAction(event -> PlaylistCreatorWindow.present());
+
+            //Add menu items
+            this.getItems().addAll(
+                    add,
+                    new SeparatorMenuItem(),
+                    playlist,
+                    new SeparatorMenuItem(),
+                    edit,
+                    delete,
+                    unindex
+            );
+
+            //Playlist integration
+            this.setOnShowing(event -> {
+                if (mainWindowController.getNavigator().getSelectedPlaylist() != null) {
+                    this.getItems().add(3, removeFromPlaylist);
+                } else {
+                    if (this.getItems().get(3) == removeFromPlaylist)
+                        this.getItems().remove(3);
+                }
+
+                playlist.getItems().clear();
+                playlist.getItems().addAll(newPlaylist, new SeparatorMenuItem());
+
+                for (String playlistName : App.getInstance().getILibrary().playlists().getPlaylistNames()) {
+                    MenuItem item = new MenuItem(playlistName, getNewPlaylistImage());
+                    item.setOnAction(event1 -> {
+                        try {
+                            App.getInstance().getILibrary().playlists().getPlaylist(playlistName).add(
+                                    mainWindowController.getTable().getSelectedEntry().getEntry()
+                            );
+                        } catch (IPlaylists.PlaylistException e) {
+                            AlertUtil.showErrorDialog(
+                                    "Failed to add entry to playlist.", e.getClass().getName()
+                            );
+                        }
+                    });
+
+                    playlist.getItems().add(item);
+                }
+            });
+        }
+
+        /**
+         * Called when the "Add" menu item is pressed.
+         *
+         * @param e action event.
+         */
+        private void onAdd(ActionEvent e) {
+            window.getActionBar().addEntry();
+        }
+
+        /**
+         * Called when the "Edit" menu item is pressed.
+         *
+         * @param e action event.
+         */
+        private void onEdit(ActionEvent e) {
+            window.getActionBar().editSelectedEntry();
+        }
+
+        /**
+         * Called when the "Delete" menu item is pressed.
+         *
+         * @param e action event.
+         */
+        private void onDelete(ActionEvent e) {
+            window.getActionBar().deleteSelectedEntry();
+        }
+
+        /**
+         * Called when the "Unindex" menu item is pressed.
+         *
+         * @param e action event.
+         */
+        private void onUnindex(ActionEvent e) {
+            window.getActionBar().unindexSelectedEntry();
+        }
+
+        /**
+         * Called when the "Remove from Playlist" menu item is pressed.
+         *
+         * @param event action event.
+         */
+        private void onRemoveFromPlaylist(ActionEvent event) {
+            try {
+                window.getNavigator().getSelectedPlaylist().remove(
+                        window.getTable().getSelectedEntry().getEntry()
+                );
+            } catch (IPlaylists.PlaylistException.PlaylistWriteException e) {
+                AlertUtil.showErrorDialog("Failed delete entry from playlist.", e.getClass().getName());
+            }
+        }
+
+        /**
+         * Sets a given image view to 16x16 pixels.
+         *
+         * @param image the given image view.
+         */
+        private static void set16x16(ImageView image) {
+            image.setFitHeight(16);
+            image.setFitWidth(16);
+        }
+
+        /**
+         * @return a new {@link ImageView} that displays
+         * the playlist image.
+         */
+        private static ImageView getNewPlaylistImage() {
+            ImageView image = new ImageView("/images/img_playlist.png");
+            set16x16(image);
+            return image;
         }
     }
 }
