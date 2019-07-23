@@ -359,9 +359,11 @@ class LibraryFileManager {
 
         int entriesRead = 0;
 
+        LOG.info("Reading: " + index.size() + " entries...");
+
         for (File entryFile : index.values()) {
             try {
-                LOG.debug(
+                LOG.info(
                         "Reading entry " + ++entriesRead + " of " + index.size() + ": " + entryFile.getAbsolutePath()
                 );
 

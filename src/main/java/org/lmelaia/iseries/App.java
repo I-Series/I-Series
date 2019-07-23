@@ -237,9 +237,11 @@ public class App extends AppBase {
                 );
             } catch (LibraryException.LibraryFetchException e) {
                 //TODO: Add dialogs to deal with this problem.
+                LOG.error("Failed to load library", e);
                 throw e;
             } catch (LibraryException.LibraryCreationException e) {
                 //TODO: Add dialogs to deal with this problem.
+                LOG.error("Failed to create library", e);
                 throw e;
             }
 
@@ -282,9 +284,11 @@ public class App extends AppBase {
      */
     @Override
     protected void start() {
+        LOG.info("Initializing ipc communication");
         postInitIPC();
         registerArgumentReceiver();
 
+        LOG.info("Displaying main window...");
         FXWindowsManager.getInstance().showWindow(MainWindow.class);
 
         initLibrary();

@@ -88,6 +88,7 @@ public class Library {
             throws LibraryCreationException, LibraryFetchException {
         Objects.requireNonNull(libraryPath);
         Objects.requireNonNull(sorter);
+        LOG.info("Loading library...");
         this.fileManager = new LibraryFileManager(libraryPath, sorter, this, progressTracker);
     }
 

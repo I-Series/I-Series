@@ -4,7 +4,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import org.apache.logging.log4j.Logger;
 import org.lmelaia.iseries.common.fx.FXController;
+import org.lmelaia.iseries.common.system.AppLogger;
 import org.lmelaia.iseries.ilibrary.ITableEntry;
 
 /**
@@ -15,6 +17,11 @@ import org.lmelaia.iseries.ilibrary.ITableEntry;
  * a small portion of the window.
  */
 public class MainWindowController extends FXController {
+
+    /**
+     * Logger instance.
+     */
+    private static final Logger LOG = AppLogger.getLogger();
 
     //***************
     //* FX Controls *
@@ -218,6 +225,7 @@ public class MainWindowController extends FXController {
      * of each sub-controller.
      */
     protected void saveState() {
+        LOG.info("Saving window state...");
         for (SubControl control : subControls)
             control.saveState();
     }
@@ -227,6 +235,7 @@ public class MainWindowController extends FXController {
      * of each sub-controller.
      */
     protected void loadState() {
+        LOG.info("Loading window state...");
         for (SubControl control : subControls)
             control.loadState();
     }

@@ -88,6 +88,7 @@ public class IPlaylists {
         this.backingEntry = backingEntry;
 
         JsonElement ePlaylists = backingEntry.getInformation().get("playlists");
+        LOG.info("Initializing playlists...");
 
         if (ePlaylists == null) {
             LOG.info("Playlists entry missing playlists array. creating...");
@@ -386,7 +387,7 @@ public class IPlaylists {
             writer.flush();
             writer.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("Failed to write playlists.", e);
         }
     }
 

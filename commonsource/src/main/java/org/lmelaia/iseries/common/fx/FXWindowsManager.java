@@ -332,7 +332,6 @@ public class FXWindowsManager extends Application {
             //the list of classes in the package.
             throw new IllegalStateException(e);
         }
-
     }
 
     /**
@@ -375,7 +374,8 @@ public class FXWindowsManager extends Application {
                             LOG.debug("Skipping window class: " + clazz.getCanonicalName());
                         }
                     } catch (InstantiationException | IllegalAccessException e) {
-                        LOG.debug("Failed to process a possible window class: " + clazz.getCanonicalName());
+                        //Causes unnecessary log spam.
+                        //LOG.debug("Failed to process a possible window class: " + clazz.getCanonicalName());
                     }
                 } catch (NullPointerException e) {
                     LOG.error("Failed to process possible window class: " + clazz.getCanonicalName());

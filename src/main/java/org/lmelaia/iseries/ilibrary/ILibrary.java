@@ -3,6 +3,7 @@ package org.lmelaia.iseries.ilibrary;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableView;
+import org.apache.logging.log4j.Logger;
 import org.lmelaia.iseries.App;
 import org.lmelaia.iseries.common.system.AppLogger;
 import org.lmelaia.iseries.common.system.ExitCode;
@@ -21,6 +22,11 @@ import java.util.*;
  * system.
  */
 public class ILibrary {
+
+    /**
+     * Logger instance.
+     */
+    private static final Logger LOG = AppLogger.getLogger();
 
     /**
      * Map that keeps track of the created ITableEntries.
@@ -53,10 +59,12 @@ public class ILibrary {
      * @param backingLibrary the Library to wrap.
      */
     public ILibrary(Library backingLibrary) {
+        LOG.info("Initializing ILibrary...");
         this.tableHandler = new TableItemHandler();
         this.backingLibrary = backingLibrary;
         populateILibrary();
         initPlaylists();
+        LOG.info("ILibrary initialized");
     }
 
     // **********
