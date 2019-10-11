@@ -88,6 +88,12 @@ public class BuildConfiguration {
     public static final SmartFile SLAUNCHER_FOLDER = SPROJECT_FOLDER
             .forward("launchersource");
 
+    /**
+     * The updater project directory.
+     */
+    public static final SmartFile SUPDATER_FOLDER = SPROJECT_FOLDER
+            .forward("updatersource");
+
     //******************************
     //       BUILD PROPERTIES
     //******************************
@@ -128,32 +134,42 @@ public class BuildConfiguration {
      */
     public static final SmartFile SOUT_LIBRARIES_FOLDER = SOUTPUT_FOLDER
             .forward("libs");
+
+    /**
+     * The logger for this class.
+     */
     private static final Logger LOG = AppLogger.getLogger();
 
     //******************************
     //     FILES AND FILE PATHS
     //******************************
+
     /**
      * The build properties file.
      */
     private static final SmartFile SBUILD_PROPERTIES_FILE
             = SPROJECT_FOLDER.forward("build.cfg");
+
     /**
      * Build properties object. Holds the properties.
      */
     private static final Properties BUILD_PROPERTIES = new Properties();
+
     /**
      * The build version property name.
      */
     private static final String BUILD_VERSION_CID = "build.version";
+
     /**
      * Hard coded I-Series environment build version.
      */
     private static final String BUILD_VERSION = "0.0.1-Aplha";
+
     /**
      * The name of the application.
      */
     private static final String APPLICATION_NAME = "I-Series";
+
     /**
      * The I-Series jar file.
      */
@@ -162,6 +178,7 @@ public class BuildConfiguration {
             .forward("build")
             .forward("libs")
             .forward(APPLICATION_NAME + ".jar");
+
     /**
      * The windows distribution zip file.
      */
@@ -171,6 +188,7 @@ public class BuildConfiguration {
                     + " v"
                             + BUILD_VERSION
                     + " Windows.zip");
+
     /**
      * The cross-platform distribution zip file.
      */
@@ -201,7 +219,10 @@ public class BuildConfiguration {
                     APPLICATION_NAME + " Acknowledgements.txt"),
 
         new OutputCopyFile(SLAUNCHER_FOLDER.forward("build").forward("libs")
-                .forward("launchersource.jar").getFile(), "I-Series.jar")
+                .forward("launchersource.jar").getFile(), "I-Series.jar"),
+
+            new OutputCopyFile(SUPDATER_FOLDER.forward("build").forward("libs")
+                    .forward("updatersource.jar").getFile(), "I-Series-Updater.jar")
     };
     /**
      * A list of the libraries for the root project.
@@ -210,7 +231,9 @@ public class BuildConfiguration {
         new Library("Gson", "gson-2.8.0", Licences.APACHE),
         new Library("Log4j", new String[]{"log4j-api-2.8.2", "log4j-core-2.8.2"}, Licences.APACHE),
             new Library("Guava", "guava-19.0", Licences.APACHE),
-            new Library("CommonSource", "commonsource", Licences.GNU)
+            new Library("CommonSource", "commonsource", Licences.GNU),
+            //We use the commonsource library jar here because the updater isn't a library so we can't use it.
+            new Library("I-Series-Updater", "commonsource", Licences.GNU)
     };
 
 
@@ -243,7 +266,8 @@ public class BuildConfiguration {
             new ExpectedFile(APPLICATION_NAME + " Acknowledgements.txt"),
         new ExpectedFile(APPLICATION_NAME + ".exe"),
         new ExpectedFile(APPLICATION_NAME + ".jar"),
-        new ExpectedFile(APPLICATION_NAME + "-Base.jar")
+            new ExpectedFile(APPLICATION_NAME + "-Base.jar"),
+            new ExpectedFile(APPLICATION_NAME + "-Updater.jar")
     };
 
     /**
@@ -278,7 +302,8 @@ public class BuildConfiguration {
                     .setJarRuntimePath("I-Series.jar")
                     .setWrap(false)
                     .setOutputFile(
-                            SOUTPUT_FOLDER.forward(EXECUTABLE_NAME).getPath())
+                            SOUTPUT_FOLDER.forward(EXECUTABLE_NAME
+                            ).getPath())
                     .setMinimumJreVersion("1.8.0_111")
             .setIconFile(SPROJECT_FOLDER.forward("iseries-32.ico").getFile().getAbsolutePath())
                     .create();
@@ -286,6 +311,7 @@ public class BuildConfiguration {
     //******************************
     //        CONFIGURATION
     //******************************
+
     /**
      * Contains a list of the libraries for the application and handles the
      * copying of them and their licences.
@@ -301,6 +327,17 @@ public class BuildConfiguration {
      * copying of them and their licences.
      */
     private static final LibraryManager LAUNCHER_LIBRARY_MANAGER = new LibraryManager(
+            SLAUNCHER_FOLDER.forward("build").forward("libs")
+                    .forward("libs").getFile(),
+            SOUTPUT_FOLDER.forward("libs").getFile(),
+            SOUTPUT_FOLDER.forward("legal").getFile()
+    );
+
+    /**
+     * Contains a list of the libraries for the updated application and handles the
+     * copying of them and their licences.
+     */
+    private static final LibraryManager UPDATER_LIBRARY_MANAGER = new LibraryManager(
             SLAUNCHER_FOLDER.forward("build").forward("libs")
                     .forward("libs").getFile(),
             SOUTPUT_FOLDER.forward("libs").getFile(),
@@ -376,8 +413,10 @@ public class BuildConfiguration {
                 FileUtils.forceMkdir(new File(f + "/"));
             }
         } catch (IOException ex) {
-            LOG.warn("Failed to force a clean make of the directory: " + f,
-                    ex);
+            LOG.warn(
+                    "Failed to force a clean make of the directory: " + f,
+                    ex
+            );
             return false;
         }
 
@@ -641,6 +680,7 @@ public class BuildConfiguration {
         copyLauncherLibraries();
         buildISeriesExecutable();
         //Give windows explorer time to refresh
+        //We need this for some reason
         try {
             Thread.sleep(1000);
         } catch (InterruptedException ex) {

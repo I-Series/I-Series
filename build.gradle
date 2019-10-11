@@ -246,6 +246,7 @@ _build.dependsOn(":copyDependencies")
 _build.dependsOn("BuildSource:build")
 _build.dependsOn("commonsource:build")
 _build.dependsOn("launchersource:build")
+_build.dependsOn("updatersource:build")
 _build.dependsOn(":build")
 _build.finalizedBy("BuildSource:run")
 
