@@ -18,9 +18,7 @@ public class PlaylistCreatorWindow extends FXWindow<PlaylistCreatorWindowControl
 
     /**
      * Presents the playlist creator window to the user.
-     * <p>
      * <p/>
-     * <p>
      * The window will then handle adding the playlist the
      * user wants to create.
      */
