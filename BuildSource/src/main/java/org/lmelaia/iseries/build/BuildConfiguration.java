@@ -209,20 +209,20 @@ public class BuildConfiguration {
      */
     private static final CopyFile[] FILES_TO_COPY = {
         //Jar file
-        new OutputCopyFile(SPROJECT_FOLDER.forward("build").forward("libs")
-                        .forward("I-Series.jar").getFile(), "I-Series-Base.jar"),
-        //I-Series licence
-        new OutputCopyFile(Licences.GNU.getFile(),
-        APPLICATION_NAME + " Licence.txt"),
+            new OutputCopyFile(SPROJECT_FOLDER.forward("build").forward("libs")
+                    .forward("I-Series.jar").getFile(), "I-Series-Base.jar"),
+            //I-Series licence
+            new OutputCopyFile(Licences.GNU.getFile(),
+                    APPLICATION_NAME + " Licence.txt"),
 
             new OutputCopyFile(Licences.ACKNOWLEDGEMENTS.getFile(),
                     APPLICATION_NAME + " Acknowledgements.txt"),
 
-        new OutputCopyFile(SLAUNCHER_FOLDER.forward("build").forward("libs")
-                .forward("launchersource.jar").getFile(), "I-Series.jar"),
+            new OutputCopyFile(SLAUNCHER_FOLDER.forward("build").forward("libs")
+                    .forward("src-launcher.jar").getFile(), "I-Series.jar"),
 
             new OutputCopyFile(SUPDATER_FOLDER.forward("build").forward("libs")
-                    .forward("updatersource.jar").getFile(), "I-Series-Updater.jar")
+                    .forward("src-updater.jar").getFile(), "I-Series-Updater.jar")
     };
 
     /**
@@ -237,9 +237,9 @@ public class BuildConfiguration {
                     "listenablefuture-9999.0-empty-to-avoid-conflict-with-guava"
             }, Licences.APACHE),
             //new Library("Guava", "guava-19.0", Licences.APACHE),
-            new Library("CommonSource", "commonsource", Licences.GNU),
-            //We use the commonsource library jar here because the updater isn't a library so we can't use it.
-            new Library("I-Series-Updater", "commonsource", Licences.GNU)
+            new Library("src-common", "src-common", Licences.GNU),
+            //We use the src-common library jar here because the updater isn't a library so we can't use it.
+            new Library("I-Series-Updater", "src-common", Licences.GNU)
     };
 
 
