@@ -18,5 +18,5 @@
 rootProject.name = 'I-Series'
 include ':src-launcher'
 include ':src-common'
-include ':BuildSource'
+include ':src-build'
 include ':src-updater'

@@ -241,12 +241,12 @@ void runLauncher(){
     Build task dependencies.
  */
 _build.dependsOn(":copyDependencies")
-_build.dependsOn("BuildSource:build")
+_build.dependsOn("src-build:build")
 _build.dependsOn("src-common:build")
 _build.dependsOn("src-launcher:build")
 _build.dependsOn("src-updater:build")
 _build.dependsOn(":build")
-_build.finalizedBy("BuildSource:run")
+_build.finalizedBy("src-build:run")
 
 /*
     Run task dependencies.
