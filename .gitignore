@@ -5,7 +5,7 @@
 /.gradle/
 /.idea/
 /src-build/build
-/src-build/logs
+/src-build/logs/
 /src-updater/build
 /src-common/build
 /src-launcher/build
