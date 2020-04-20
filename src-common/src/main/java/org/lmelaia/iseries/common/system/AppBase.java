@@ -295,7 +295,7 @@ public abstract class AppBase {
         /**
          * Exit code given.
          */
-        private ExitCode exitCode;
+        private final ExitCode exitCode;
 
         /**
          * Creates a new shutdown thread.

@@ -36,6 +36,7 @@ import java.util.Map;
  * Sub-control class that handles the table
  * part of the main window.
  */
+@SuppressWarnings("rawtypes")//It works...
 public class TableController extends SubControl {
 
     /**
@@ -250,7 +251,7 @@ public class TableController extends SubControl {
         /**
          * File to which the state will be read/written.
          */
-        private static final File SAVE_FILE = new File("savedata/table.json");
+        private static final File SAVE_FILE = new File("../savedata/table.json");
 
         /**
          * Writes the state (defined in the class doc)

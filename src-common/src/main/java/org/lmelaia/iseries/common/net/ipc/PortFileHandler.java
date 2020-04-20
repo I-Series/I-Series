@@ -20,7 +20,7 @@ class PortFileHandler {
     /**
      * The file the data is written to.
      */
-    private static final File PORT_FILE = new File("savedata/port.int");
+    private static final File PORT_FILE = new File("../savedata/port.int");
 
     /**
      * The private singleton instance of this class.

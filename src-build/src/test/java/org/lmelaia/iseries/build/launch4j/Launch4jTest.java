@@ -15,14 +15,8 @@
  */
 package org.lmelaia.iseries.build.launch4j;
 
-import org.junit.Ignore;
-import org.junit.Test;
-import org.lmelaia.iseries.build.BuildConfiguration;
-
 import java.io.File;
-import java.io.IOException;
 
-import static org.junit.Assert.fail;
 import static org.lmelaia.iseries.build.BuildConfiguration.SPROJECT_FOLDER;
 
 /**
@@ -32,11 +26,11 @@ import static org.lmelaia.iseries.build.BuildConfiguration.SPROJECT_FOLDER;
  */
 public class Launch4jTest {
 
-    /**
-     * The path to the launch4j application folder.
-     */
-    private static final File LAUNCH4J_PATH
-            = BuildConfiguration.SLAUNCH4J_FOLDER.getFile();
+//    /**
+//     * The path to the launch4j application folder.
+//     */
+//    private static final File LAUNCH4J_PATH
+//            = BuildConfiguration.SLAUNCH4J_FOLDER.getFile();
 
     /**
      * The output executable file created with launch4j.
@@ -60,43 +54,43 @@ public class Launch4jTest {
             .setMinimumJreVersion("1.8.0")
             .create();
 
-    /**
-     * Attempts to create an executable with launch4j.
-     *
-     * <p>
-     * This method uses launch4j to test for failure. If launch4j fails to
-     * create the executable, it's assumed that there is an error in the code.
-     * <br>
-     * If launch4j returns an exit code of {@code 0}, it's assumed the file was
-     * created successfully. Checking for an output executable is buggy and
-     * prone to error so this method won't check for an output file.
-     * </p>
-     * 
-     * <p>
-     * The launch4j output is printed to the console if launch4j fails to create
-     * the executable, which will aid in debugging.
-     * </p> 
-     *
-     * @throws IOException ...
-     */
-    @Ignore
-    @Test
-    public void testExecutableCreation() throws IOException {
-        Launch4jProcessWrapper l4jProcessWrapper
-                = new Launch4jProcessWrapper(LAUNCH4J_PATH, l4jConfig);
-        StringBuilder output = new StringBuilder();
-
-        int l4jExitCode = l4jProcessWrapper.startProcess(output);
-
-        //Launch4j failed to create the executable
-        if (l4jExitCode != 0) {
-            fail("Launch4j failed with exit code: " + l4jExitCode);
-        }
-        
-        if(!output.toString().equals("launch4j: Compiling resources")){
-            fail("The launch4j output was expected to "
-                    + "be: \"launch4j: Compiling resources\", but was: "
-                    + "\"" + output + "\"");
-        }
-    }
+//    /**
+//     * Attempts to create an executable with launch4j.
+//     *
+//     * <p>
+//     * This method uses launch4j to test for failure. If launch4j fails to
+//     * create the executable, it's assumed that there is an error in the code.
+//     * <br>
+//     * If launch4j returns an exit code of {@code 0}, it's assumed the file was
+//     * created successfully. Checking for an output executable is buggy and
+//     * prone to error so this method won't check for an output file.
+//     * </p>
+//     *
+//     * <p>
+//     * The launch4j output is printed to the console if launch4j fails to create
+//     * the executable, which will aid in debugging.
+//     * </p>
+//     *
+//     * @throws IOException ...
+//     */
+//    @Ignore
+//    @Test
+//    public void testExecutableCreation() throws IOException {
+//        Launch4jProcessWrapper l4jProcessWrapper
+//                = new Launch4jProcessWrapper(LAUNCH4J_PATH, l4jConfig);
+//        StringBuilder output = new StringBuilder();
+//
+//        int l4jExitCode = l4jProcessWrapper.startProcess(output);
+//
+//        //Launch4j failed to create the executable
+//        if (l4jExitCode != 0) {
+//            fail("Launch4j failed with exit code: " + l4jExitCode);
+//        }
+//
+//        if(!output.toString().equals("launch4j: Compiling resources")){
+//            fail("The launch4j output was expected to "
+//                    + "be: \"launch4j: Compiling resources\", but was: "
+//                    + "\"" + output + "\"");
+//        }
+//    }
 }

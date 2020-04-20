@@ -44,7 +44,7 @@ jar {
     manifest {
         attributes(
                 'Class-Path': configurations.compile.collect {
-                    "libs/" + it.getName()
+                    "../libs/" + it.getName()
                 }.join(' '),
                 'Main-Class': 'org.lmelaia.iseries.updater.Main'
         )

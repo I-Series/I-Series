@@ -19,9 +19,6 @@ package org.lmelaia.iseries.build;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.Logger;
 import org.lmelaia.iseries.build.BuildOutputVerifier.ExpectedFile;
-import org.lmelaia.iseries.build.launch4j.Launch4jConfiguration;
-import org.lmelaia.iseries.build.launch4j.Launch4jConfigurationBuilder;
-import org.lmelaia.iseries.build.launch4j.Launch4jProcessWrapper;
 import org.lmelaia.iseries.build.library.Library;
 import org.lmelaia.iseries.build.library.LibraryManager;
 import org.lmelaia.iseries.build.licence.Licences;
@@ -56,29 +53,40 @@ public class BuildConfiguration {
     public static final SmartFile SPROJECT_FOLDER = SmartFile.getSmartFile(
             SmartFile.getSmartFile(System.getProperty("user.dir"))
                     .goBack().getFile().getAbsolutePath());
-    /**
-     * The launch4j folder which contains the launch4j binaries and executables.
-     */
-    public static final SmartFile SLAUNCH4J_FOLDER = SmartFile.getSmartFile(
-            //CHANGE: Change this to the path of launch4j on your machine.
-            "D:\\Programs\\Launch4j");
+
+//    /**
+//     * The launch4j folder which contains the launch4j binaries and executables.
+//     */
+//    public static final SmartFile SLAUNCH4J_FOLDER = SmartFile.getSmartFile(
+//            //CHANGE: Change this to the path of launch4j on your machine.
+//            "D:\\Programs\\Launch4j");
 
     //******************************
     //    CONFIGURATION SETTINGS
     //******************************
-    
+
     //******************************
     //   NB FILES AND FOLDERS
     //******************************
+
     /**
      * The final build output folder.
      */
     public static final SmartFile SOUTPUT_FOLDER = SPROJECT_FOLDER
             .forward("buildoutput");
 
+    /**
+     * The {@code /bin} folder within all build/run
+     * directores. Used to store primary application
+     * binnaries.
+     */
+    public static final SmartFile BIN_FOLDER = SPROJECT_FOLDER
+            .forward("buildoutput").forward("bin");
+
     static {
         //noinspection ResultOfMethodCallIgnored
         SOUTPUT_FOLDER.getFile().mkdirs();
+        BIN_FOLDER.getFile().mkdirs();
     }
 
 
@@ -208,9 +216,9 @@ public class BuildConfiguration {
      * ({@link #SOUTPUT_FOLDER}).
      */
     private static final CopyFile[] FILES_TO_COPY = {
-        //Jar file
+            //Jar file
             new OutputCopyFile(SPROJECT_FOLDER.forward("build").forward("libs")
-                    .forward("I-Series.jar").getFile(), "I-Series-Base.jar"),
+                    .forward("I-Series.jar").getFile(), "bin/I-Series-App.jar"),
             //I-Series licence
             new OutputCopyFile(Licences.GNU.getFile(),
                     APPLICATION_NAME + " Licence.txt"),
@@ -219,10 +227,10 @@ public class BuildConfiguration {
                     APPLICATION_NAME + " Acknowledgements.txt"),
 
             new OutputCopyFile(SLAUNCHER_FOLDER.forward("build").forward("libs")
-                    .forward("src-launcher.jar").getFile(), "I-Series.jar"),
+                    .forward("src-launcher.jar").getFile(), "bin/I-Series-Launcher.jar"),
 
             new OutputCopyFile(SUPDATER_FOLDER.forward("build").forward("libs")
-                    .forward("src-updater.jar").getFile(), "I-Series-Updater.jar")
+                    .forward("src-updater.jar").getFile(), "bin/I-Series-Updater.jar")
     };
 
     /**
@@ -230,14 +238,17 @@ public class BuildConfiguration {
      */
     private static final Library[] LIBRARIES = {
             new Library("Gson", "gson-2.8.0", Licences.APACHE),
+
             new Library("Log4j", new String[]{"log4j-api-2.8.2", "log4j-core-2.8.2"}, Licences.APACHE),
+
             new Library("Guava", new String[]{
                     "checker-qual-2.11.1", "error_prone_annotations-2.3.4", "failureaccess-1.0.1",
                     "guava-29.0-jre", "j2objc-annotations-1.3", "jsr305-3.0.2",
                     "listenablefuture-9999.0-empty-to-avoid-conflict-with-guava"
             }, Licences.APACHE),
-            //new Library("Guava", "guava-19.0", Licences.APACHE),
+
             new Library("src-common", "src-common", Licences.GNU),
+
             //We use the src-common library jar here because the updater isn't a library so we can't use it.
             new Library("I-Series-Updater", "src-common", Licences.GNU)
     };
@@ -266,14 +277,12 @@ public class BuildConfiguration {
      * List of files expected to be in the output directory.
      */
     private static final ExpectedFile[] OUTPUT_DIR_FILES = {
-        new ExpectedFile("legal"),
-        new ExpectedFile("libs"),
-        new ExpectedFile(APPLICATION_NAME + " Licence.txt"),
+            new ExpectedFile("legal"),
+            new ExpectedFile("libs"),
+            new ExpectedFile(APPLICATION_NAME + " Licence.txt"),
             new ExpectedFile(APPLICATION_NAME + " Acknowledgements.txt"),
-        new ExpectedFile(APPLICATION_NAME + ".exe"),
-        new ExpectedFile(APPLICATION_NAME + ".jar"),
-            new ExpectedFile(APPLICATION_NAME + "-Base.jar"),
-            new ExpectedFile(APPLICATION_NAME + "-Updater.jar")
+            new ExpectedFile(APPLICATION_NAME + ".exe"),
+            new ExpectedFile("bin")
     };
 
     /**
@@ -297,22 +306,23 @@ public class BuildConfiguration {
      */
     private static final BuildOutputVerifier DIST_DIR_VERIFIER
             = new BuildOutputVerifier(SDISTRIBUTION_FOLDER.getFile(),
-                    DIST_DIR_FILES)
+            DIST_DIR_FILES)
             .setLogExtraFiles(true);
 
-    /**
-     * The configuration settings to build the I-Series executable.
+    /*
+     * The configuration settings to build the I-Series executable
+     * using the Launch4j wrapper api.
      */
-    private static final Launch4jConfiguration EXEC_CONFIGURATION
-            = new Launch4jConfigurationBuilder()
-                    .setJarRuntimePath("I-Series.jar")
-                    .setWrap(false)
-                    .setOutputFile(
-                            SOUTPUT_FOLDER.forward(EXECUTABLE_NAME
-                            ).getPath())
-                    .setMinimumJreVersion("1.8.0_111")
-            .setIconFile(SPROJECT_FOLDER.forward("iseries-32.ico").getFile().getAbsolutePath())
-                    .create();
+//    private static final Launch4jConfiguration EXEC_CONFIGURATION
+//            = new Launch4jConfigurationBuilder()
+//                    .setJarRuntimePath("I-Series.jar")
+//                    .setWrap(false)
+//                    .setOutputFile(
+//                            SOUTPUT_FOLDER.forward(EXECUTABLE_NAME
+//                            ).getPath())
+//                    .setMinimumJreVersion("1.9.0_0")
+//            .setIconFile(SPROJECT_FOLDER.forward("iseries-32.ico").getFile().getAbsolutePath())
+//                    .create();
 
     //******************************
     //        CONFIGURATION
@@ -370,11 +380,14 @@ public class BuildConfiguration {
      */
     private static void buildISeriesExecutable() {
         LOG.debug("Creating executable");
-        createExecutable(EXEC_CONFIGURATION);
+        //Statement that is responsible for creating the
+        //launch4j I-Series executable. Uncomment to
+        //allow creation.
+        //createExecutable(EXEC_CONFIGURATION);
     }
 
     /**
-     * Adds the list of libraries ({@link #LIBRARIES) to the library manager.
+     * Adds the list of libraries ({@link #LIBRARIES}) to the library manager.
      */
     private static void addLibrariesToList() {
         for (Library library : LIBRARIES) {
@@ -387,7 +400,7 @@ public class BuildConfiguration {
     }
 
     /**
-     * Adds the list of libraries ({@link #LIBRARIES) to the library manager.
+     * Adds the list of libraries ({@link #LIBRARIES}) to the library manager.
      */
     @SuppressWarnings("unused")
     private static void addLauncherLibrariesToList() {
@@ -469,40 +482,40 @@ public class BuildConfiguration {
         }
     }
 
-    /**
-     * Creates an executable file with launch4j.
-     *
-     * @param configuration the configuration settings for the executable file.
-     */
-    @SuppressWarnings("SameParameterValue")
-    private static void createExecutable(Launch4jConfiguration configuration) {
-        Launch4jProcessWrapper launch4jProcess = new Launch4jProcessWrapper(
-                SLAUNCH4J_FOLDER.getFile(), configuration);
-        StringBuilder output = new StringBuilder();
-
-        LOG.debug("Starting launch4j process");
-
-        try {
-            launch4jProcess.startProcess(output);
-        } catch (IOException ex) {
-            LOG.error("Launch4j process failed", ex);
-        }
-
-        LOG.info("Launch4J output: " + output);
-
-        if (!output.toString().equals("launch4j: Compiling resources")) {
-            LOG.error("Launch4j produced unexpected output: "
-                    + (output.toString().equals("")
-                    ? "No output" : output.toString()));
-        }
-    }
+//    /**
+//     * Creates an executable file with launch4j.
+//     *
+//     * @param configuration the configuration settings for the executable file.
+//     */
+//    @SuppressWarnings("SameParameterValue")
+//    private static void createExecutable(Launch4jConfiguration configuration) {
+//        Launch4jProcessWrapper launch4jProcess = new Launch4jProcessWrapper(
+//                SLAUNCH4J_FOLDER.getFile(), configuration);
+//        StringBuilder output = new StringBuilder();
+//
+//        LOG.debug("Starting launch4j process");
+//
+//        try {
+//            launch4jProcess.startProcess(output);
+//        } catch (IOException ex) {
+//            LOG.error("Launch4j process failed", ex);
+//        }
+//
+//        LOG.info("Launch4J output: " + output);
+//
+//        if (!output.toString().equals("launch4j: Compiling resources")) {
+//            LOG.error("Launch4j produced unexpected output: "
+//                    + (output.toString().equals("")
+//                    ? "No output" : output.toString()));
+//        }
+//    }
 
     /**
      * Compares the library(.jar) files in the buildOutput/libs folder to the
      * folders containing the libraries for the application and launcher. This ensures
      * no required library is missing from the buildOutput.
      */
-    private static void compareLibraries(){
+    private static void compareLibraries() {
         File buildOutputLibs = SOUTPUT_FOLDER.forward("libs").getFile();
         compare(SLIBRARIES_FOLDER.getFile(), buildOutputLibs);
         compare(SPROJECT_FOLDER.forward("src-launcher").forward("build").forward("libs").forward("libs").getFile(), buildOutputLibs);

@@ -22,7 +22,7 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%-5level| %d{HH:mm:ss(SSS)} | %t | %F:%L\n\t %msg\n"/>
         </Console>
-        <File name="LatestLog" fileName="logs/Launcher.log" immediateFlush="true" append="false">
+        <File name="LatestLog" fileName="../logs/Launcher.log" immediateFlush="true" append="false">
             <PatternLayout pattern="%-5level| %d{HH:mm:ss(SSS)} | %t\n\t %msg\n"/>
         </File>
     </Appenders>

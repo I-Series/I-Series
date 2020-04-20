@@ -35,6 +35,12 @@ if (!hasProperty('mainClass')) {
 }
 
 /**
+ * The full path to the java executable of the JDK.
+ * Only used for the development environment.
+ */
+ext.JAVA_PATH = "C:\\Program Files\\Java\\liberica-openjdk-14-full\\bin\\java.exe"
+
+/**
  * Maven repository declaration.
  */
 repositories {
@@ -77,7 +83,7 @@ jar {
     manifest {
         attributes(
             'Class-Path': configurations.compile.collect {
-                "libs/" + it.getName() 
+                "../libs/" + it.getName()
             }.join(' '),
             'Main-Class': mainClassName
         )
@@ -202,15 +208,15 @@ void createRunDirectory(){
 void runLauncher(){
     createRunDirectory()
 
-    String command = "java -jar " +
+    String command = JAVA_PATH + " -jar " +
             new File(System.getProperty("user.dir")).getAbsolutePath() +
-            File.separator + "run" +
-            File.separator + "I-Series.jar"
+            File.separator + "run" + File.separator + "bin" +
+            File.separator + "I-Series-Launcher.jar"
 
     //noinspection GroovyAssignabilityCheck
     Process appProcess = Runtime.getRuntime().exec(command, null, new File(new File(
             System.getProperty("user.dir")).getAbsolutePath() +
-            File.separator + "run"))
+            File.separator + "run" + File.separator + "bin"))
 
     //noinspection GroovyAssignabilityCheck
     Thread t = new Thread(new Runnable() {

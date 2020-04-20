@@ -62,6 +62,12 @@ public enum Settings {
     LAST_PLAYLIST("last_selected_playlist", null, "The last playlist or navigation entry " +
             "the user selected.");
 
+
+    /**
+     * The file the settings are saved to.
+     */
+    private static final File SAVE_FILE = new File("../savedata/settings.xml");
+
     /*
      * Initializes the {@link SettingsStore}
      * and read the settings from file.
@@ -206,11 +212,6 @@ public enum Settings {
          * Logger instance.
          */
         private static final Logger LOG = AppLogger.getLogger();
-
-        /**
-         * The file the settings are saved to.
-         */
-        private static final File SAVE_FILE = new File("savedata/settings.xml");
 
         /**
          * The properties instance.

@@ -55,7 +55,7 @@ public class ISeriesAppController {
      * The main applications jar filename.
      */
     private static final String JAR_FILENAME
-            = "I-Series-Base.jar";
+            = "I-Series-App.jar";
 
     /**
      * Thread responsible for capturing the output
