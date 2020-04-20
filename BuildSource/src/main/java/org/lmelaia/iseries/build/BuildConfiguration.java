@@ -224,13 +224,19 @@ public class BuildConfiguration {
             new OutputCopyFile(SUPDATER_FOLDER.forward("build").forward("libs")
                     .forward("updatersource.jar").getFile(), "I-Series-Updater.jar")
     };
+
     /**
      * A list of the libraries for the root project.
      */
     private static final Library[] LIBRARIES = {
-        new Library("Gson", "gson-2.8.0", Licences.APACHE),
-        new Library("Log4j", new String[]{"log4j-api-2.8.2", "log4j-core-2.8.2"}, Licences.APACHE),
-            new Library("Guava", "guava-19.0", Licences.APACHE),
+            new Library("Gson", "gson-2.8.0", Licences.APACHE),
+            new Library("Log4j", new String[]{"log4j-api-2.8.2", "log4j-core-2.8.2"}, Licences.APACHE),
+            new Library("Guava", new String[]{
+                    "checker-qual-2.11.1", "error_prone_annotations-2.3.4", "failureaccess-1.0.1",
+                    "guava-29.0-jre", "j2objc-annotations-1.3", "jsr305-3.0.2",
+                    "listenablefuture-9999.0-empty-to-avoid-conflict-with-guava"
+            }, Licences.APACHE),
+            //new Library("Guava", "guava-19.0", Licences.APACHE),
             new Library("CommonSource", "commonsource", Licences.GNU),
             //We use the commonsource library jar here because the updater isn't a library so we can't use it.
             new Library("I-Series-Updater", "commonsource", Licences.GNU)

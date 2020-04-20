@@ -207,7 +207,7 @@ public class App extends AppBase {
          * Tracks the progress of the Library load and updates
          * the main window progress to reflect the load.
          */
-        ProgressTracker tracker = new ProgressTracker() {
+        final ProgressTracker tracker = new ProgressTracker() {
             @Override
             public void onProgressChange(double percentage, int pos, int max) {
                 updateProgress(pos, max);
@@ -264,6 +264,8 @@ public class App extends AppBase {
         while (libraryLocation.equals("")) {
             Platform.runLater(() -> LibraryWindow.present(true));
             try {
+                //Here until a better solution falls out of the sky.
+                //noinspection BusyWait
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -271,7 +273,11 @@ public class App extends AppBase {
         }
 
         TextProgressBar progressBar
-                = getWindowsManager().getWindow(MainWindow.class).getController().getProgress().getProgressBar();
+                = getWindowsManager()
+                .getWindow(MainWindow.class)
+                .getController()
+                .getProgress()
+                .getProgressBar();
 
         progressBar.progressProperty().bind(loadLibrary.progressProperty());
         progressBar.textProperty().bind(loadLibrary.messageProperty());

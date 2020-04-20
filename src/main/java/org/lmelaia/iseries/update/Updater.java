@@ -9,5 +9,7 @@ public class Updater {
         return false;
     }
 
+    public static void launchUpdater() {
 
+    }
 }

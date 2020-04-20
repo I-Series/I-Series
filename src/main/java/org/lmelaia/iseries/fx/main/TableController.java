@@ -350,14 +350,14 @@ public class TableController extends SubControl {
 
                     //Width
                     if (jColumn.has("width"))
-                        //noinspection deprecation
-                        column.impl_setWidth(jColumn.get("width").getAsDouble());
+                        //TODO: Somehow fix this
+                        //column.impl_setWidth(jColumn.get("width").getAsDouble());
 
-                    //Add to table
-                    if (!tableView.getColumns().contains(column)) {
-                        tableView.getColumns().add(column);
-                        Columns.COLUMN_CONTEXT_MENU.checkItem(column);
-                    }
+                        //Add to table
+                        if (!tableView.getColumns().contains(column)) {
+                            tableView.getColumns().add(column);
+                            Columns.COLUMN_CONTEXT_MENU.checkItem(column);
+                        }
 
                 }));
             } catch (IOException e) {

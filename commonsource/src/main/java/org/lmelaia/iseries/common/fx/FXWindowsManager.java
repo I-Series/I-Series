@@ -28,6 +28,7 @@ import org.lmelaia.iseries.common.system.AppLogger;
 import org.lmelaia.iseries.common.system.ExitCode;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,7 +93,7 @@ public class FXWindowsManager extends Application {
     /**
      * List of all declared windows.
      */
-    private final List<FXWindow> windows = new ArrayList<>();
+    private final List<FXWindow<?>> windows = new ArrayList<>();
 
     /**
      * Starts the FX application thread in a nonblocking way
@@ -196,8 +197,9 @@ public class FXWindowsManager extends Application {
      * window was not registered.
      */
     @SuppressWarnings({"unchecked", "WeakerAccess"})
-    public <T extends FXWindow> T getWindow(Class<T> windowClass) {
-        for (FXWindow window : windows) {
+    public <T extends FXWindow<?>> T getWindow(Class<T> windowClass) {
+        LOG.debug("Number of windows found: " + windows.size());
+        for (FXWindow<?> window : windows) {
             if (window.getClass().equals(windowClass)) {
                 return (T) window;
             }
@@ -212,8 +214,8 @@ public class FXWindowsManager extends Application {
      * @param windowClass the class of the window (eg. Window.class)
      * @return {@code true} if the window was displayed.
      */
-    public boolean showWindow(Class<? extends FXWindow> windowClass) {
-        FXWindow window = getWindow(windowClass);
+    public boolean showWindow(Class<? extends FXWindow<?>> windowClass) {
+        FXWindow<?> window = getWindow(windowClass);
 
         if (window == null)
             return false;
@@ -232,8 +234,8 @@ public class FXWindowsManager extends Application {
      * @param windowClass the class of the window (eg. Window.class)
      * @return {@code true} if the window was displayed.
      */
-    public boolean showWindowAndWait(Class<? extends FXWindow> windowClass) {
-        FXWindow window = getWindow(windowClass);
+    public boolean showWindowAndWait(Class<? extends FXWindow<?>> windowClass) {
+        FXWindow<?> window = getWindow(windowClass);
 
         if (window == null)
             return false;
@@ -253,8 +255,8 @@ public class FXWindowsManager extends Application {
      * @param owner       the parent window.
      * @return {@code true} if the window was displayed.
      */
-    public boolean showWindowAndWait(Class<? extends FXWindow> windowClass, Window owner) {
-        FXWindow window = getWindow(windowClass);
+    public boolean showWindowAndWait(Class<? extends FXWindow<?>> windowClass, Window owner) {
+        FXWindow<?> window = getWindow(windowClass);
 
         if (window == null)
             return false;
@@ -277,7 +279,7 @@ public class FXWindowsManager extends Application {
      * @param owner  the parent window.
      * @return {@code true} if the window was displayed.
      */
-    public boolean showWindowAndWait(FXWindow window, Window owner) {
+    public boolean showWindowAndWait(FXWindow<?> window, Window owner) {
         if (window == null)
             return false;
 
@@ -299,6 +301,7 @@ public class FXWindowsManager extends Application {
      */
     private void initWindows() {
         try {
+            //noinspection rawtypes
             for (Class<? extends FXWindow> c : getWindowClasses()) {
                 LOG.debug("Initializing window: " + c.getCanonicalName());
 
@@ -316,18 +319,19 @@ public class FXWindowsManager extends Application {
                     }
 
                     try {
-                        controller = controllerClass.newInstance();
-                    } catch (InstantiationException e) {
+                        controller = (FXController) controllerClass.getDeclaredConstructors()[0].newInstance();
+                    } catch (InstantiationException | InvocationTargetException e) {
                         throw new IllegalStateException("Controller: " + controllerClass.getCanonicalName()
                                 + " does not have a default constructor");
                     }
                 }
 
-                FXWindow window = c.newInstance();
+                //noinspection deprecation
+                FXWindow<?> window = (FXWindow<?>) c.getDeclaredConstructors()[0].newInstance();
                 windows.add(window);
                 window.initialize(fxml, css, controller);
             }
-        } catch (IOException | IllegalAccessException | InstantiationException e) {
+        } catch (IOException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
             //Should not happen as each class is read from
             //the list of classes in the package.
             throw new IllegalStateException(e);
@@ -339,7 +343,7 @@ public class FXWindowsManager extends Application {
      * method of each declared window.
      */
     private void postInitWindows() {
-        for (FXWindow window : windows)
+        for (FXWindow<?> window : windows)
             window.postInitialize();
     }
 
@@ -348,6 +352,7 @@ public class FXWindowsManager extends Application {
      * @throws IOException if the attempt to read class path resources
      *                     (jar files or directories) failed.
      */
+    @SuppressWarnings("rawtypes")//Still works...
     private List<Class<? extends FXWindow>> getWindowClasses() throws IOException {
         List<Class<? extends FXWindow>> classList = new ArrayList<>();
         classList.addAll(getWindowClasses(windowsPath));
@@ -355,7 +360,7 @@ public class FXWindowsManager extends Application {
         return classList;
     }
 
-    @SuppressWarnings({"unchecked", "UnstableApiUsage"})
+    @SuppressWarnings({"unchecked", "UnstableApiUsage", "rawtypes"})
     private List<Class<? extends FXWindow>> getWindowClasses(String path) throws IOException {
         List<Class<? extends FXWindow>> classList = new ArrayList<>();
 
@@ -367,7 +372,7 @@ public class FXWindowsManager extends Application {
                     try {
                         if (clazz.newInstance() instanceof FXWindow) {
                             if (clazz.getDeclaredAnnotation(RegisterFXWindow.class) != null) {
-                                classList.add((Class<? extends FXWindow>) clazz);
+                                classList.add((Class<? extends FXWindow<?>>) clazz);
                                 LOG.debug("Identified possible window class: " + clazz.getCanonicalName());
                             }
                         } else {
@@ -391,7 +396,7 @@ public class FXWindowsManager extends Application {
      * @param windowClass the window class to retrieve the value from.
      * @return the fxml file name value from the window class annotation.
      */
-    private String getFxmlFileName(Class<? extends FXWindow> windowClass) {
+    private String getFxmlFileName(@SuppressWarnings("rawtypes") Class<? extends FXWindow> windowClass) {
         if (windowClass.getDeclaredAnnotation(RegisterFXWindow.class) == null) {
             throw new IllegalArgumentException("Class: " + windowClass.getCanonicalName()
                     + " is not annotated with: " + RegisterFXWindow.class.getCanonicalName());
@@ -406,7 +411,7 @@ public class FXWindowsManager extends Application {
      * @param windowClass the window class to retrieve the value from.
      * @return the css file name value from the window class annotation.
      */
-    private String getCssFileName(Class<? extends FXWindow> windowClass) {
+    private String getCssFileName(@SuppressWarnings("rawtypes") Class<? extends FXWindow> windowClass) {
         if (windowClass.getDeclaredAnnotation(RegisterFXWindow.class) == null) {
             throw new IllegalArgumentException("Class: " + windowClass.getCanonicalName()
                     + " is not annotated with: " + RegisterFXWindow.class.getCanonicalName());
@@ -421,7 +426,8 @@ public class FXWindowsManager extends Application {
      * @param windowClass the window class to retrieve the value from.
      * @return the controller class from the window class annotation.
      */
-    private Class<? extends FXController> getControllerClass(Class<? extends FXWindow> windowClass) {
+    private Class<? extends FXController> getControllerClass(
+            @SuppressWarnings("rawtypes") Class<? extends FXWindow> windowClass) {
         if (windowClass.getDeclaredAnnotation(RegisterFXWindow.class) == null) {
             throw new IllegalArgumentException("Class: " + windowClass.getCanonicalName()
                     + " is not annotated with: " + RegisterFXWindow.class.getCanonicalName());
