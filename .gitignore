@@ -2,10 +2,10 @@
 /buildoutput/
 /distribution/
 /run/
-/buildsource/logs/
-/buildsource/build/
-/commonsource/build/
-/launchersource/build/
 /.gradle/
 /.idea/
-/updatersource/build
+/src-build/build
+/src-build/logs
+/src-updater/build
+/src-common/build
+/src-launcher/build
