@@ -23,7 +23,7 @@ apply plugin: 'application'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 //Gradle run arguments.
-//noinspection GroovyUnusedAssignmen
+//noinspection GroovyUnusedAssignment
 applicationDefaultJvmArgs = ["-Dprism.vsync=false"]
 
 /**
@@ -153,6 +153,7 @@ task _run() {
  */
 task _cleanrun() {
     doFirst{
+        //noinspection GroovyAssignabilityCheck
         FileUtils.deleteDirectory(new File(System.getProperty("user.dir") + "/run"))
     }
 }
@@ -179,9 +180,11 @@ task _build(){
  * of the application for test runs.
  */
 void createRunDirectory(){
+    //noinspection GroovyAssignabilityCheck
     File runDir = new File(System.getProperty("user.dir") + "/run")
     runDir.mkdir()
 
+    //noinspection GroovyAssignabilityCheck
     File source = new File(System.getProperty("user.dir") + "/buildOutput")
     File dest = runDir
 
@@ -205,6 +208,7 @@ void runLauncher(){
             File.separator + "run" +
             File.separator + "I-Series.jar"
 
+    //noinspection GroovyAssignabilityCheck
     Process appProcess = Runtime.getRuntime().exec(command, null, new File(new File(
             System.getProperty("user.dir")).getAbsolutePath() +
             File.separator + "run"))
@@ -240,8 +244,8 @@ void runLauncher(){
 _build.dependsOn(":copyDependencies")
 _build.dependsOn("BuildSource:build")
 _build.dependsOn("commonsource:build")
-_build.dependsOn("launchersource:build")
-_build.dependsOn("updatersource:build")
+_build.dependsOn("src-launcher:build")
+_build.dependsOn("src-updater:build")
 _build.dependsOn(":build")
 _build.finalizedBy("BuildSource:run")
 

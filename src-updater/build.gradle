@@ -20,6 +20,7 @@ apply plugin: 'application'
 test.testLogging.showStandardStreams = true
 test.testLogging.exceptionFormat = 'full'
 
+//noinspection GroovyUnusedAssignment
 mainClassName = 'org.lmelaia.iseries.updater.Main'
 if (!hasProperty('mainClass')) {
     ext.mainClass = 'org.lmelaia.iseries.updater.Main'

@@ -86,13 +86,13 @@ public class BuildConfiguration {
      * The launcher project directory.
      */
     public static final SmartFile SLAUNCHER_FOLDER = SPROJECT_FOLDER
-            .forward("launchersource");
+            .forward("src-launcher");
 
     /**
      * The updater project directory.
      */
     public static final SmartFile SUPDATER_FOLDER = SPROJECT_FOLDER
-            .forward("updatersource");
+            .forward("src-updater");
 
     //******************************
     //       BUILD PROPERTIES
@@ -333,7 +333,7 @@ public class BuildConfiguration {
      * copying of them and their licences.
      */
     private static final LibraryManager LAUNCHER_LIBRARY_MANAGER = new LibraryManager(
-            SLAUNCHER_FOLDER.forward("build").forward("libs")
+            SPROJECT_FOLDER.forward("src-launcher").forward("build").forward("libs")
                     .forward("libs").getFile(),
             SOUTPUT_FOLDER.forward("libs").getFile(),
             SOUTPUT_FOLDER.forward("legal").getFile()
@@ -344,7 +344,7 @@ public class BuildConfiguration {
      * copying of them and their licences.
      */
     private static final LibraryManager UPDATER_LIBRARY_MANAGER = new LibraryManager(
-            SLAUNCHER_FOLDER.forward("build").forward("libs")
+            SPROJECT_FOLDER.forward("src-launcher").forward("build").forward("libs")
                     .forward("libs").getFile(),
             SOUTPUT_FOLDER.forward("libs").getFile(),
             SOUTPUT_FOLDER.forward("legal").getFile()
@@ -505,7 +505,7 @@ public class BuildConfiguration {
     private static void compareLibraries(){
         File buildOutputLibs = SOUTPUT_FOLDER.forward("libs").getFile();
         compare(SLIBRARIES_FOLDER.getFile(), buildOutputLibs);
-        compare(SLAUNCHER_FOLDER.forward("build").forward("libs").forward("libs").getFile(), buildOutputLibs);
+        compare(SPROJECT_FOLDER.forward("src-launcher").forward("build").forward("libs").forward("libs").getFile(), buildOutputLibs);
     }
 
     /**
@@ -517,12 +517,17 @@ public class BuildConfiguration {
      * @param secondary the folder being compared.
      */
     @SuppressWarnings("ConstantConditions")
-    private static void compare(File primary, File secondary){
-        for(File f : primary.listFiles()){
-            if(f.isDirectory())
+    private static void compare(File primary, File secondary) {
+        if (primary.listFiles() == null)
+            LOG.warn(String.format(
+                    "Failed to compare %s to %s. ", primary.toString(), secondary.toString()
+            ), new NullPointerException(primary.toString()));
+
+        for (File f : primary.listFiles()) {
+            if (f.isDirectory())
                 continue;
 
-            if(!contains(secondary, f.getName()))
+            if (!contains(secondary, f.getName()))
                 LOG.warn("File: " + f.getName() + " from folder: " + primary.getAbsolutePath()
                         + " is not contained in the folder: " + secondary);
         }
