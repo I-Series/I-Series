@@ -25,3 +25,7 @@
 /runtimes/x32/conf/
 /runtimes/x32/bin/
 !/runtimes/x32/readme.md
+/src-build/logs/Build.log
+src-common/src/main/resources/
+src-common/src/test/
+src-launcher/src/test/
