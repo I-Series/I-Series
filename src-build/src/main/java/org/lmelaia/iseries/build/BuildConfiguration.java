@@ -23,6 +23,7 @@ import org.lmelaia.iseries.build.library.Library;
 import org.lmelaia.iseries.build.library.LibraryManager;
 import org.lmelaia.iseries.build.licence.Licences;
 import org.lmelaia.iseries.build.packaging.ZipPackager;
+import org.lmelaia.iseries.build.runtime.JREs;
 import org.lmelaia.iseries.build.utils.CopyFile;
 import org.lmelaia.iseries.build.utils.OutputCopyFile;
 import org.lmelaia.iseries.build.utils.SmartFile;
@@ -137,6 +138,7 @@ public class BuildConfiguration {
     //******************************
     //             NAMES
     //******************************
+
     /**
      * The folder containing the copied libraries.
      */
@@ -147,6 +149,29 @@ public class BuildConfiguration {
      * The logger for this class.
      */
     private static final Logger LOG = AppLogger.getLogger();
+
+    //******************************
+    //             Jres
+    //******************************
+
+    /**
+     * The folder holding both java jre runtimes.
+     */
+    private static final SmartFile JRE_RUNTIMES_FOLDER = SPROJECT_FOLDER
+            .forward("runtimes");
+
+    /**
+     * The build output folder where the jre runtimes are copied to.
+     */
+    private static final SmartFile JRE_DESTINATION = SOUTPUT_FOLDER
+            .forward("runtime");
+
+    /**
+     * The JREs object helping with the jre runtime copying.
+     */
+    private static final JREs JRES = new JREs(
+            JRE_RUNTIMES_FOLDER.forward("x64").getFile(), JRE_RUNTIMES_FOLDER.forward("x32").getFile()
+    );
 
     //******************************
     //     FILES AND FILE PATHS
@@ -375,16 +400,16 @@ public class BuildConfiguration {
     //      METHODS
     //*******************
 
-    /**
-     * Builds the executable file for the I-Series jar file.
-     */
-    private static void buildISeriesExecutable() {
-        LOG.debug("Creating executable");
-        //Statement that is responsible for creating the
-        //launch4j I-Series executable. Uncomment to
-        //allow creation.
-        //createExecutable(EXEC_CONFIGURATION);
-    }
+//    /**
+//     * Builds the executable file for the I-Series jar file.
+//     */
+//    private static void buildISeriesExecutable() {
+//        LOG.debug("Creating executable");
+//        //Statement that is responsible for creating the
+//        //launch4j I-Series executable. Uncomment to
+//        //allow creation.
+//        //createExecutable(EXEC_CONFIGURATION);
+//    }
 
     /**
      * Adds the list of libraries ({@link #LIBRARIES}) to the library manager.
@@ -678,6 +703,27 @@ public class BuildConfiguration {
     }
 
     /**
+     * Initates the copying of the Java JRE runtimes
+     * to the build output directory, as well as the
+     * launcher executable (.exe).
+     */
+    private static void copyRuntime() {
+        LOG.info("Copying over runtime...");
+
+        try {
+            JRES.copyOver(false, JRE_DESTINATION.forward("/x32").getFile());
+        } catch (IOException e) {
+            LOG.error("Failed to copy the JREx32 runtime...", e);
+        }
+
+        try {
+            JRES.copyOver(true, JRE_DESTINATION.forward("/x64").getFile());
+        } catch (IOException e) {
+            LOG.error("Failed to copy the JREx32 runtime...", e);
+        }
+    }
+
+    /**
      * This method is considered an alternative to
      * {@link #main(java.lang.String[])}, and is called ONLY when the user whats
      * to do a full build of the root project.
@@ -699,10 +745,11 @@ public class BuildConfiguration {
     @SuppressWarnings("EmptyCatchBlock")
     public static void fullBuild() throws Exception {
         copyFilesOver();
+        copyRuntime();
         addLibrariesToList();
         copyLibraries();
         copyLauncherLibraries();
-        buildISeriesExecutable();
+        //buildISeriesExecutable();
         //Give windows explorer time to refresh
         //We need this for some reason
         try {
