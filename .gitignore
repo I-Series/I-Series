@@ -29,3 +29,6 @@
 src-common/src/main/resources/
 src-common/src/test/
 src-launcher/src/test/
+/src-executable/I-Series/bin/
+/src-executable/I-Series/obj/
+/src-executable/.vs/
