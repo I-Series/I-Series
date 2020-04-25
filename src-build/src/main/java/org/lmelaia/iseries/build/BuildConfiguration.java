@@ -307,7 +307,8 @@ public class BuildConfiguration {
             new ExpectedFile(APPLICATION_NAME + " Licence.txt"),
             new ExpectedFile(APPLICATION_NAME + " Acknowledgements.txt"),
             new ExpectedFile(APPLICATION_NAME + ".exe"),
-            new ExpectedFile("bin")
+            new ExpectedFile("bin"),
+            new ExpectedFile("runtime")
     };
 
     /**

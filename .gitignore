@@ -32,3 +32,4 @@ src-launcher/src/test/
 /src-executable/I-Series/bin/
 /src-executable/I-Series/obj/
 /src-executable/.vs/
+/src-executable/.idea/
