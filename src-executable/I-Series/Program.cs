@@ -10,27 +10,33 @@ namespace I_Series {
     /// and starting procedure.
     /// </summary>
     internal class Program {
-        
+
         /// <summary>
-        /// The current working directory the executable was launched from.
+        /// A list of arguments meant for this specific application, and which should
+        /// not be passed onto the actual I-Series process.
         /// </summary>
-        private readonly string _workingDirectory = Directory.GetCurrentDirectory();
+        private static readonly object[] FilteredArguments = { "--architecture", "--shell"};
         
         /// <summary>
         /// The runtime configuration settings.
         /// </summary>
-        private readonly RuntimeSettings _runtimeSettings = new RuntimeSettings.RuntimeSettingsBuilder()
+        private static readonly RuntimeSettings RuntimeSettings = new RuntimeSettings.RuntimeSettingsBuilder()
             .SetJre32Path(@"\runtime\x32\")
             .SetJre64Path(@"\runtime\x64\")
             .SetWorkingDirectory(@"\bin\")
             .AddAdditionalArgument("-Dprism.vsync=false")
             .SetLauncherJar(@"\bin\I-Series-Launcher.jar")
             .Build();
+        
+        /// <summary>
+        /// The current working directory the executable was launched from.
+        /// </summary>
+        private readonly string _workingDirectory = Directory.GetCurrentDirectory();
 
         /// <summary>
         /// The command line arguments the executable was launched with.
         /// </summary>
-        private readonly List<Object> _cmdArguments;
+        private readonly List<object> _cmdArguments;
 
         /// <summary>
         /// boolean flag that lets us know the
@@ -51,25 +57,17 @@ namespace I_Series {
         /// <summary>
         /// The determined jre runtime architecture (x32/x64) to use.
         /// </summary>
-        private RuntimeChipset _runtimeChipset;
+        private Chipset _runtimeChipset;
         
-        /// <summary>
-        /// Represents a cpu chipset (x32/x64 bit) or
-        /// an undetermined chipset.
-        /// </summary>
-        private enum RuntimeChipset {
-            X32, X64, Undetermined
-        }
-        
-        public Program(string[] args) {
+        private Program(string[] args) {
             _cmdArguments = new List<object>();
             foreach (var arg in args) {
                 _cmdArguments.Add(arg);
             }
             
             _is64BitEnv = Environment.Is64BitOperatingSystem;
-            _jreX32 = new Jre($"{_workingDirectory}{_runtimeSettings.Jre32Path}");
-            _jreX64 = new Jre($"{_workingDirectory}{_runtimeSettings.Jre64Path}");
+            _jreX32 = new Jre($"{_workingDirectory}{RuntimeSettings.Jre32Path}");
+            _jreX64 = new Jre($"{_workingDirectory}{RuntimeSettings.Jre64Path}");
         }
 
         /// <summary>
@@ -87,6 +85,11 @@ namespace I_Series {
             }
 
             ConfigureRuntime();
+            
+            ISProcess process = new ISProcess(RuntimeSettings, Filter(_cmdArguments),
+                _runtimeChipset == Chipset.X32 ? _jreX32 : _jreX64, HasShellFlag()
+            );
+            process.Run();
         }
 
         /// <summary>
@@ -121,13 +124,13 @@ namespace I_Series {
             //Determine runtime mode (x32, x64)
             if (hasJreX32 && hasJreX64) {
                 _runtimeChipset = GetChipsetFromArgs();
-                if(_runtimeChipset == RuntimeChipset.Undetermined)
-                    _runtimeChipset = _is64BitEnv ? RuntimeChipset.X64 : RuntimeChipset.X32;
-            } else if (hasJreX32) _runtimeChipset = RuntimeChipset.X32;
-            else if (hasJreX64) _runtimeChipset = RuntimeChipset.X64;
+                if(_runtimeChipset == Chipset.Undetermined)
+                    _runtimeChipset = _is64BitEnv ? Chipset.X64 : Chipset.X32;
+            } else if (hasJreX32) _runtimeChipset = Chipset.X32;
+            else if (hasJreX64) _runtimeChipset = Chipset.X64;
             
             Console.Out.WriteLine("Determined chipset: {0}",
-                _runtimeChipset == RuntimeChipset.X32 ? "x32bit" : "x64bit"
+                _runtimeChipset == Chipset.X32 ? "x32bit" : "x64bit"
             );
         }
 
@@ -139,7 +142,7 @@ namespace I_Series {
         /// <returns>X32 or X64 depending on what the user
         /// chose, Undetermined if the user didn't make a choice
         /// </returns>
-        private RuntimeChipset GetChipsetFromArgs() {
+        private Chipset GetChipsetFromArgs() {
             foreach (var arg in _cmdArguments) {
                 if (arg.ToString().StartsWith("--architecture")) {
                     string arch = arg.ToString().Replace("--architecture", "");
@@ -150,16 +153,53 @@ namespace I_Series {
                         case "x64":
                         case "X64":
                         case "64":
-                            return RuntimeChipset.X64;
+                            return Chipset.X64;
                         case "x32":
                         case "X32":
                         case "32":
-                            return RuntimeChipset.X32;
+                            return Chipset.X32;
                     }
                 }
             }
 
-            return RuntimeChipset.Undetermined;
+            return Chipset.Undetermined;
+        }
+
+        /// <summary>
+        /// Used to check if the <code>--shell</code>
+        /// flag was used in the command line arguments.
+        /// If true, will open a shell window with
+        /// the application output.
+        /// </summary>
+        /// <returns><code>true</code> if the shell flag
+        /// was used in the command line arguments.</returns>
+        private bool HasShellFlag() {
+            foreach (var arg in _cmdArguments) {
+                if (arg.ToString().ToLower().StartsWith("--shell"))
+                    return true;
+            }
+            
+            return false;
+        }
+
+        /// <summary>
+        /// Used to filter out specific commands (FilteredArguments)
+        /// from the array of command line arguments given.
+        /// </summary>
+        /// <param name="arguments">an array of command line arguments
+        /// that needs filtering.</param>
+        /// <returns>the filtered command line arguments.</returns>
+        private List<object> Filter(List<object> arguments) {
+            List<object> filtered = new List<object>(arguments);
+
+            foreach (var argument in arguments) {
+                foreach (var targetArg in FilteredArguments) {
+                    if (argument.ToString().StartsWith(targetArg.ToString()))
+                        filtered.Remove(argument);
+                }
+            }
+            
+            return filtered;
         }
 
         /// <summary>
@@ -168,6 +208,7 @@ namespace I_Series {
         /// </summary>
         /// <param name="args">the command line arguments.
         /// </param>
+        // ReSharper disable once UnusedMember.Local
         private static void Main(string[] args) {
             new Program(args).Start();
         }

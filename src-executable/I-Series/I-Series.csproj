@@ -51,6 +51,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Chipset.cs" />
+    <Compile Include="ISProcess.cs" />
     <Compile Include="Jre.cs" />
     <Compile Include="RuntimeSettings.cs" />
     <Compile Include="Program.cs" />

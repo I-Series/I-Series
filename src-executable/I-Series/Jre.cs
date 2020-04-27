@@ -41,5 +41,11 @@ namespace I_Series {
             Console.Out.WriteLine("Looking for JRE at: {0}{1}", _directory, _relativeExecutablePath);
             return File.Exists($"{_directory}{_relativeExecutablePath}");
         }
+
+        /// <summary>
+        /// The full path to this java runtime environment
+        /// binary executable (java.exe).
+        /// </summary>
+        public string ExecutablePath => $"{_directory}{_relativeExecutablePath}";
     }
 }
