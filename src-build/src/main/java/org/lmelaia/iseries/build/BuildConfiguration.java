@@ -23,6 +23,7 @@ import org.lmelaia.iseries.build.library.Library;
 import org.lmelaia.iseries.build.library.LibraryManager;
 import org.lmelaia.iseries.build.licence.Licences;
 import org.lmelaia.iseries.build.packaging.ZipPackager;
+import org.lmelaia.iseries.build.runtime.Executable;
 import org.lmelaia.iseries.build.runtime.JREs;
 import org.lmelaia.iseries.build.utils.CopyFile;
 import org.lmelaia.iseries.build.utils.OutputCopyFile;
@@ -172,6 +173,15 @@ public class BuildConfiguration {
     private static final JREs JRES = new JREs(
             JRE_RUNTIMES_FOLDER.forward("x64").getFile(), JRE_RUNTIMES_FOLDER.forward("x32").getFile()
     );
+
+    //******************************
+    //          Executable
+    //******************************
+
+    /**
+     * The helper object used to copy over the src-executable executable binary.
+     */
+    private static final Executable EXECUTABLE = new Executable(SPROJECT_FOLDER.getFile());
 
     //******************************
     //     FILES AND FILE PATHS
@@ -544,7 +554,8 @@ public class BuildConfiguration {
     private static void compareLibraries() {
         File buildOutputLibs = SOUTPUT_FOLDER.forward("libs").getFile();
         compare(SLIBRARIES_FOLDER.getFile(), buildOutputLibs);
-        compare(SPROJECT_FOLDER.forward("src-launcher").forward("build").forward("libs").forward("libs").getFile(), buildOutputLibs);
+        compare(SPROJECT_FOLDER.forward("src-launcher").forward("build")
+                .forward("libs").forward("libs").getFile(), buildOutputLibs);
     }
 
     /**
@@ -725,6 +736,25 @@ public class BuildConfiguration {
     }
 
     /**
+     * Handles copying over the src-executable
+     * executable binary.
+     */
+    private static void copyExecutable() {
+        LOG.info("Copying over executable...");
+        if (!EXECUTABLE.exists())
+            throw new RuntimeException(
+                    "A release version of the executable could not be found: "
+                            + EXECUTABLE.getExecutableBinary()
+            );
+
+        try {
+            EXECUTABLE.copy(SOUTPUT_FOLDER.forward("I-Series.exe").getFile());
+        } catch (IOException e) {
+            LOG.error("Failed to copy the executable: ", e);
+        }
+    }
+
+    /**
      * This method is considered an alternative to
      * {@link #main(java.lang.String[])}, and is called ONLY when the user whats
      * to do a full build of the root project.
@@ -746,6 +776,7 @@ public class BuildConfiguration {
     @SuppressWarnings("EmptyCatchBlock")
     public static void fullBuild() throws Exception {
         copyFilesOver();
+        copyExecutable();
         copyRuntime();
         addLibrariesToList();
         copyLibraries();
