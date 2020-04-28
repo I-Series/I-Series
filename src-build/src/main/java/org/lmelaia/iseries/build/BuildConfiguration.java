@@ -156,6 +156,13 @@ public class BuildConfiguration {
     //******************************
 
     /**
+     * A flag that allows disabling the copy
+     * of the JRE runtimes during build
+     * to save on dev time.
+     */
+    private static final boolean COPY_RUNTIME = false;
+
+    /**
      * The folder holding both java jre runtimes.
      */
     private static final SmartFile JRE_RUNTIMES_FOLDER = SPROJECT_FOLDER
@@ -721,6 +728,11 @@ public class BuildConfiguration {
      */
     private static void copyRuntime() {
         LOG.info("Copying over runtime...");
+
+        if (!COPY_RUNTIME) {
+            LOG.warn("NOT COPYING RUNTIMES");
+            return;
+        }
 
         try {
             JRES.copyOver(false, JRE_DESTINATION.forward("/x32").getFile());
