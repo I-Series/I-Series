@@ -16,6 +16,41 @@ namespace I_Series {
         /// not be passed onto the actual I-Series process.
         /// </summary>
         private static readonly object[] FilteredArguments = { "--architecture", "--shell"};
+
+        /// <summary>
+        /// An object representation of every file that should exist within the
+        /// current working directory (excluding jre), which can be used to
+        /// easily verify that each file does exist.
+        /// </summary>
+        private static readonly VeriStructure CoreFiles = new VeriStructure(Directory.GetCurrentDirectory())
+            .Add(new VeriStructure("bin")
+                //Bin
+                .Add("I-Series-App.jar")
+                .Add("I-Series-Launcher.jar")
+                .Add("I-Series-Updater.jar")
+            ).Add(new VeriStructure("legal")
+                //Legal
+                .Add("Gson Licence.txt")
+                .Add("Guava Licence.txt")
+                .Add("I-Series-Updater Licence.txt")
+                .Add("Log4j Licence.txt")
+                .Add("src-common Licence.txt")
+            ).Add(new VeriStructure("libs")
+                //Libs
+                .Add("checker-qual-2.11.1.jar")
+                .Add("error_prone_annotations-2.3.4.jar")
+                .Add("failureaccess-1.0.1.jar")
+                .Add("gson-2.8.0.jar")
+                .Add("guava-29.0-jre.jar")
+                .Add("j2objc-annotations-1.3.jar")
+                .Add("jsr305-3.0.2.jar")
+                .Add("listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar")
+                .Add("log4j-api-2.8.2.jar")
+                .Add("log4j-core-2.8.2.jar")
+                .Add("src-common.jar")
+            )
+            //Root
+            .Add("I-Series Acknowledgements.txt").Add("I-Series Licence.txt");
         
         /// <summary>
         /// The runtime configuration settings.
@@ -84,6 +119,7 @@ namespace I_Series {
                 Console.Out.Write("\n");
             }
 
+            CoreFiles.Verify();
             ConfigureRuntime();
             
             ISProcess process = new ISProcess(RuntimeSettings, Filter(_cmdArguments),
@@ -107,9 +143,12 @@ namespace I_Series {
             Console.Out.WriteLine("Has x64 JRE: {0}", (hasJreX64 = _jreX64.Check()).ToString());
 
             //Dialog Boxes for errors.
-            if (!(hasJreX32 || hasJreX64))
+            if (!(hasJreX32 || hasJreX64)) {
                 //Fail
                 MessageBox.Show("No JRE runtime found. Please reinstall I-Series.");
+                Environment.Exit(-1);
+                return;
+            }
 
             if (_is64BitEnv && !hasJreX64) {
                 //Warn
@@ -119,6 +158,8 @@ namespace I_Series {
             if (!_is64BitEnv && !hasJreX32) {
                 //Fail
                 MessageBox.Show("No x32bit runtime found. Please reinstall I-Series for x32bit Windows.");
+                Environment.Exit(-2);
+                return;
             }
 
             //Determine runtime mode (x32, x64)
@@ -127,7 +168,7 @@ namespace I_Series {
                 if(_runtimeChipset == Chipset.Undetermined)
                     _runtimeChipset = _is64BitEnv ? Chipset.X64 : Chipset.X32;
             } else if (hasJreX32) _runtimeChipset = Chipset.X32;
-            else if (hasJreX64) _runtimeChipset = Chipset.X64;
+            else _runtimeChipset = Chipset.X64;
             
             Console.Out.WriteLine("Determined chipset: {0}",
                 _runtimeChipset == Chipset.X32 ? "x32bit" : "x64bit"
