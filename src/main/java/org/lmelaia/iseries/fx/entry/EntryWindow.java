@@ -35,7 +35,7 @@ public class EntryWindow extends FXWindow<EntryWindowController> {
      */
     @Override
     protected void onInitialization() {
-        this.setTitle("I-Series Entry Editor - New");
+        this.setTitle("Entry Editor");
         this.getIcons().add(new Image("/images/iseries-32.png"));
     }
 
