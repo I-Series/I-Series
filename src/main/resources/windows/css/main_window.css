@@ -1,9 +1,17 @@
-.menu-item:focused {
-     -fx-background-color: rgb(0,0,0);
+.table-row-cell {
+    -fx-cell-size: 20px;
 }
 
-.menu:hover, .menu:showing{
-     -fx-background-color: rgb(0,0,0);
+.table-column {
+    -fx-cell-size: 20px;
+}
+
+.menu-item:focused {
+    -fx-background-color: rgb(0, 0, 0);
+}
+
+.menu:hover, .menu:showing {
+    -fx-background-color: rgb(0, 0, 0);
 }
 
 .button {

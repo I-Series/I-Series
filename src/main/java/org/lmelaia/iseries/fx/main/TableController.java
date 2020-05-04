@@ -29,6 +29,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,11 +57,6 @@ public class TableController extends SubControl {
     private static class Columns {
 
         /**
-         * Context menu that allows enabling/disabling columns.
-         */
-        private static final TableColumnContentMenu COLUMN_CONTEXT_MENU;
-
-        /**
          * Column to display the name of the entry.
          */
         public static final TableColumn<ITableEntry, ITableEntry> name = new TableColumn<>("Name");
@@ -69,6 +66,31 @@ public class TableController extends SubControl {
          */
         public static final TableColumn<ITableEntry, ITableEntry> uuid = new TableColumn<>("UUID");
 
+        /**
+         * The column that displays the entries type.
+         */
+        public static final TableColumn<ITableEntry, ITableEntry> type = new TableColumn<>("Type");
+
+        /**
+         * The column that displays the entries rating.
+         */
+        public static final TableColumn<ITableEntry, ITableEntry> rating = new TableColumn<>("Rating");
+
+        /**
+         * The column that displays a shortened version of the entries synopsis.
+         */
+        public static final TableColumn<ITableEntry, ITableEntry> synopsis = new TableColumn<>("Synopsis");
+
+        /**
+         * The column that displays a shortened version of the entries comments.
+         */
+        public static final TableColumn<ITableEntry, ITableEntry> comments = new TableColumn<>("Comments");
+
+        /**
+         * The column that displays an open or closed heart if the entry is loved or not.
+         */
+        public static final TableColumn<ITableEntry, ImageView> loved = new TableColumn<>("Loved");
+
         // *******
         // HELPERS
         // *******
@@ -76,40 +98,58 @@ public class TableController extends SubControl {
         /**
          * Map of all available columns that can go into the table.
          */
-        private static final Map<String, TableColumn<ITableEntry, ITableEntry>> columnMap = new HashMap<>();
+        private static final Map<String, TableColumn<ITableEntry, ?>> columnMap = new HashMap<>();
+
+        /**
+         * Context menu that allows enabling/disabling columns.
+         */
+        private static final TableColumnContentMenu COLUMN_CONTEXT_MENU = new TableColumnContentMenu(new TableColumn[]{
+                name, uuid, type, rating, synopsis, comments, loved
+        });
 
         /**
          * List of default columns that should be placed in the
          * table.
          */
         public static final TableColumn[] DEFAULTS = new TableColumn[]{
-                name
+                name, type, rating
         };
 
         /*
          * Initializes the columns.
          */
         static {
-            COLUMN_CONTEXT_MENU = new TableColumnContentMenu(new TableColumn[]{
-                    name, uuid
-            });
+            init(name, new PropertyValueFactory<>("name"));
+            init(uuid, new PropertyValueFactory<>("UUID"));
+            init(type, new PropertyValueFactory<>("type"));
+            init(rating, new PropertyValueFactory<>("rating"));
+            init(synopsis, new PropertyValueFactory<>("synopsis"));
+            init(comments, new PropertyValueFactory<>("comments"));
 
-            //Name
-            name.setCellValueFactory(new PropertyValueFactory<>("name"));
-            name.setContextMenu(COLUMN_CONTEXT_MENU);
-            columnMap.put(name.getText(), name);
-
-            //UUID
-            uuid.setCellValueFactory(new PropertyValueFactory<>("UUID"));
-            uuid.setContextMenu(COLUMN_CONTEXT_MENU);
-            columnMap.put(uuid.getText(), uuid);
+            loved.setCellValueFactory(new PropertyValueFactory<>("lovedGraphic"));
+            loved.setContextMenu(COLUMN_CONTEXT_MENU);
+            columnMap.put(loved.getText(), loved);
         }
 
         /**
          * @return a column with the given {@link TableColumn#getText()}
          */
-        public static TableColumn<ITableEntry, ITableEntry> get(String name) {
+        public static TableColumn<ITableEntry, ?> get(String name) {
             return columnMap.get(name);
+        }
+
+        /**
+         * Initializes the given table column with the provided
+         * PropertyValueFactory, as well as context menus.
+         *
+         * @param column the column to initialize.
+         * @param pvf    the
+         */
+        private static void init(TableColumn<ITableEntry, ITableEntry> column,
+                                 PropertyValueFactory<ITableEntry, ITableEntry> pvf) {
+            column.setCellValueFactory(pvf);
+            column.setContextMenu(COLUMN_CONTEXT_MENU);
+            columnMap.put(column.getText(), column);
         }
     }
 
@@ -332,7 +372,7 @@ public class TableController extends SubControl {
 
                 array.forEach((jsonElement -> {
                     JsonObject jColumn = jsonElement.getAsJsonObject();
-                    TableColumn<ITableEntry, ITableEntry> column = Columns.get(jColumn.get("value").getAsString());
+                    TableColumn<ITableEntry, ?> column = Columns.get(jColumn.get("value").getAsString());
 
                     //Sort Type
                     if (jColumn.has("sort"))
@@ -351,14 +391,13 @@ public class TableController extends SubControl {
 
                     //Width
                     if (jColumn.has("width"))
-                        //TODO: Somehow fix this
-                        //column.impl_setWidth(jColumn.get("width").getAsDouble());
+                        setColumnWidth(column, jColumn.get("width").getAsDouble());
 
-                        //Add to table
-                        if (!tableView.getColumns().contains(column)) {
-                            tableView.getColumns().add(column);
-                            Columns.COLUMN_CONTEXT_MENU.checkItem(column);
-                        }
+                    //Add to table
+                    if (!tableView.getColumns().contains(column)) {
+                        tableView.getColumns().add(column);
+                        Columns.COLUMN_CONTEXT_MENU.checkItem(column);
+                    }
 
                 }));
             } catch (IOException e) {
@@ -368,6 +407,22 @@ public class TableController extends SubControl {
             //Always make sure this column gets added.
             if (!tableView.getColumns().contains(Columns.name))
                 tableView.getColumns().add(Columns.name);
+        }
+
+        /**
+         * Allows us to reflectively set the width of a table column.
+         *
+         * @param column      the column to set the width of.
+         * @param targetWidth the width, as a percentage of the total table area.
+         */
+        private static void setColumnWidth(TableColumn column, double targetWidth) {
+            try {
+                Method method = TableColumnBase.class.getDeclaredMethod("doSetWidth", double.class);
+                method.setAccessible(true);
+                method.invoke(column, targetWidth);
+            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                LOG.error("Failed to set column width", e);
+            }
         }
     }
 
@@ -452,10 +507,6 @@ public class TableController extends SubControl {
          * (e.g. {@link AnchorPane#setTopAnchor(Node, Double)}).
          *
          * @param node   the node.
-         * @param top    -
-         * @param bottom -
-         * @param left   -
-         * @param right  -
          */
         private void setAnchors(Node node, double top, double bottom, double left, double right) {
             AnchorPane.setBottomAnchor(node, bottom);
