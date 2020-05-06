@@ -1,20 +1,20 @@
-INFO | 16:35:31(910) | I-Series Builder
+INFO | 01:23:29(993) | I-Series Builder
 	 Logger initialized with configuration file: file:/D:/Projects/I-Series/src-build/build/resources/main/configuration/log4j2_configuration.xml
-INFO | 16:35:31(930) | I-Series Builder
+INFO | 01:23:30(017) | I-Series Builder
 	 Beginning full build...
-INFO | 16:35:31(940) | I-Series Builder
+INFO | 01:23:30(029) | I-Series Builder
 	 Copying over executable...
-INFO | 16:35:31(941) | I-Series Builder
+INFO | 01:23:30(030) | I-Series Builder
 	 Copying over runtime...
-WARN | 16:35:31(942) | I-Series Builder
+WARN | 01:23:30(031) | I-Series Builder
 	 NOT COPYING RUNTIMES
-INFO | 16:35:33(447) | I-Series Builder
+INFO | 01:23:31(550) | I-Series Builder
 	 Verifying output directory: D:\Projects\I-Series\buildoutput
-WARN | 16:35:33(448) | I-Series Builder
+WARN | 01:23:31(551) | I-Series Builder
 	 File: D:\Projects\I-Series\buildoutput\I-Series Acknowledgements.txt is empty
-WARN | 16:35:33(450) | I-Series Builder
+WARN | 01:23:31(553) | I-Series Builder
 	 File: (runtime) is not contained in the output directory: buildoutput
-INFO | 16:35:33(451) | I-Series Builder
+INFO | 01:23:31(554) | I-Series Builder
 	 Verifying output directory: D:\Projects\I-Series\distribution
-INFO | 16:35:33(456) | I-Series Builder
+INFO | 01:23:31(560) | I-Series Builder
 	 Full build completed without fatal errors

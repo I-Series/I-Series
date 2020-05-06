@@ -59,37 +59,37 @@ public class TableController extends SubControl {
         /**
          * Column to display the name of the entry.
          */
-        public static final TableColumn<ITableEntry, ITableEntry> name = new TableColumn<>("Name");
+        private static final TableColumn<ITableEntry, ITableEntry> NAME = new TableColumn<>("Name");
 
         /**
          * Column to display the UUID of the entry.
          */
-        public static final TableColumn<ITableEntry, ITableEntry> uuid = new TableColumn<>("UUID");
+        private static final TableColumn<ITableEntry, ITableEntry> UUID = new TableColumn<>("UUID");
 
         /**
          * The column that displays the entries type.
          */
-        public static final TableColumn<ITableEntry, ITableEntry> type = new TableColumn<>("Type");
+        private static final TableColumn<ITableEntry, ITableEntry> TYPE = new TableColumn<>("Type");
 
         /**
          * The column that displays the entries rating.
          */
-        public static final TableColumn<ITableEntry, ITableEntry> rating = new TableColumn<>("Rating");
+        private static final TableColumn<ITableEntry, ITableEntry> RATING = new TableColumn<>("Rating");
 
         /**
          * The column that displays a shortened version of the entries synopsis.
          */
-        public static final TableColumn<ITableEntry, ITableEntry> synopsis = new TableColumn<>("Synopsis");
+        private static final TableColumn<ITableEntry, ITableEntry> SYNOPSIS = new TableColumn<>("Synopsis");
 
         /**
          * The column that displays a shortened version of the entries comments.
          */
-        public static final TableColumn<ITableEntry, ITableEntry> comments = new TableColumn<>("Comments");
+        private static final TableColumn<ITableEntry, ITableEntry> COMMENTS = new TableColumn<>("Comments");
 
         /**
          * The column that displays an open or closed heart if the entry is loved or not.
          */
-        public static final TableColumn<ITableEntry, ImageView> loved = new TableColumn<>("Loved");
+        private static final TableColumn<ITableEntry, ImageView> LOVED = new TableColumn<>("Loved");
 
         // *******
         // HELPERS
@@ -103,32 +103,33 @@ public class TableController extends SubControl {
         /**
          * Context menu that allows enabling/disabling columns.
          */
-        private static final TableColumnContentMenu COLUMN_CONTEXT_MENU = new TableColumnContentMenu(new TableColumn[]{
-                name, uuid, type, rating, synopsis, comments, loved
-        });
+        private static final TableColumnContentMenu COLUMN_CONTEXT_MENU;
 
         /**
          * List of default columns that should be placed in the
          * table.
          */
-        public static final TableColumn[] DEFAULTS = new TableColumn[]{
-                name, type, rating
-        };
+        public static final TableColumn[] DEFAULTS;
 
         /*
          * Initializes the columns.
          */
         static {
-            init(name, new PropertyValueFactory<>("name"));
-            init(uuid, new PropertyValueFactory<>("UUID"));
-            init(type, new PropertyValueFactory<>("type"));
-            init(rating, new PropertyValueFactory<>("rating"));
-            init(synopsis, new PropertyValueFactory<>("synopsis"));
-            init(comments, new PropertyValueFactory<>("comments"));
+            COLUMN_CONTEXT_MENU = new TableColumnContentMenu(new TableColumn[]{
+                    NAME, UUID, TYPE, RATING, SYNOPSIS, COMMENTS, LOVED
+            });
 
-            loved.setCellValueFactory(new PropertyValueFactory<>("lovedGraphic"));
-            loved.setContextMenu(COLUMN_CONTEXT_MENU);
-            columnMap.put(loved.getText(), loved);
+            DEFAULTS = new TableColumn[]{
+                    NAME, TYPE, RATING
+            };
+
+            init(NAME, new PropertyValueFactory<>("name"));
+            init(UUID, new PropertyValueFactory<>("UUID"));
+            init(TYPE, new PropertyValueFactory<>("type"));
+            init(RATING, new PropertyValueFactory<>("rating"));
+            init(SYNOPSIS, new PropertyValueFactory<>("synopsis"));
+            init(COMMENTS, new PropertyValueFactory<>("comments"));
+            init(LOVED, new PropertyValueFactory("lovedGraphic"));
         }
 
         /**
@@ -145,8 +146,9 @@ public class TableController extends SubControl {
          * @param column the column to initialize.
          * @param pvf    the
          */
-        private static void init(TableColumn<ITableEntry, ITableEntry> column,
-                                 PropertyValueFactory<ITableEntry, ITableEntry> pvf) {
+        private static void init(TableColumn<ITableEntry, ?> column,
+                                 PropertyValueFactory pvf) {
+            //noinspection unchecked
             column.setCellValueFactory(pvf);
             column.setContextMenu(COLUMN_CONTEXT_MENU);
             columnMap.put(column.getText(), column);
@@ -405,8 +407,8 @@ public class TableController extends SubControl {
             }
 
             //Always make sure this column gets added.
-            if (!tableView.getColumns().contains(Columns.name))
-                tableView.getColumns().add(Columns.name);
+            if (!tableView.getColumns().contains(Columns.NAME))
+                tableView.getColumns().add(Columns.NAME);
         }
 
         /**

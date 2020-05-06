@@ -18,22 +18,20 @@ package org.lmelaia.iseries;
 import org.lmelaia.iseries.common.system.AppBase;
 
 /**
- * Starting point of the i-series application.
+ * Starting point of the I-Series application.
  *
  * @author Luke
  */
-@SuppressWarnings("WeakerAccess")
 public class Main {
 
     /**
-     * Sets up the application class
-     * and calls the start method.
+     * Sets up the application class, sets the thread
+     * name and calls the applications start method.
      *
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         Thread.currentThread().setName("I-Series Main");
         AppBase.startApp(new App(), args);
     }
-
 }

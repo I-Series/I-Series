@@ -69,7 +69,7 @@ public class App extends AppBase {
     /**
      * The global library instance.
      */
-    private Library library;
+    private final Library library;
 
     /**
      * The global ILibrary instance. Used
@@ -201,7 +201,7 @@ public class App extends AppBase {
      * and updating the main windows progress bar to
      * reflect the progress of the library loading.
      */
-    private final Task loadLibrary = new Task() {
+    private final Task<Object> loadLibrary = new Task<>() {
 
         /**
          * Tracks the progress of the Library load and updates
@@ -210,6 +210,7 @@ public class App extends AppBase {
         final ProgressTracker tracker = new ProgressTracker() {
             @Override
             public void onProgressChange(double percentage, int pos, int max) {
+
                 updateProgress(pos, max);
                 updateMessage("Loading Library... " + pos + " of " + max);
             }
@@ -321,9 +322,8 @@ public class App extends AppBase {
     }
 
     /**
-     * {@inheritDoc}
-     *
-     * @return
+     * @return the name of the fx thread -
+     * {@code "I-Series"}.
      */
     @Override
     protected String getFXThreadName() {
@@ -331,9 +331,9 @@ public class App extends AppBase {
     }
 
     /**
-     * {@inheritDoc}
-     *
-     * @return
+     * @return {@code "org.lmelaia.iseries.fx"}
+     * - the package path to where  the window
+     * classes are located.
      */
     @Override
     protected String getFXWindowsClassPath() {

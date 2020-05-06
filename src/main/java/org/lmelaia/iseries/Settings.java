@@ -224,12 +224,14 @@ public enum Settings {
          */
         static {
             if (SAVE_FILE.exists()) {
+                //Try read save file
                 try {
                     store.loadFromXML(new FileInputStream(SAVE_FILE));
                 } catch (IOException e) {
                     LOG.error("Failed to load settings", e);
                 }
             } else {
+                //Create save file
                 try {
                     //noinspection ResultOfMethodCallIgnored
                     SAVE_FILE.getParentFile().mkdirs();
@@ -241,6 +243,7 @@ public enum Settings {
                 }
             }
 
+            //Register shutdown hook for saving
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 for (Settings setting : Settings.values()) {
                     store.put(setting.idn, setting.getValue());

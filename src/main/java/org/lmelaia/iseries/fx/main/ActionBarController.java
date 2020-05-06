@@ -81,12 +81,7 @@ public class ActionBarController extends SubControl {
         });
 
         //Handles showing/hiding the clear text button.
-        input.setOnKeyTyped((event) -> {
-            if (!input.getText().equals(""))
-                this.clearInput.setVisible(true);
-            else
-                this.clearInput.setVisible(false);
-        });
+        input.setOnKeyTyped((event) -> this.clearInput.setVisible(!input.getText().equals("")));
 
         edit.setDisable(true);
         delete.setDisable(true);
