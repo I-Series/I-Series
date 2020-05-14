@@ -10,6 +10,7 @@ import org.lmelaia.iseries.fx.entry.EntryWindow;
 import org.lmelaia.iseries.fx.entry.EntryWindowController;
 import org.lmelaia.iseries.fx.unindex.UnindexWindow;
 import org.lmelaia.iseries.ilibrary.ITableEntry;
+import org.lmelaia.iseries.ilibrary.SearchFilter;
 import org.lmelaia.iseries.library.LibraryEntryBase;
 
 /**
@@ -144,10 +145,7 @@ public class ActionBarController extends SubControl {
      * @param e action event.
      */
     private void onInputEntered(ActionEvent e) {
-        App.getInstance().getILibrary().setSearchFilter((entry ->
-                entry.getName().toLowerCase().contains(input.getText().toLowerCase())
-        ));
-
+        App.getInstance().getILibrary().setSearchFilter(new SearchFilter(input.getText()));
         this.input.selectAll();
     }
 
